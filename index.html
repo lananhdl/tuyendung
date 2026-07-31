@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cổng Thông Tin Việc Làm & Tiếp Thị</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
+    <style>
+        :root { --primary-color: #512da8; --secondary-color: #0284c7; --bg-color: #f3f4f6; --text-color: #333; --border-color: #e5e7eb; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); margin: 0; }
+        
+        .search-section { background-color: var(--primary-color); padding: 20px 5%; }
+        .search-bar { display: flex; flex-wrap: wrap; gap: 10px; background: white; padding: 10px; border-radius: 8px; max-width: 1400px; margin: auto; }
+        .search-bar input { flex: 2; border: 1px solid var(--border-color); padding: 10px; border-radius: 4px; outline: none; font-size: 15px;}
+        .search-bar select { flex: 1; min-width: 200px; border: 1px solid var(--border-color); padding: 10px; border-radius: 4px; outline: none; font-size: 15px; background: white;}
+        
+        .container { display: flex; gap: 20px; padding: 20px 5%; max-width: 1400px; margin: auto; }
+        .main-content { flex: 3; } .sidebar { flex: 1; }
+        .page-title { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center;}
+        .page-title h1 { font-size: 20px; margin-bottom: 5px; } .page-title span { color: #666; font-size: 14px; }
+        
+        .job-card { background: white; border-radius: 8px; margin-bottom: 15px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid transparent; transition: 0.3s; }
+        .job-card:hover { border-color: var(--primary-color); }
+        .job-header { display: flex; gap: 15px; cursor: pointer; align-items: center; }
+        .job-logo { width: 60px; height: 60px; background: #eee; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #888; font-size: 20px; }
+        .job-info { flex: 1; }
+        .job-title { font-size: 16px; color: var(--text-color); margin-bottom: 5px; display: flex; justify-content: space-between; }
+        .job-company { color: #666; font-size: 14px; margin-bottom: 10px; }
+        .job-meta { display: flex; gap: 20px; font-size: 14px; color: #555; } .job-meta .salary { color: #059669; font-weight: bold; }
+        .expand-icon { color: #999; transition: transform 0.3s; }
+        .job-details { display: none; margin-top: 15px; padding-top: 15px; border-top: 1px dashed var(--border-color); font-size: 14px; color: #444; line-height: 1.6; }
+        .btn-apply { background-color: var(--primary-color); color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin-top: 15px; font-weight: bold; width: 100%; transition: 0.2s; }
+        .btn-apply:hover { opacity: 0.9; } .btn-apply:disabled { background: #ccc; cursor: not-allowed; }
+        .job-card.active .expand-icon { transform: rotate(180deg); } .job-card.active .job-details { display: block; }
+
+        .auth-box { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); text-align: center; margin-bottom: 20px; }
+        .auth-box h3 { font-size: 16px; margin-bottom: 10px; color: var(--primary-color); }
+        .btn-login-outline { background: white; color: var(--primary-color); border: 1px solid var(--primary-color); padding: 10px; width: 100%; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        
+        .referral-box { display: none; background: #e0f2fe; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .stats-text { font-size: 14px; font-weight: bold; color: #333; } .stats-count { color: #dc2626; font-size: 18px; margin-left: 5px; }
+
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 30px; border-radius: 8px; width: 500px; max-width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .close-modal { float: right; cursor: pointer; font-size: 24px; color: #999; line-height: 1; margin-top: -10px;}
+        
+        .auth-tabs { display: flex; border-bottom: 2px solid #eee; margin-bottom: 20px; }
+        .auth-tab { flex: 1; text-align: center; padding: 10px; cursor: pointer; font-weight: bold; color: #666; }
+        .auth-tab.active { color: var(--primary-color); border-bottom: 2px solid var(--primary-color); }
+        .auth-form { display: none; }
+        .auth-form.active { display: block; }
+        
+        .input-group { margin-bottom: 12px; } .input-group input, .input-group textarea { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; outline: none; font-size: 14px;}
+        .radio-group { margin-bottom: 20px; font-size: 14px; } .radio-group label { margin-right: 15px; cursor: pointer; }
+        .btn-submit { background: var(--primary-color); color: white; border: none; padding: 12px; width: 100%; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .loading-spinner { text-align: center; padding: 40px; color: #666; font-size: 16px; }
+
+        #redirect-screen { display: none; height: 100vh; flex-direction: column; justify-content: center; align-items: center; background: #f3f4f6; position: absolute; top: 0; left: 0; width: 100%; z-index: 9999; }
+        .daily-stat-box { font-size: 12px; color: #475569; margin-top: 6px; background: #fff; padding: 6px; border: 1px solid #e2e8f0; border-radius: 4px;}
+        .error-msg { color: #dc2626; font-size: 13px; margin-bottom: 10px; display: none; text-align: center; font-weight: bold;}
+        
+        /* CSS CHAT BUTTONS (CHỈ DÙNG CHỮ) */
+        .floating-contact { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 15px; z-index: 1000; }
+        .contact-btn { width: 50px; height: 50px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: transform 0.3s; color: white; text-decoration: none; cursor: pointer; border: none; font-weight: 800; font-size: 13px; font-family: 'Segoe UI', Arial, sans-serif;}
+        .contact-btn:hover { transform: scale(1.1); color: white; }
+        .messenger-btn { background: linear-gradient(45deg, #00B2FF, #006AFF); }
+        .zalo-btn { background: #0068FF; letter-spacing: 0.5px;}
+
+        /* CSS QUẢNG CÁO SHOPEE MỚI - CHO PHÉP HIỂN THỊ HÌNH VÀ CHỮ OVERLAY */
+        .ad-container { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .ad-item { position: relative; display: block; transition: transform 0.2s, opacity 0.2s; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.15); background: white; text-decoration: none; max-width: 100%; }
+        .ad-item:hover { transform: scale(1.02); opacity: 0.95; }
+        .ad-item img { max-width: 100%; height: auto; display: block; margin: 0 auto; object-fit: contain; }
+        .ad-badge { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6); color: white; font-size: 10px; padding: 3px 6px; border-radius: 4px; z-index: 5; border: 1px solid rgba(255,255,255,0.3);}
+        .ad-text-only { padding: 15px; text-align: center; color: #ff5722; font-weight: bold; }
+        
+        /* CSS Khối chữ chèn nổi trên bề mặt hình ảnh quảng cáo */
+        .ad-overlay-text { 
+            position: absolute; 
+            bottom: 0; 
+            left: 0; 
+            width: 100%; 
+            padding: 12px 10px; 
+            background: rgba(255, 255, 255, 0.88); /* Dải nền trắng mờ để chữ đè lên dễ nhìn */
+            text-align: center; 
+            z-index: 2; 
+            box-sizing: border-box; 
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+
+         /* Ép banner Header và Footer kéo dài 100% bề ngang */
+#header-ads, #footer-ads { flex-direction: column; width: 100%; gap: 15px; }
+#header-ads .ad-item, #footer-ads .ad-item { max-width: 100%; width: 100%; border-radius: 0; box-shadow: none; }
+#header-ads .ad-item img, #footer-ads .ad-item img { width: 100%; height: auto; object-fit: cover; }
+        @media (max-width: 768px) { 
+            .container { flex-direction: column; } .search-bar { flex-direction: column; } 
+            #header-ads .ad-item, #footer-ads .ad-item { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="redirect-screen">
+        <i class="fa-solid fa-spinner fa-spin" style="font-size: 45px; color: #0284c7; margin-bottom: 20px;"></i>
+        <h2 style="color: #333; margin-bottom: 10px;">Đang chuyển hướng...</h2>
+        <p style="color: #666; font-size: 15px;">Hệ thống đang ghi nhận thông tin, vui lòng đợi giây lát.</p>
+    </div>
+
+    <div id="main-ui">
+        <!-- VÙNG HIỂN THỊ QUẢNG CÁO HEADER -->
+        <div id="header-ads" class="ad-container" style="max-width: 1400px; margin: 15px auto 0 auto; padding: 0 5%;"></div>
+
+        <div class="search-section">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="🔍 Nhập tên, công ty hoặc nội dung công việc..." oninput="filterJobs()" onkeydown="if(event.key === 'Enter'){ event.preventDefault(); filterJobs(); }">
+                
+                <select id="locationSelect" onchange="filterJobs()">
+                    <option value="">📍 Tất cả địa điểm</option>
+                    <option value="toàn quốc">🌍 Toàn quốc</option>
+                    <option value="hà nội">Hà Nội</option>
+                    <option value="tp.hcm">TP. Hồ Chí Minh</option>
+                    <option value="đà nẵng">Đà Nẵng</option>
+                    <option value="cần thơ">Cần Thơ</option>
+                    <option value="hải phòng">Hải Phòng</option>
+                    <option value="an giang">An Giang</option>
+                    <option value="bà rịa - vũng tàu">Bà Rịa - Vũng Tàu</option>
+                    <option value="bắc giang">Bắc Giang</option>
+                    <option value="bắc ninh">Bắc Ninh</option>
+                    <option value="bình dương">Bình Dương</option>
+                    <option value="bình phước">Bình Phước</option>
+                    <option value="bình thuân">Bình Thuận</option>
+                    <option value="đồng nai">Đồng Nai</option>
+                    <option value="khánh hòa">Khánh Hòa</option>
+                    <option value="nghệ an">Nghệ An</option>
+                    <option value="thanh hóa">Thanh Hóa</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="main-content">
+                <div class="page-title">
+                    <div>
+                        <span>Trang Chủ / Tuyển Dụng Mới Nhất</span>
+                        <h1>Cơ hội việc làm đang mở</h1>
+                    </div>
+                    <button id="btnAddJobAdmin" onclick="openAddJobModal()" style="display: none; background: #059669; color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px;">
+                        <i class="fa-solid fa-plus"></i> Thêm việc làm
+                    </button>
+                </div>
+                <div id="job-list-container"><div class="loading-spinner"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải dữ liệu...</div></div>
+            </div>
+
+            <div class="sidebar">
+                <div class="auth-box" id="loginBox">
+                    <h3>Đăng nhập / Đăng ký</h3>
+                    <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Tham gia Affiliate và theo dõi lịch sử ứng tuyển.</p>
+                    <button class="btn-login-outline" onclick="openAuthModal('login')">Bắt đầu ngay</button>
+                </div>
+                
+                <div class="referral-box" id="referralDashboard" style="display: none;">
+                    <h3 style="color: var(--primary-color); text-align: center; font-size: 18px; margin-bottom: 5px;">
+                        👋 Xin chào, <span id="userFullNameGreeting" style="color: var(--secondary-color);">...</span>!
+                    </h3>
+                    <hr style="border: 0; border-top: 1px dashed #bae6fd; margin: 15px 0;">
+                    
+                    <div class="stats-text" style="margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div><i class="fa-solid fa-hand-pointer" style="color:#0284c7;"></i> Số Click: <span class="stats-count" id="myClickCount">...</span></div>
+                            <button onclick="checkMyStats()" style="background: transparent; border: 1px solid #ccc; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;" title="Làm mới thống kê">🔄</button>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div><i class="fa-solid fa-sack-dollar" style="color:#059669;"></i> Đã tính hoa hồng: <span class="stats-count" style="color:#059669;">0</span></div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 8px; margin-top: 15px; margin-bottom: 20px;">
+                        <button onclick="logoutUser()" style="flex:1; background: #dc2626; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;" title="Đăng xuất">
+                            <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+                        </button>
+                    </div>
+                </div>
+
+                <!-- VÙNG HIỂN THỊ QUẢNG CÁO SIDEBAR -->
+                <div id="sidebar-ads" class="ad-container"></div>
+            </div>
+        </div>
+        
+        <!-- VÙNG HIỂN THỊ QUẢNG CÁO FOOTER -->
+        <div id="footer-ads" class="ad-container" style="max-width: 1400px; margin: 0 auto 30px auto; padding: 0 5%;"></div>
+    </div>
+
+    <!-- NÚT LIÊN HỆ GÓC DƯỚI PHẢI -->
+    <div class="floating-contact">
+        <a href="https://www.facebook.com/messages/t/ruaju0123456" target="_blank" class="contact-btn messenger-btn" title="Chat với Admin qua Messenger">Mess</a>
+        <a href="https://zalo.me/0971087697" target="_blank" class="contact-btn zalo-btn" title="Chat với Admin qua Zalo">Zalo</a>
+    </div>
+
+    <!-- MODAL ĐĂNG KÝ / ĐĂNG NHẬP -->
+    <div id="authModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeAuthModal()">&times;</span>
+            <div class="auth-tabs">
+                <div class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Đăng nhập</div>
+                <div class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')">Đăng ký mới</div>
+            </div>
+            <div id="authErrorMsg" class="error-msg"></div>
+
+            <form id="loginForm" class="auth-form active">
+                <div class="input-group"><input type="text" id="loginId" placeholder="UserID hoặc Số điện thoại" required></div>
+                <div class="input-group"><input type="password" id="loginPassword" placeholder="Mật khẩu" required></div>
+                <button type="button" class="btn-submit" id="btnSubmitLogin" onclick="submitLogin()">Đăng nhập</button>
+            </form>
+
+            <form id="registerForm" class="auth-form">
+                <div class="input-group"><input type="text" id="regUserid" placeholder="UserID (Viết liền không dấu)" required></div>
+                <div class="input-group"><input type="password" id="regPassword" placeholder="Tạo Mật khẩu" required></div>
+                <div class="input-group"><input type="text" id="regFullname" placeholder="Họ và Tên" required></div>
+                <div class="input-group"><input type="tel" id="regPhone" placeholder="Số điện thoại" required></div>
+                
+                <div style="margin-bottom: 15px; border: 1px solid var(--border-color); padding: 12px; border-radius: 4px; background: #fafafa;">
+                    <label style="font-weight: bold; color: #555; display: block; margin-bottom: 8px; font-size: 14px;">Mạng xã hội tham gia:</label>
+                    <div style="margin-bottom: 8px;"><label style="cursor: pointer; font-size: 14px;"><input type="checkbox" class="social-checkbox" value="Facebook" onchange="toggleSocialInput(this, 'fb-input')"> Facebook</label><input type="text" id="fb-input" placeholder="Link Facebook" style="display: none; width: 100%; margin-top: 5px; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; outline: none;"></div>
+                    <div style="margin-bottom: 8px;"><label style="cursor: pointer; font-size: 14px;"><input type="checkbox" class="social-checkbox" value="Zalo" onchange="toggleSocialInput(this, 'zalo-input')"> Zalo</label><input type="text" id="zalo-input" placeholder="SĐT Zalo" style="display: none; width: 100%; margin-top: 5px; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; outline: none;"></div>
+                    <div style="margin-bottom: 8px;"><label style="cursor: pointer; font-size: 14px;"><input type="checkbox" class="social-checkbox" value="TikTok" onchange="toggleSocialInput(this, 'tiktok-input')"> TikTok</label><input type="text" id="tiktok-input" placeholder="Link TikTok" style="display: none; width: 100%; margin-top: 5px; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; outline: none;"></div>
+                    <div style="margin-bottom: 8px;"><label style="cursor: pointer; font-size: 14px;"><input type="checkbox" class="social-checkbox" value="Instagram" onchange="toggleSocialInput(this, 'ig-input')"> Instagram</label><input type="text" id="ig-input" placeholder="Link Instagram" style="display: none; width: 100%; margin-top: 5px; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; outline: none;"></div>
+                    <div style="margin-bottom: 8px;"><label style="cursor: pointer; font-size: 14px;"><input type="checkbox" class="social-checkbox" value="Threads" onchange="toggleSocialInput(this, 'threads-input')"> Threads</label><input type="text" id="threads-input" placeholder="Link Threads" style="display: none; width: 100%; margin-top: 5px; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; outline: none;"></div>
+                    <div><label style="cursor: pointer; font-size: 14px;"><input type="checkbox" class="social-checkbox" value="Khác" onchange="toggleSocialInput(this, 'other-input')"> Khác</label><input type="text" id="other-input" placeholder="Nhập tên mạng xã hội khác và Link..." style="display: none; width: 100%; margin-top: 5px; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; outline: none;"></div>
+                </div>
+
+                <div class="radio-group">
+                    <p style="margin-bottom: 8px; font-weight: bold; color: #555;">Hình thức làm việc:</p>
+                    <label><input type="radio" name="workmode" value="Từ xa" checked> Từ xa</label>
+                </div>
+                <button type="button" class="btn-submit" id="btnSubmitReg" onclick="submitRegister()">Đăng ký tài khoản</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DÀNH CHO ADMIN THÊM CÔNG VIỆC MỚI -->
+    <div id="addJobModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeAddJobModal()">&times;</span>
+            <h3 style="color: #059669;">Thêm Công Việc (Quyền Admin)</h3>
+            <form id="addJobForm">
+                <div class="input-group"><input type="text" id="newJobId" placeholder="ID Công việc (VD: JOB03)" required></div>
+                <div class="input-group"><input type="text" id="newTitle" placeholder="Tên công việc" required></div>
+                <div class="input-group"><input type="text" id="newCompany" placeholder="Tên công ty" required></div>
+                <div class="input-group"><input type="text" id="newSalary" placeholder="Mức lương (VD: 10 - 15 triệu)" required></div>
+                
+                <div class="input-group">
+                    <label style="font-size: 13px; color: #555; font-weight: bold; margin-bottom: 5px; display: block;">Địa điểm (Giữ phím ⌘ / Ctrl để chọn nhiều):</label>
+                    <select id="newLocation" multiple required style="height: 120px; width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; outline: none; font-size: 14px; background: white;">
+                        <option value="Toàn quốc">🌍 Toàn quốc</option>
+                        <option value="Hà Nội">Hà Nội</option>
+                        <option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option>
+                        <option value="Đà Nẵng">Đà Nẵng</option>
+                        <option value="Cần Thơ">Cần Thơ</option>
+                        <option value="Hải Phòng">Hải Phòng</option>
+                        <option value="Bình Dương">Bình Dương</option>
+                        <option value="Đồng Nai">Đồng Nai</option>
+                    </select>
+                </div>
+
+                <div class="input-group"><input type="text" id="newDeadline" placeholder="Thời hạn (VD: 30/04/2026)" required></div>
+                <div class="input-group"><textarea id="newDesc" rows="3" placeholder="Mô tả chi tiết" required></textarea></div>
+                <div class="input-group"><input type="text" id="newAffLink" placeholder="Link Affiliate gốc (VD: https://adpvn.co/s/...)" required></div>
+                <div class="input-group"><textarea id="newSample" rows="3" placeholder="Nội dung bài đăng mẫu"></textarea></div>
+                <div class="input-group"><textarea id="newCommission" rows="2" placeholder="Quy định hoa hồng thành công"></textarea></div>
+                <button type="button" class="btn-submit" id="btnSubmitJob" style="background: #059669;" onclick="submitNewJob()">Đẩy lên Google Sheets</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // --- THAY LINK APP SCRIPT VÀO DÒNG DƯỚI ĐÂY ---
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw9u_9DwmblYDtBf5WH3aedMCk3m7doCelgqnywJGj71opG7mgpJT1PwFmYrEl1fsfB/exec"; 
+
+        let globalJobsData = []; 
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const referrerID = urlParams.get('ref');
+            const jobTarget = urlParams.get('job'); 
+
+            if (jobTarget) {
+                document.getElementById('main-ui').style.display = 'none'; 
+                document.getElementById('redirect-screen').style.display = 'flex'; 
+                try {
+                    const res = await fetch(SCRIPT_URL, { 
+                        method: "POST", redirect: "follow", body: JSON.stringify({ action: "directApply", referrer: referrerID, jobName: jobTarget }) 
+                    });
+                    const result = await res.json();
+                    if (result.status === "success" && result.url) {
+                        let finalUrl = result.url.trim();
+                        if (!finalUrl.startsWith("http")) finalUrl = "https://" + finalUrl;
+                        window.location.replace(finalUrl); 
+                    } else { document.getElementById('redirect-screen').innerHTML = `<h3 style="color: red;">Lỗi: Link hỏng</h3>`; }
+                } catch (e) { document.getElementById('redirect-screen').innerHTML = `<h3>Lỗi mạng.</h3>`; }
+                return; 
+            }
+            loadJobs();
+            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+            if (userInfo && userInfo.userid) activateLoggedInState(userInfo.userid);
+        });
+
+        async function loadJobs() {
+            const container = document.getElementById('job-list-container');
+            try {
+                const response = await fetch(SCRIPT_URL);
+                const result = await response.json();
+                
+                if (result.status === "error") {
+                    container.innerHTML = `<div class="loading-spinner" style="color:red;">Lỗi Data: ${result.message}</div>`; return;
+                }
+                
+                if (result.status === "success" && result.data) {
+                    globalJobsData = result.data; 
+                    renderJobList(globalJobsData);
+                    if(result.ads && result.ads.length > 0) renderAds(result.ads);
+                } else {
+                    container.innerHTML = `<div class="loading-spinner">Chưa có dữ liệu.</div>`;
+                }
+            } catch (e) { container.innerHTML = `<div class="loading-spinner">Lỗi kết nối API.</div>`; }
+        }
+
+        function getDirectImageUrl(url) {
+            if (!url) return "";
+            const driveMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
+            if (driveMatch && driveMatch[1]) { return "https://lh3.googleusercontent.com/d/" + driveMatch[1]; }
+            return url;
+        }
+
+        // HÀM HIỂN THỊ QUẢNG CÁO CÓ TEXT ĐÈ LÊN HÌNH
+        function renderAds(ads) {
+            const headerAds = document.getElementById('header-ads');
+            const sidebarAds = document.getElementById('sidebar-ads');
+            const footerAds = document.getElementById('footer-ads');
+            
+            headerAds.innerHTML = ''; sidebarAds.innerHTML = ''; footerAds.innerHTML = '';
+
+            ads.forEach(ad => {
+                const finalImgUrl = getDirectImageUrl(ad.image);
+                let overlayHTML = "";
+                
+                // Nếu có Text Tiêu đề từ Google Sheet thì mới render lớp phủ
+                if (ad.title && ad.title.trim() !== "") {
+                    overlayHTML = `<div class="ad-overlay-text">${ad.title}</div>`;
+                }
+
+                const content = finalImgUrl ? `<img src="${finalImgUrl}" alt="Shopee Ads">${overlayHTML}` : `<div class="ad-text-only">${ad.title}</div>`;
+                const badge = ad.isPinned ? `<span class="ad-badge"><i class="fa-solid fa-thumbtack"></i> Shopee</span>` : `<span class="ad-badge">Shopee</span>`;
+                const adHTML = `<a href="${ad.link}" target="_blank" class="ad-item">${badge}${content}</a>`;
+
+                if(ad.position.includes('header')) headerAds.innerHTML += adHTML;
+                else if(ad.position.includes('sidebar')) sidebarAds.innerHTML += adHTML;
+                else if(ad.position.includes('footer')) footerAds.innerHTML += adHTML;
+            });
+        }
+
+        function renderJobList(jobs) {
+            const container = document.getElementById('job-list-container');
+            if(jobs.length === 0) { container.innerHTML = `<div class="loading-spinner">Không tìm thấy công việc phù hợp.</div>`; return; }
+            container.innerHTML = ""; 
+            jobs.forEach((job) => {
+                const logo = job.company.substring(0, 2).toUpperCase();
+                const safeTitle = job.title.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
+                const statHTML = `<div style="margin-top: 10px; font-size: 13px; color: #0284c7; font-weight: bold; display: none;" class="job-click-stat" data-jobid="${job.id}">📊 Tổng click: <span class="job-stat-val" style="color: #dc2626;">0</span> lần<div class="daily-stat-breakdown"></div></div>`;
+                const sampleHTML = job.samplePost ? `
+                    <div class="copy-box-container" style="display: none; background: #f8fafc; padding: 12px; border-left: 4px solid #0284c7; margin-top: 15px; border-radius: 4px; margin-bottom: 10px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <strong style="color: #0284c7; font-size: 13px;"><i class="fa-solid fa-pen-to-square"></i> Nội dung để giới thiệu:</strong>
+                            <button data-title="${safeTitle}" onclick="copySamplePost(event, this)" style="background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; padding: 4px 10px; cursor: pointer; border-radius: 4px; font-size: 12px; font-weight: bold;">Copy</button>
+                        </div>
+                        <p style="margin: 0; font-size: 13px; font-style: italic; color: #475569;" class="post-text">${job.samplePost}</p>
+                        <div style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed #cbd5e1; display: flex; align-items: center; gap: 15px;">
+                            <div class="qrcode-box" style="background: white; padding: 5px; border: 1px solid #ddd; border-radius: 8px; width: 130px; height: 130px; display: flex; align-items: center; justify-content: center;"></div>
+                            <div style="font-size: 13px; color: #555;"><span style="font-weight: bold; color: #0284c7; font-size: 15px;">Mã QR của bạn:</span><br><span>Quét mã hoặc click link để ứng tuyển nhanh.</span></div>
+                        </div>
+                    </div>
+                ` : '';
+
+                container.innerHTML += `
+                    <div class="job-card" onclick="toggleJob(this)">
+                        <div class="job-header">
+                            <div class="job-logo">${logo}</div>
+                            <div class="job-info">
+                                <div class="job-title"><strong>[${job.id}] ${job.title}</strong><i class="fa-regular fa-heart"></i></div>
+                                <div class="job-company">${job.company}</div>
+                                <div class="job-meta">
+                                    <span class="salary"><i class="fa-solid fa-coins"></i> ${job.salary}</span>
+                                    <span><i class="fa-solid fa-location-dot"></i> ${job.location}</span>
+                                    <span style="margin-left: auto; color: #888;">${job.deadline}</span>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-chevron-down expand-icon"></i>
+                        </div>
+                        <div class="job-details" onclick="event.stopPropagation()">
+                            <strong>Mô tả chi tiết:</strong><br>${job.description || "Chưa có mô tả"}<br><br>
+                            <div style="background: #fdf4ff; padding: 10px; border-left: 4px solid #c084fc; border-radius: 4px; margin-bottom: 10px;">
+                                <strong style="color: #7e22ce; font-size: 13px;"><i class="fa-solid fa-hand-holding-dollar"></i> Quy Định Hoa Hồng:</strong>
+                                <p style="margin: 5px 0 0 0; font-size: 13px; color: #581c87;">${job.commission || "Chưa có quy định"}</p>
+                            </div>
+                            ${statHTML} ${sampleHTML}
+                            <button class="btn-apply" data-title="${safeTitle}" data-jobid="${job.id}" onclick="trackAndApply(event, this)">Ứng tuyển ngay</button>
+                        </div>
+                    </div>
+                `;
+            });
+            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+            if (userInfo && userInfo.userid) checkMyStats(userInfo.userid);
+        }
+
+        function stripHtml(html) { let tmp = document.createElement("DIV"); tmp.innerHTML = html; return tmp.textContent || tmp.innerText || ""; }
+
+        function filterJobs() {
+            const keyword = document.getElementById('searchInput').value.toLowerCase().trim();
+            const locationWord = document.getElementById('locationSelect').value.toLowerCase().trim();
+            const filtered = globalJobsData.filter(job => {
+                const plainTitle = job.title.toLowerCase(); const plainDesc = stripHtml(job.description).toLowerCase(); 
+                const matchText = plainTitle.includes(keyword) || plainDesc.includes(keyword) || job.company.toLowerCase().includes(keyword) || job.id.toLowerCase().includes(keyword);
+                const matchLocation = locationWord === "" || job.location.toLowerCase().includes(locationWord);
+                return matchText && matchLocation;
+            });
+            renderJobList(filtered);
+        }
+
+        function toggleJob(element) {
+            document.querySelectorAll('.job-card').forEach(card => { if (card !== element) card.classList.remove('active'); });
+            element.classList.toggle('active');
+            const statDiv = element.querySelector('.job-click-stat');
+            if (statDiv && element.classList.contains('active')) {
+                const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+                if (userInfo && userInfo.userid) checkMyStats(userInfo.userid);
+            }
+        }
+
+        function switchAuthTab(tab) {
+            document.getElementById('authErrorMsg').style.display = 'none';
+            if (tab === 'login') {
+                document.getElementById('tabLogin').classList.add('active'); document.getElementById('tabRegister').classList.remove('active');
+                document.getElementById('loginForm').classList.add('active'); document.getElementById('registerForm').classList.remove('active');
+            } else {
+                document.getElementById('tabRegister').classList.add('active'); document.getElementById('tabLogin').classList.remove('active');
+                document.getElementById('registerForm').classList.add('active'); document.getElementById('loginForm').classList.remove('active');
+            }
+        }
+
+        function openAuthModal(defaultTab = 'login') { switchAuthTab(defaultTab); document.getElementById('authModal').style.display = 'flex'; }
+        function closeAuthModal() { document.getElementById('authModal').style.display = 'none'; }
+        function openAddJobModal() { document.getElementById('addJobModal').style.display = 'flex'; }
+        function closeAddJobModal() { document.getElementById('addJobModal').style.display = 'none'; }
+
+        function toggleSocialInput(checkbox, inputId) {
+            const inputElement = document.getElementById(inputId);
+            if (checkbox.checked) { inputElement.style.display = 'block'; inputElement.required = true; } 
+            else { inputElement.style.display = 'none'; inputElement.value = ''; inputElement.required = false; }
+        }
+
+        async function submitLogin() {
+            const loginId = document.getElementById('loginId').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            const msgBox = document.getElementById('authErrorMsg');
+            if(!loginId || !password) { msgBox.innerText = "Vui lòng nhập tài khoản và mật khẩu!"; msgBox.style.display = 'block'; return; }
+            const btn = document.getElementById('btnSubmitLogin'); btn.innerText = "Đang kiểm tra..."; btn.disabled = true; msgBox.style.display = 'none';
+
+            try {
+                const res = await fetch(SCRIPT_URL, { method: "POST", redirect: "follow", body: JSON.stringify({ action: "login", loginId, password }) });
+                const data = await res.json();
+                if (data.status === "success") {
+                    localStorage.setItem('userInfo', JSON.stringify({ userid: data.userid, fullname: data.fullname, phone: data.phone, workmode: data.workmode, social: data.social }));
+                    closeAuthModal(); activateLoggedInState(data.userid); checkPendingJob();
+                } else { msgBox.innerText = data.message; msgBox.style.display = 'block'; }
+            } catch (e) { msgBox.innerText = "Lỗi kết nối!"; msgBox.style.display = 'block'; }
+            btn.innerText = "Đăng nhập"; btn.disabled = false;
+        }
+
+        async function submitRegister() {
+            const userid = document.getElementById('regUserid').value.trim(); const password = document.getElementById('regPassword').value.trim();
+            const fullname = document.getElementById('regFullname').value.trim(); const phone = document.getElementById('regPhone').value.trim();
+            const workmode = document.querySelector('input[name="workmode"]:checked').value; const msgBox = document.getElementById('authErrorMsg');
+
+            let socialArr = [];
+            document.querySelectorAll('.social-checkbox').forEach(chk => {
+                if (chk.checked) { const targetId = chk.onchange.toString().match(/'([^']+)'/)[1]; const val = document.getElementById(targetId).value.trim(); if (val) socialArr.push(`${chk.value}: ${val}`); }
+            });
+            const social = socialArr.join(" | ");
+
+            if(!userid || !password || !fullname || !phone) { msgBox.innerText = "Điền đủ thông tin!"; msgBox.style.display = 'block'; return; }
+            const btn = document.getElementById('btnSubmitReg'); btn.innerText = "Đang đăng ký..."; btn.disabled = true; msgBox.style.display = 'none';
+
+            try {
+                const res = await fetch(SCRIPT_URL, { method: "POST", redirect: "follow", body: JSON.stringify({ action: "register", userid, password, fullname, phone, workmode, social }) });
+                const data = await res.json();
+                if (data.status === "success") {
+                    localStorage.setItem('userInfo', JSON.stringify({userid, fullname, phone, workmode, social}));
+                    closeAuthModal(); activateLoggedInState(userid); checkPendingJob();
+                } else { msgBox.innerText = data.message; msgBox.style.display = 'block'; }
+            } catch (e) { msgBox.innerText = "Lỗi mạng!"; msgBox.style.display = 'block'; }
+            btn.innerText = "Đăng ký tài khoản"; btn.disabled = false;
+        }
+
+        function checkPendingJob() {
+            const pendingJob = localStorage.getItem('pendingJob'); const pendingBtn = document.getElementById('pendingBtnObj');
+            if(pendingJob && pendingBtn) { pendingBtn.click(); localStorage.removeItem('pendingJob'); pendingBtn.removeAttribute('id'); }
+        }
+
+        async function submitNewJob() {
+            const jobId = document.getElementById('newJobId').value.trim(); const title = document.getElementById('newTitle').value.trim();
+            const company = document.getElementById('newCompany').value.trim(); const salary = document.getElementById('newSalary').value.trim();
+            const locationSelect = document.getElementById('newLocation'); const location = Array.from(locationSelect.selectedOptions).map(opt => opt.value).join(" / "); 
+            const deadline = document.getElementById('newDeadline').value.trim(); const description = document.getElementById('newDesc').value.trim();
+            const affLink = document.getElementById('newAffLink').value.trim(); const samplePost = document.getElementById('newSample').value.trim();
+            const commission = document.getElementById('newCommission').value.trim();
+
+            if (!jobId || !title || !company || !affLink || !location) return alert("Điền các trường bắt buộc!");
+            const btn = document.getElementById('btnSubmitJob'); btn.innerText = "Đang đẩy..."; btn.disabled = true;
+
+            try {
+                const res = await fetch(SCRIPT_URL, {
+                    method: "POST", redirect: "follow", body: JSON.stringify({ action: "addJob", jobId, title, company, salary, location, deadline, description, affLink, samplePost, commission })
+                });
+                const result = await res.json();
+                if (result.status === "success") { alert("Thêm thành công!"); closeAddJobModal(); loadJobs(); document.getElementById('addJobForm').reset(); } 
+                else alert("Có lỗi: " + result.message);
+            } catch (e) { alert("Lỗi mạng!"); }
+            btn.innerText = "Đẩy lên Google Sheets"; btn.disabled = false;
+        }
+
+        async function trackAndApply(event, btnElement) {
+            event.stopPropagation();
+            const jobTitle = btnElement.getAttribute('data-title'); const jobId = btnElement.getAttribute('data-jobid');
+            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+            if (!userInfo || !userInfo.userid) { localStorage.setItem('pendingJob', jobTitle); btnElement.id = 'pendingBtnObj'; openAuthModal('login'); return; }
+
+            const copyBox = btnElement.parentElement.querySelector('.copy-box-container');
+            if (copyBox) {
+                copyBox.style.display = 'block';
+                const baseUrl = window.location.origin + window.location.pathname; const encodedJob = encodeURIComponent(jobTitle);
+                const longRefLink = `${baseUrl}?ref=${userInfo.userid}&job=${encodedJob}`;
+
+                const textElement = copyBox.querySelector('.post-text');
+                if (!textElement.innerHTML.includes("👉 Ứng tuyển ngay")) {
+                    textElement.innerHTML += `<br><br>👉 Ứng tuyển ngay tại đây: <a href="${longRefLink}" target="_blank" style="color:#0284c7; font-weight:bold; text-decoration:underline;">${longRefLink}</a>`;
+                }
+                const qrContainer = copyBox.querySelector('.qrcode-box'); qrContainer.innerHTML = ""; 
+                new QRCode(qrContainer, { text: longRefLink, width: 120, height: 120, colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.M });
+            } else alert("Chưa có nội dung mẫu.");
+
+            btnElement.innerText = "Đã tạo Link & QR"; btnElement.style.background = "#059669"; btnElement.disabled = true; 
+            try { fetch(SCRIPT_URL, { method: "POST", redirect: "follow", body: JSON.stringify({ action: "trackClick", userid: userInfo.userid, jobName: jobTitle, jobId: jobId }) }); } catch (e) {}
+        }
+
+        function copySamplePost(event, btnElement) {
+            event.stopPropagation();
+            const container = btnElement.closest('.copy-box-container');
+            const postText = container.querySelector('.post-text');
+            const textToCopy = stripHtml(postText.innerHTML.replace(/<br\s*[\/]?>/gi, "\n"));
+            const tempTextArea = document.createElement("textarea"); tempTextArea.value = textToCopy; document.body.appendChild(tempTextArea); tempTextArea.select();
+            try {
+                document.execCommand("copy"); const originalText = btnElement.innerHTML;
+                btnElement.innerHTML = `<i class="fa-solid fa-check"></i> Đã Copy!`; btnElement.style.background = "#dcfce7"; btnElement.style.color = "#166534";
+                setTimeout(() => { btnElement.innerHTML = originalText; btnElement.style.background = "#e0f2fe"; btnElement.style.color = "#0369a1"; }, 2000);
+            } catch (err) { alert("Trình duyệt không hỗ trợ copy."); }
+            document.body.removeChild(tempTextArea);
+        }
+
+        function activateLoggedInState(userid) {
+            document.getElementById('loginBox').style.display = 'none';
+            document.getElementById('referralDashboard').style.display = 'block';
+            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+            document.getElementById('userFullNameGreeting').innerText = (userInfo && userInfo.fullname) ? userInfo.fullname : userid;
+            document.getElementById('btnAddJobAdmin').style.display = (userid.toLowerCase() === 'admin') ? 'block' : 'none';
+            checkMyStats(userid);
+        }
+
+        async function checkMyStats(passedUserid = null) {
+            const userInfo = JSON.parse(localStorage.getItem('userInfo')); if (!userInfo) return;
+            const userid = passedUserid || userInfo.userid; const countDisplay = document.getElementById('myClickCount');
+            countDisplay.innerText = "..."; 
+            try {
+                const res = await fetch(SCRIPT_URL, { method: "POST", redirect: "follow", body: JSON.stringify({ action: "getReferralStats", userid: userid }) });
+                const result = await res.json();
+                if (result.status === "error") { countDisplay.innerText = "Lỗi"; return; }
+                if (result.status === "success") {
+                    countDisplay.innerText = result.clicks;
+                    if (result.jobClicks) {
+                        document.querySelectorAll('.job-click-stat').forEach(div => {
+                            const jId = div.getAttribute('data-jobid'); const countSpan = div.querySelector('.job-stat-val');
+                            const breakdownDiv = div.querySelector('.daily-stat-breakdown');
+                            countSpan.innerText = result.jobClicks[jId] || 0;
+                            let breakdownHTML = "";
+                            if (result.dailyJobClicks) {
+                                for (let date in result.dailyJobClicks) {
+                                    if (result.dailyJobClicks[date][jId]) breakdownHTML += `• Ngày ${date}: <b style="color:#059669;">${result.dailyJobClicks[date][jId]}</b> click<br>`;
+                                }
+                            }
+                            breakdownDiv.innerHTML = breakdownHTML ? `<div class="daily-stat-box"><b>Chi tiết:</b><br>${breakdownHTML}</div>` : `<div class="daily-stat-box">Chưa có lượt click nào.</div>`;
+                            div.style.display = 'block';
+                        });
+                    }
+                }
+            } catch (e) { countDisplay.innerText = "Lỗi"; }
+        }
+
+        function logoutUser() { if (confirm("Đăng xuất?")) { localStorage.removeItem('userInfo'); location.reload(); } }
+    </script>
+</body>
+</html>
