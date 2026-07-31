@@ -407,7 +407,7 @@
     </div>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxLQY5ku2zitJhBN0IdENaBeKoarLXsnIyJheuCj9mhVdnED96j7JnSe23-DawkhHCP/exec"; 
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzcBd11NkHz1Zb0MeJhrL9UtmDTbDX3yV2J4RPp3anmK6R3sfm8yjvTpkYKEitp-Ut6/exec"; 
 
         let globalJobsData = []; 
 
@@ -810,7 +810,7 @@
         }
 
     // Hàm tự động ghép link Shopee kèm Sub_id1 theo UserID hiện tại
-function generateCustomShopeeLink() {
+        async function generateCustomShopeeLink() {
     const rawUrl = document.getElementById('rawShopeeInput').value.trim();
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 
@@ -821,65 +821,42 @@ function generateCustomShopeeLink() {
     }
 
     if (!userInfo || !userInfo.userid) {
-        alert("Bạn cần Đăng nhập tài khoản trước để hệ thống ghi nhận mã hoa hồng cho riêng bạn!");
+        alert("Bạn cần Đăng nhập tài khoản trước!");
         openAuthModal('login');
         return;
     }
 
-    const currentUserId = userInfo.userid;
+    const btnElement = event.target;
+    const originalText = btnElement.innerHTML;
+    btnElement.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang tạo link ẩn...`;
+    btnElement.disabled = true;
 
-    // Link gốc chuẩn của bạn
-    const myBaseLink = "https://s.shopee.vn/9V0JbXlXeM";
-
-    // LƯU Ý QUAN TRỌNG: 
-    // Nếu link gốc là dạng rút gọn s.shopee.vn, Shopee không nhận thêm &url ở đuôi. 
-    // Bạn chỉ cần truyền mã sub_id1 đi kèm:
-    const finalLink = `${myBaseLink}?sub_id1=${encodeURIComponent(currentUserId)}`;
-
-    // Hiển thị kết quả ra màn hình
-    document.getElementById('shopeeResultBox').style.display = 'block';
-    document.getElementById('finalShopeeOutput').value = finalLink;
-}
-    // 2. Kiểm tra xem user đã đăng nhập chưa (Bắt buộc phải có để lấy UserID gán vào sub_id1)
-    if (!userInfo || !userInfo.userid) {
-        alert("Bạn cần Đăng nhập tài khoản trước để hệ thống ghi nhận mã hoa hồng cho riêng bạn!");
-        openAuthModal('login');
-        return;
-    }
-
-    // Lấy UserID làm mã định danh sub_id1 (Ví dụ: "lananh")
-    const currentUserId = userInfo.userid;
-
-    // 3. Link gốc Affiliate của bạn
-    const myBaseLink = "https://s.shopee.vn/9V0JbXlXeM";
-
-    // 4. Ghép nối link theo chuẩn tham số sub_id1 của Shopee
-    // Cấu trúc: LinkGốc ? sub_id1 = UserID & url = LinkSảnPhẩmGốc
-    const finalLink = `${myBaseLink}&sub_id1=${encodeURIComponent(currentUserId)}&url=${encodeURIComponent(rawUrl)}`;
-
-    // 5. Hiển thị kết quả ra màn hình
-    document.getElementById('shopeeResultBox').style.display = 'block';
-    document.getElementById('finalShopeeOutput').value = finalLink;
-}
-
-// Hàm copy link kết quả
-function copyGeneratedLink(btnElement) {
-    const outputInput = document.getElementById('finalShopeeOutput');
-    outputInput.select();
-    outputInput.setSelectionRange(0, 99999); // Hỗ trợ trên điện thoại
-    
     try {
-        document.execCommand("copy");
-        const originalText = btnElement.innerHTML;
-        btnElement.innerHTML = `<i class="fa-solid fa-check"></i> Đã Copy!`;
-        btnElement.style.background = "#047857";
-        setTimeout(() => {
-            btnElement.innerHTML = originalText;
-            btnElement.style.background = "#059669";
-        }, 2000);
+        // Gửi ngầm qua Backend (.gs) để giấu kín mã Affiliate 17355480535
+        const res = await fetch(SCRIPT_URL, {
+            method: "POST",
+            redirect: "follow",
+            body: JSON.stringify({
+                action: "createShopeeLink",
+                productUrl: rawUrl,
+                userid: userInfo.userid
+            })
+        });
+        const result = await res.json();
+
+        if (result.status === "success" && result.affLink) {
+            document.getElementById('shopeeResultBox').style.display = 'block';
+            document.getElementById('finalShopeeOutput').value = result.affLink;
+        } else {
+            alert("Có lỗi xảy ra khi tạo link.");
+        }
     } catch (e) {
-        alert("Trình duyệt không hỗ trợ copy tự động.");
+        alert("Lỗi kết nối hệ thống.");
     }
-}</script>
+
+    btnElement.innerHTML = originalText;
+    btnElement.disabled = false;
+}
+</script>
 </body>
 </html>
