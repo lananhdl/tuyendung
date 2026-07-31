@@ -814,13 +814,32 @@ function generateCustomShopeeLink() {
     const rawUrl = document.getElementById('rawShopeeInput').value.trim();
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 
-    // 1. Kiểm tra xem người dùng đã dán link chưa
     if (!rawUrl) {
         alert("Vui lòng dán đường link sản phẩm Shopee vào ô trống!");
         document.getElementById('rawShopeeInput').focus();
         return;
     }
 
+    if (!userInfo || !userInfo.userid) {
+        alert("Bạn cần Đăng nhập tài khoản trước để hệ thống ghi nhận mã hoa hồng cho riêng bạn!");
+        openAuthModal('login');
+        return;
+    }
+
+    const currentUserId = userInfo.userid;
+
+    // Link gốc chuẩn của bạn
+    const myBaseLink = "https://s.shopee.vn/9V0JbXlXeM";
+
+    // LƯU Ý QUAN TRỌNG: 
+    // Nếu link gốc là dạng rút gọn s.shopee.vn, Shopee không nhận thêm &url ở đuôi. 
+    // Bạn chỉ cần truyền mã sub_id1 đi kèm:
+    const finalLink = `${myBaseLink}?sub_id1=${encodeURIComponent(currentUserId)}`;
+
+    // Hiển thị kết quả ra màn hình
+    document.getElementById('shopeeResultBox').style.display = 'block';
+    document.getElementById('finalShopeeOutput').value = finalLink;
+}
     // 2. Kiểm tra xem user đã đăng nhập chưa (Bắt buộc phải có để lấy UserID gán vào sub_id1)
     if (!userInfo || !userInfo.userid) {
         alert("Bạn cần Đăng nhập tài khoản trước để hệ thống ghi nhận mã hoa hồng cho riêng bạn!");
