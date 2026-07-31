@@ -810,7 +810,7 @@
         }
 
     // Hàm tự động ghép link Shopee kèm Sub_id1 theo UserID hiện tại
-        async function generateCustomShopeeLink() {
+   async function generateCustomShopeeLink() {
     const rawUrl = document.getElementById('rawShopeeInput').value.trim();
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 
@@ -826,13 +826,17 @@
         return;
     }
 
+    // Kiểm tra nếu người dùng dán link rút gọn s.shopee.vn thì cảnh báo nhẹ
+    if (rawUrl.includes("s.shopee.vn") || rawUrl.includes("shope.ee")) {
+        alert("Mẹo: Bạn nên lấy link gốc đầy đủ của sản phẩm trên trình duyệt (dạng shopee.vn/tên-sản-phẩm-i.xxx) để khách hàng mở ra đúng sản phẩm chính xác nhất nhé!");
+    }
+
     const btnElement = event.target;
     const originalText = btnElement.innerHTML;
     btnElement.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang tạo link ẩn...`;
     btnElement.disabled = true;
 
     try {
-        // Gửi ngầm qua Backend (.gs) để giấu kín mã Affiliate 17355480535
         const res = await fetch(SCRIPT_URL, {
             method: "POST",
             redirect: "follow",
@@ -856,6 +860,37 @@
 
     btnElement.innerHTML = originalText;
     btnElement.disabled = false;
+}
+
+// Sửa lại hàm copy để chắc chắn nút copy hoạt động mượt mà
+function copyGeneratedLink(btnElement) {
+    const outputInput = document.getElementById('finalShopeeOutput');
+    outputInput.select();
+    outputInput.setSelectionRange(0, 99999); // Hỗ trợ cho điện thoại di động
+    
+    try {
+        document.execCommand("copy");
+        const originalHTML = btnElement.innerHTML;
+        btnElement.innerHTML = `<i class="fa-solid fa-check"></i> Đã Copy!`;
+        btnElement.style.background = "#047857";
+        setTimeout(() => {
+            btnElement.innerHTML = originalHTML;
+            btnElement.style.background = "#059669";
+        }, 2000);
+    } catch (e) {
+        // Fallback hiện đại nếu trình duyệt chặn execCommand
+        navigator.clipboard.writeText(outputInput.value).then(() => {
+            const originalHTML = btnElement.innerHTML;
+            btnElement.innerHTML = `<i class="fa-solid fa-check"></i> Đã Copy!`;
+            btnElement.style.background = "#047857";
+            setTimeout(() => {
+                btnElement.innerHTML = originalHTML;
+                btnElement.style.background = "#059669";
+            }, 2000);
+        }).catch(err => {
+            alert("Không thể copy tự động, vui lòng bôi đen và copy thủ công.");
+        });
+    }
 }
 </script>
 </body>
