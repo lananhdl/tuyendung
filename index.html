@@ -318,7 +318,7 @@
                 }
                 
                 if (result.status === "success" && result.data) {
-                    globalJobsData = result.data; 
+                   globalJobsData = result.data.reverse(); 
                     renderJobList(globalJobsData);
                     if(result.ads && result.ads.length > 0) renderAds(result.ads);
                 } else {
