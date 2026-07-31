@@ -244,7 +244,33 @@
                 </div>
             </div>
         </div>
+<!-- KHU VỰC TẠO LINK SHOPEE CÁ NHÂN CHO CỘNG TÁC VIÊN -->
+<div style="max-width: 1400px; margin: 20px auto 0 auto; padding: 0 5%;">
+    <div style="background: linear-gradient(to right, #fff7ed, #ffedd5); border-left: 5px solid #f97316; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h3 style="color: #c2410c; margin-bottom: 8px; font-size: 17px;">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Tạo Link Mua Hộ / Nhận Hoa Hồng (Cashback)
+        </h3>
+        <p style="font-size: 14px; color: #431407; margin-bottom: 15px;">
+            Dán bất kỳ đường link sản phẩm nào trên Shopee vào ô bên dưới. Hệ thống sẽ tự động tạo link Affiliate gắn liền với tài khoản của bạn để nhận hoa hồng!
+        </p>
+        
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <input type="text" id="rawShopeeInput" placeholder="Dán link sản phẩm Shopee vào đây (VD: https://shopee.vn/...)..." style="flex: 2; padding: 12px; border: 1px solid #fdba74; border-radius: 6px; outline: none; font-size: 14px; background: white;">
+            <button onclick="generateCustomShopeeLink()" style="background: #f97316; color: white; border: none; padding: 12px 25px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; transition: 0.2s;">
+                <i class="fa-solid fa-link"></i> Tạo Link Ngay
+            </button>
+        </div>
 
+        <!-- BẢNG HIỂN THỊ KẾT QUẢ SAU KHI TẠO -->
+        <div id="shopeeResultBox" style="display: none; margin-top: 15px; background: white; padding: 15px; border-radius: 6px; border: 1px solid #fed7aa;">
+            <label style="font-size: 13px; color: #c2410c; font-weight: bold; display: block; margin-bottom: 5px;">Link rút gọn mang đi chia sẻ của bạn:</label>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="finalShopeeOutput" readonly style="flex: 1; padding: 10px; background: #fffaf0; border: 1px solid #fed7aa; border-radius: 4px; font-size: 13px; color: #9a3412; font-weight: bold;">
+                <button onclick="copyGeneratedLink(this)" style="background: #059669; color: white; border: none; padding: 10px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 13px;">Copy Link</button>
+            </div>
+        </div>
+    </div>
+</div>
         <div class="container">
             <div class="main-content">
                 <div class="page-title">
@@ -381,7 +407,7 @@
     </div>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwvsn6slSfEIyeOTGoeO-XeCzl04a3fDPla-5NlH0ta7FA443r5ayN1F3csxo80MC6w/exec"; 
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxLQY5ku2zitJhBN0IdENaBeKoarLXsnIyJheuCj9mhVdnED96j7JnSe23-DawkhHCP/exec"; 
 
         let globalJobsData = []; 
 
@@ -782,6 +808,59 @@
             document.getElementById('trustMsgContent').innerText = message;
             document.getElementById('trustModal').style.display = 'flex';
         }
-    </script>
+
+    // Hàm tự động ghép link Shopee kèm Sub_id1 theo UserID hiện tại
+function generateCustomShopeeLink() {
+    const rawUrl = document.getElementById('rawShopeeInput').value.trim();
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+
+    // 1. Kiểm tra xem người dùng đã dán link chưa
+    if (!rawUrl) {
+        alert("Vui lòng dán đường link sản phẩm Shopee vào ô trống!");
+        document.getElementById('rawShopeeInput').focus();
+        return;
+    }
+
+    // 2. Kiểm tra xem user đã đăng nhập chưa (Bắt buộc phải có để lấy UserID gán vào sub_id1)
+    if (!userInfo || !userInfo.userid) {
+        alert("Bạn cần Đăng nhập tài khoản trước để hệ thống ghi nhận mã hoa hồng cho riêng bạn!");
+        openAuthModal('login');
+        return;
+    }
+
+    // Lấy UserID làm mã định danh sub_id1 (Ví dụ: "lananh")
+    const currentUserId = userInfo.userid;
+
+    // 3. Link gốc Affiliate của bạn
+    const myBaseLink = "https://s.shopee.vn/9V0JbXlXeM";
+
+    // 4. Ghép nối link theo chuẩn tham số sub_id1 của Shopee
+    // Cấu trúc: LinkGốc ? sub_id1 = UserID & url = LinkSảnPhẩmGốc
+    const finalLink = `${myBaseLink}&sub_id1=${encodeURIComponent(currentUserId)}&url=${encodeURIComponent(rawUrl)}`;
+
+    // 5. Hiển thị kết quả ra màn hình
+    document.getElementById('shopeeResultBox').style.display = 'block';
+    document.getElementById('finalShopeeOutput').value = finalLink;
+}
+
+// Hàm copy link kết quả
+function copyGeneratedLink(btnElement) {
+    const outputInput = document.getElementById('finalShopeeOutput');
+    outputInput.select();
+    outputInput.setSelectionRange(0, 99999); // Hỗ trợ trên điện thoại
+    
+    try {
+        document.execCommand("copy");
+        const originalText = btnElement.innerHTML;
+        btnElement.innerHTML = `<i class="fa-solid fa-check"></i> Đã Copy!`;
+        btnElement.style.background = "#047857";
+        setTimeout(() => {
+            btnElement.innerHTML = originalText;
+            btnElement.style.background = "#059669";
+        }, 2000);
+    } catch (e) {
+        alert("Trình duyệt không hỗ trợ copy tự động.");
+    }
+}</script>
 </body>
 </html>
