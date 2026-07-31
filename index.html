@@ -221,7 +221,8 @@
                         <strong style="color: #0284c7; font-size: 15px;"><i class="fa-solid fa-3"></i> Bước 3: Lấy bài đăng & Link giới thiệu</strong><br>
                         - Nhấn nút <b>"Ứng tuyển ngay"</b> ở cuối công việc.<br>
                         - Hệ thống sẽ hiển thị Bài đăng mẫu, Link Affiliate và Mã QR của riêng bạn.<br>
-                        - <i>Mẹo:</i> Bạn có thể bấm nút <b>"Rút gọn Link"</b> để đường link nhìn ngắn gọn, chuyên nghiệp và uy tín hơn!
+                        - <i>Mẹo:</i> Bạn có thể bấm nút <b>"Rút gọn Link"</b> để đường link nhìn ngắn gọn, chuyên nghiệp và uy tín hơn!<br>
+                        - Bạn hoàn toàn có thể đưa nội dung cho AI viết lại trước khi đăng (Hãy kiểm tra thật kỹ nội dung do AI tạo ra).<br>
                     </div>
                     <div style="margin-bottom: 15px;">
                         <strong style="color: #0284c7; font-size: 15px;"><i class="fa-solid fa-4"></i> Bước 4: Chia sẻ & Nhận hoa hồng</strong><br>
@@ -380,7 +381,7 @@
     </div>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw1QccuzPykHGxF_zHerZmq8tw2RD0UJWBsqwEl0SXdXxqUO-FyTN5zdlPjD1vmcy00/exec"; 
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwvsn6slSfEIyeOTGoeO-XeCzl04a3fDPla-5NlH0ta7FA443r5ayN1F3csxo80MC6w/exec"; 
 
         let globalJobsData = []; 
 
@@ -472,6 +473,20 @@
 
                 const statHTML = `<div style="margin-top: 10px; font-size: 13px; color: #0284c7; font-weight: bold; display: none;" class="job-click-stat" data-jobid="${job.id}">📊 Tổng click: <span class="job-stat-val" style="color: #dc2626;">0</span> lần<div class="daily-stat-breakdown"></div></div>`;
                 
+                // KHỐI HIỂN THỊ HÌNH ẢNH BANNER TỪ CỘT K
+                const bannerHTML = job.bannerImg ? `
+                    <div style="margin-top: 15px; border-top: 1px dashed #cbd5e1; padding-top: 15px;">
+                        <strong style="color: #0284c7; font-size: 13px;"><i class="fa-solid fa-image"></i> Hình ảnh để đăng bài:</strong>
+                        <div style="margin-top: 8px; text-align: center;">
+                            <img src="${getDirectImageUrl(job.bannerImg)}" alt="Banner" style="max-width: 100%; max-height: 250px; border-radius: 6px; border: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <div style="margin-top: 10px; display: flex; gap: 10px; justify-content: center;">
+                                <a href="${getDirectImageUrl(job.bannerImg)}" target="_blank" style="background: #0ea5e9; color: white; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: bold; text-decoration: none;"><i class="fa-solid fa-download"></i> Tải ảnh gốc</a>
+                            </div>
+                            <p style="font-size: 11px; color: #64748b; margin-top: 5px; font-style: italic;">*Mẹo: Trên điện thoại, bạn có thể nhấn giữ vào ảnh để lưu nhanh.</p>
+                        </div>
+                    </div>
+                ` : '';
+
                 const sampleHTML = job.samplePost ? `
                     <div class="copy-box-container" style="display: none; background: #f8fafc; padding: 12px; border-left: 4px solid #0284c7; margin-top: 15px; border-radius: 4px; margin-bottom: 10px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
@@ -486,6 +501,7 @@
                             <div class="qrcode-box" style="background: white; padding: 5px; border: 1px solid #ddd; border-radius: 8px; width: 130px; height: 130px; display: flex; align-items: center; justify-content: center;"></div>
                             <div style="font-size: 13px; color: #555;"><span style="font-weight: bold; color: #0284c7; font-size: 15px;">Mã QR của bạn:</span><br><span>Quét mã hoặc click link để ứng tuyển nhanh.</span></div>
                         </div>
+                        ${bannerHTML}
                     </div>
                 ` : '';
 
