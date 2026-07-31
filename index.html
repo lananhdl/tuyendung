@@ -659,6 +659,10 @@
         }
 
         function logoutUser() { if (confirm("Đăng xuất?")) { localStorage.removeItem('userInfo'); location.reload(); } }
+function showTrustMsg(message) {
+    document.getElementById('trustMsgContent').innerText = message;
+    document.getElementById('trustModal').style.display = 'flex';
+}
     </script>
 </body>
 </html>
