@@ -62,14 +62,14 @@
         .daily-stat-box { font-size: 12px; color: #475569; margin-top: 6px; background: #fff; padding: 6px; border: 1px solid #e2e8f0; border-radius: 4px;}
         .error-msg { color: #dc2626; font-size: 13px; margin-bottom: 10px; display: none; text-align: center; font-weight: bold;}
         
-        /* CSS CHAT BUTTONS (CHỈ DÙNG CHỮ) */
+        /* CSS CHAT BUTTONS */
         .floating-contact { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 15px; z-index: 1000; }
         .contact-btn { width: 50px; height: 50px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: transform 0.3s; color: white; text-decoration: none; cursor: pointer; border: none; font-weight: 800; font-size: 13px; font-family: 'Segoe UI', Arial, sans-serif;}
         .contact-btn:hover { transform: scale(1.1); color: white; }
         .messenger-btn { background: linear-gradient(45deg, #00B2FF, #006AFF); }
         .zalo-btn { background: #0068FF; letter-spacing: 0.5px;}
 
-        /* CSS QUẢNG CÁO SHOPEE MỚI - CHO PHÉP HIỂN THỊ HÌNH VÀ CHỮ OVERLAY */
+        /* CSS QUẢNG CÁO SHOPEE MỚI */
         .ad-container { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 20px; }
         .ad-item { position: relative; display: block; transition: transform 0.2s, opacity 0.2s; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.15); background: white; text-decoration: none; max-width: 100%; }
         .ad-item:hover { transform: scale(1.02); opacity: 0.95; }
@@ -77,44 +77,43 @@
         .ad-badge { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6); color: white; font-size: 10px; padding: 3px 6px; border-radius: 4px; z-index: 5; border: 1px solid rgba(255,255,255,0.3);}
         .ad-text-only { padding: 15px; text-align: center; color: #ff5722; font-weight: bold; }
         
-        /* CSS Khối chữ chèn nổi trên bề mặt hình ảnh quảng cáo */
         .ad-overlay-text { 
             position: absolute; 
             bottom: 0; 
             left: 0; 
             width: 100%; 
             padding: 12px 10px; 
-            background: rgba(255, 255, 255, 0.88); /* Dải nền trắng mờ để chữ đè lên dễ nhìn */
+            background: rgba(255, 255, 255, 0.88); 
             text-align: center; 
             z-index: 2; 
             box-sizing: border-box; 
             border-top: 1px solid rgba(0,0,0,0.05);
         }
 
-         /* Ép banner Header và Footer kéo dài 100% bề ngang */
-#header-ads, #footer-ads { flex-direction: column; width: 100%; gap: 15px; }
-#header-ads .ad-item, #footer-ads .ad-item { max-width: 100%; width: 100%; border-radius: 0; box-shadow: none; }
-#header-ads .ad-item img, #footer-ads .ad-item img { width: 100%; height: auto; object-fit: cover; }
+        /* Ép banner Header và Footer kéo dài 100% bề ngang */
+        #header-ads, #footer-ads { flex-direction: column; width: 100%; gap: 15px; }
+        #header-ads .ad-item, #footer-ads .ad-item { max-width: 100%; width: 100%; border-radius: 0; box-shadow: none; }
+        #header-ads .ad-item img, #footer-ads .ad-item img { width: 100%; height: auto; object-fit: cover; }
+        
         @media (max-width: 768px) { 
             .container { flex-direction: column; } .search-bar { flex-direction: column; } 
             #header-ads .ad-item, #footer-ads .ad-item { max-width: 100%; }
         }
-        /* CSS CHO NÚT CAM KẾT (TRUST BADGE) */
-.trust-badge {
-    display: flex; 
-    align-items: center; 
-    gap: 5px; 
-    cursor: pointer; 
-    padding: 4px 8px; 
-    border-radius: 6px; 
-    transition: all 0.2s;
-    border: 1px solid transparent;
-}
-.trust-badge:hover {
-    background: #d1fae5; 
-    border-color: #a7f3d0;
-    transform: translateY(-2px);
-}
+        
+        /* CSS CHO NÚT CAM KẾT (TRUST BADGE) & HƯỚNG DẪN */
+        .trust-badge { display: flex; align-items: center; gap: 5px; cursor: pointer; padding: 4px 8px; border-radius: 6px; transition: all 0.2s; border: 1px solid transparent;}
+        .trust-badge:hover { background: #d1fae5; border-color: #a7f3d0; transform: translateY(-2px);}
+        
+        @keyframes pulse-btn {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
+            70% { transform: scale(1.03); box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+        }
+        .guide-btn {
+            background: linear-gradient(45deg, #f59e0b, #d97706); color: white; border: none; padding: 12px 30px; border-radius: 30px; font-size: 16px; font-weight: bold; cursor: pointer; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; display: inline-flex; align-items: center; gap: 8px; animation: pulse-btn 2s infinite; text-transform: uppercase;
+        }
+        .guide-btn:hover { background: linear-gradient(45deg, #d97706, #b45309); transform: translateY(-2px); animation: none; }
     </style>
 </head>
 <body>
@@ -127,7 +126,7 @@
 
     <div id="main-ui">
         <!-- VÙNG HIỂN THỊ QUẢNG CÁO HEADER -->
-        <div id="header-ads" class="ad-container" style="max-width: 1400px; margin: 15px auto 0 auto; padding: 0 5%;"></div>
+        <div id="header-ads" class="ad-container" style="width: 100%; margin: 0 0 15px 0;"></div>
 
         <div class="search-section">
             <div class="search-bar">
@@ -155,42 +154,96 @@
                 </select>
             </div>
         </div>
-    <!-- BANNER CAM KẾT UY TÍN (CÓ TƯƠNG TÁC CLICK) -->
-<div style="max-width: 1400px; margin: 20px auto 0 auto; padding: 0 5%;">
-    <div style="background: linear-gradient(to right, #f0fdf4, #ecfdf5); border-left: 5px solid #059669; padding: 15px 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 12px;">
-        <h3 style="color: #047857; margin: 0; font-size: 16px; text-transform: uppercase;">
-            <i class="fa-solid fa-shield-check"></i> Cam kết từ hệ thống - An tâm làm việc
-        </h3>
-        <div style="display: flex; flex-wrap: wrap; gap: 10px; font-size: 14px; color: #334155; font-weight: 600;">
-            <span class="trust-badge" onclick="showTrustMsg('100% miễn phí tham gia. Bạn không cần đóng bất kỳ khoản tiền nào, không có phí duy trì hay phí nền tảng.')">
-                <i class="fa-solid fa-circle-check" style="color: #10b981;"></i> 100% Không thu phí
-            </span>
-            <span class="trust-badge" onclick="showTrustMsg('Hoàn toàn không yêu cầu đặt cọc tiền hay phải mua hàng trước. Rủi ro của bạn bằng 0.')">
-                <i class="fa-solid fa-circle-check" style="color: #10b981;"></i> Không cọc, Không ôm hàng
-            </span>
-            <span class="trust-badge" onclick="showTrustMsg('Làm bao nhiêu hưởng bấy nhiêu, đối soát rõ ràng. Không ép buộc doanh số, không gò bó thời gian.')">
-                <i class="fa-solid fa-circle-check" style="color: #10b981;"></i> Không áp lực KPI
-            </span>
-            <span class="trust-badge" onclick="showTrustMsg('Hệ thống tạo sẵn nội dung, hình ảnh và Link/Mã QR riêng cho bạn. Chỉ cần Copy và đem đi chia sẻ.')">
-                <i class="fa-solid fa-circle-check" style="color: #10b981;"></i> Cung cấp sẵn bài mẫu
-            </span>
-            <span class="trust-badge" onclick="showTrustMsg('Chủ động thời gian rảnh, làm việc online ở bất cứ đâu chỉ với một chiếc điện thoại kết nối mạng.')">
-                <i class="fa-solid fa-circle-check" style="color: #10b981;"></i> Làm việc tự do tại nhà
-            </span>
-        </div>
-    </div>
-</div>
 
-<!-- POPUP THÔNG BÁO CHI TIẾT CAM KẾT -->
-<div id="trustModal" class="modal-overlay" style="display: none; align-items: center; justify-content: center; z-index: 9999;">
-    <div style="background: white; padding: 25px; border-radius: 8px; width: 400px; max-width: 90%; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative;">
-        <span onclick="document.getElementById('trustModal').style.display='none'" style="position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 28px; color: #999;">&times;</span>
-        <i class="fa-solid fa-shield-check" style="font-size: 45px; color: #10b981; margin-bottom: 15px;"></i>
-        <h3 style="color: #047857; margin-bottom: 10px; font-size: 18px;">Cam kết của chúng tôi</h3>
-        <p id="trustMsgContent" style="color: #444; font-size: 15px; line-height: 1.6; margin-bottom: 20px;"></p>
-        <button onclick="document.getElementById('trustModal').style.display='none'" style="background: #10b981; color: white; border: none; padding: 10px 25px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px;">Đã hiểu</button>
-    </div>
-</div>
+        <!-- BANNER CAM KẾT UY TÍN -->
+        <div style="max-width: 1400px; margin: 20px auto 0 auto; padding: 0 5%;">
+            <div style="background: linear-gradient(to right, #f0fdf4, #ecfdf5); border-left: 5px solid #059669; padding: 15px 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 12px;">
+                <h3 style="color: #047857; margin: 0; font-size: 16px; text-transform: uppercase;">
+                    <i class="fa-solid fa-shield-check"></i> Cam kết từ hệ thống - An tâm làm việc
+                </h3>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; font-size: 14px; color: #334155; font-weight: 600;">
+                    <span class="trust-badge" onclick="showTrustMsg('100% miễn phí tham gia. Bạn không cần đóng bất kỳ khoản tiền nào, không có phí duy trì hay phí nền tảng.')">
+                        <i class="fa-solid fa-circle-check" style="color: #10b981;"></i> 100% Không thu phí
+                    </span>
+                    <span class="trust-badge" onclick="showTrustMsg('Hoàn toàn không yêu cầu đặt cọc tiền hay phải mua hàng trước. Rủi ro của bạn bằng 0.')">
+                        <i class="fa-solid fa-circle-check" style="color: #10b981;"></i> Không cọc, Không ôm hàng
+                    </span>
+                    <span class="trust-badge" onclick="showTrustMsg('Làm bao nhiêu hưởng bấy nhiêu, đối soát rõ ràng. Không ép buộc doanh số, không gò bó thời gian.')">
+                        <i class="fa-solid fa-circle-check" style="color: #10b981;"></i> Không áp lực KPI
+                    </span>
+                    <span class="trust-badge" onclick="showTrustMsg('Hệ thống tạo sẵn nội dung, hình ảnh và Link/Mã QR riêng cho bạn. Chỉ cần Copy và đem đi chia sẻ.')">
+                        <i class="fa-solid fa-circle-check" style="color: #10b981;"></i> Cung cấp sẵn bài mẫu
+                    </span>
+                    <span class="trust-badge" onclick="showTrustMsg('Chủ động thời gian rảnh, làm việc online ở bất cứ đâu chỉ với một chiếc điện thoại kết nối mạng.')">
+                        <i class="fa-solid fa-circle-check" style="color: #10b981;"></i> Làm việc tự do tại nhà
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- NÚT HƯỚNG DẪN LÀM VIỆC NỔI BẬT -->
+        <div style="max-width: 1400px; margin: 20px auto 0 auto; padding: 0 5%; text-align: center;">
+            <button class="guide-btn" onclick="openGuideModal()">
+                <i class="fa-solid fa-book-open-reader"></i> Hướng Dẫn Từng Bước (Cho Người Mới)
+            </button>
+        </div>
+
+        <!-- POPUP THÔNG BÁO CHI TIẾT CAM KẾT -->
+        <div id="trustModal" class="modal-overlay" style="display: none; align-items: center; justify-content: center; z-index: 9999;">
+            <div style="background: white; padding: 25px; border-radius: 8px; width: 400px; max-width: 90%; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative;">
+                <span onclick="document.getElementById('trustModal').style.display='none'" style="position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 28px; color: #999;">&times;</span>
+                <i class="fa-solid fa-shield-check" style="font-size: 45px; color: #10b981; margin-bottom: 15px;"></i>
+                <h3 style="color: #047857; margin-bottom: 10px; font-size: 18px;">Cam kết của chúng tôi</h3>
+                <p id="trustMsgContent" style="color: #444; font-size: 15px; line-height: 1.6; margin-bottom: 20px;"></p>
+                <button onclick="document.getElementById('trustModal').style.display='none'" style="background: #10b981; color: white; border: none; padding: 10px 25px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px;">Đã hiểu</button>
+            </div>
+        </div>
+        
+        <!-- POPUP HƯỚNG DẪN LÀM VIỆC -->
+        <div id="guideModal" class="modal-overlay" style="display: none; align-items: center; justify-content: center; z-index: 9999;">
+            <div style="background: white; padding: 25px 30px; border-radius: 8px; width: 600px; max-width: 95%; max-height: 85vh; overflow-y: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.3); position: relative; text-align: left;">
+                <span onclick="closeGuideModal()" style="position: absolute; top: 15px; right: 20px; cursor: pointer; font-size: 28px; color: #999; line-height: 1;">&times;</span>
+                <h3 style="color: #d97706; margin-bottom: 20px; font-size: 20px; text-align: center; border-bottom: 2px solid #fef3c7; padding-bottom: 10px;">
+                    <i class="fa-solid fa-list-check"></i> Hướng Dẫn Dành Cho Người Mới
+                </h3>
+                
+                <div style="font-size: 14px; color: #444; line-height: 1.7;">
+                    <div style="margin-bottom: 15px;">
+                        <strong style="color: #0284c7; font-size: 15px;"><i class="fa-solid fa-1"></i> Bước 1: Đăng ký / Đăng nhập</strong><br>
+                        - Nếu bạn chưa có tài khoản, hãy kéo xuống hoặc nhìn sang cột bên phải (trên máy tính), nhấn vào nút <b>"Bắt đầu ngay"</b> để Đăng ký.<br>
+                        - <b>Bắt buộc phải đăng nhập</b> để hệ thống cấp cho bạn 1 đường link định danh riêng biệt, dùng để tính hoa hồng chính xác cho bạn.
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <strong style="color: #0284c7; font-size: 15px;"><i class="fa-solid fa-2"></i> Bước 2: Chọn công việc phù hợp</strong><br>
+                        - Lướt xem danh sách công việc bên dưới. Bấm vào công việc bạn thích để đọc thật kỹ <b>Mô tả chi tiết</b> và <b>Quy định hoa hồng</b>.
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <strong style="color: #0284c7; font-size: 15px;"><i class="fa-solid fa-3"></i> Bước 3: Lấy bài đăng & Link giới thiệu</strong><br>
+                        - Nhấn nút <b>"Ứng tuyển ngay"</b> ở cuối công việc.<br>
+                        - Hệ thống sẽ hiển thị Bài đăng mẫu, Link Affiliate và Mã QR của riêng bạn.<br>
+                        - <i>Mẹo:</i> Bạn có thể bấm nút <b>"Rút gọn Link"</b> để đường link nhìn ngắn gọn, chuyên nghiệp và uy tín hơn!
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <strong style="color: #0284c7; font-size: 15px;"><i class="fa-solid fa-4"></i> Bước 4: Chia sẻ & Nhận hoa hồng</strong><br>
+                        - Copy bài mẫu kèm Link/QR của bạn đăng lên các hội nhóm Facebook, Zalo cá nhân, TikTok, v.v.<br>
+                        - Bất kỳ ai nhấn vào link của bạn và hoàn thành yêu cầu (tải app/mua hàng/đăng ký), hệ thống sẽ tự động cộng hoa hồng cho bạn.
+                    </div>
+                    
+                    <div style="background: #fef2f2; border-left: 4px solid #ef4444; padding: 12px; border-radius: 4px; margin-top: 20px;">
+                        <strong style="color: #b91c1c;"><i class="fa-solid fa-triangle-exclamation"></i> LƯU Ý ĐẶC BIỆT QUAN TRỌNG:</strong>
+                        <ul style="margin-top: 5px; padding-left: 20px; color: #991b1b; margin-bottom: 0;">
+                            <li>Đọc thật kỹ phần <b>Mô tả</b> của từng việc trước khi đăng.</li>
+                            <li>Nếu công việc có ghi <b>"Không dùng tên thương hiệu"</b>, bạn <b>TUYỆT ĐỐI KHÔNG</b> được viết tên thương hiệu đó trong tiêu đề, hashtag hay nội dung bài đăng (Nếu vi phạm sẽ bị hủy toàn bộ hoa hồng).</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 25px;">
+                    <button onclick="closeGuideModal()" style="background: #0284c7; color: white; border: none; padding: 10px 30px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">Tôi đã hiểu & Bắt đầu ngay</button>
+                </div>
+            </div>
+        </div>
+
         <div class="container">
             <div class="main-content">
                 <div class="page-title">
@@ -241,7 +294,7 @@
         </div>
         
         <!-- VÙNG HIỂN THỊ QUẢNG CÁO FOOTER -->
-        <div id="footer-ads" class="ad-container" style="max-width: 1400px; margin: 0 auto 30px auto; padding: 0 5%;"></div>
+        <div id="footer-ads" class="ad-container" style="width: 100%; margin: 20px 0 0 0;"></div>
     </div>
 
     <!-- NÚT LIÊN HỆ GÓC DƯỚI PHẢI -->
@@ -327,7 +380,6 @@
     </div>
 
     <script>
-        // --- THAY LINK APP SCRIPT VÀO DÒNG DƯỚI ĐÂY ---
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw9u_9DwmblYDtBf5WH3aedMCk3m7doCelgqnywJGj71opG7mgpJT1PwFmYrEl1fsfB/exec"; 
 
         let globalJobsData = []; 
@@ -385,7 +437,6 @@
             return url;
         }
 
-        // HÀM HIỂN THỊ QUẢNG CÁO CÓ TEXT ĐÈ LÊN HÌNH
         function renderAds(ads) {
             const headerAds = document.getElementById('header-ads');
             const sidebarAds = document.getElementById('sidebar-ads');
@@ -397,7 +448,6 @@
                 const finalImgUrl = getDirectImageUrl(ad.image);
                 let overlayHTML = "";
                 
-                // Nếu có Text Tiêu đề từ Google Sheet thì mới render lớp phủ
                 if (ad.title && ad.title.trim() !== "") {
                     overlayHTML = `<div class="ad-overlay-text">${ad.title}</div>`;
                 }
@@ -421,11 +471,15 @@
                 const safeTitle = job.title.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
                 const statHTML = `<div style="margin-top: 10px; font-size: 13px; color: #0284c7; font-weight: bold; display: none;" class="job-click-stat" data-jobid="${job.id}">📊 Tổng click: <span class="job-stat-val" style="color: #dc2626;">0</span> lần<div class="daily-stat-breakdown"></div></div>`;
+                
                 const sampleHTML = job.samplePost ? `
                     <div class="copy-box-container" style="display: none; background: #f8fafc; padding: 12px; border-left: 4px solid #0284c7; margin-top: 15px; border-radius: 4px; margin-bottom: 10px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                             <strong style="color: #0284c7; font-size: 13px;"><i class="fa-solid fa-pen-to-square"></i> Nội dung để giới thiệu:</strong>
-                            <button data-title="${safeTitle}" onclick="copySamplePost(event, this)" style="background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; padding: 4px 10px; cursor: pointer; border-radius: 4px; font-size: 12px; font-weight: bold;">Copy</button>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn-shorten-link" onclick="shortenLinkNow(event, this)" style="display: none; background: #fef08a; color: #854d0e; border: 1px solid #fde047; padding: 4px 10px; cursor: pointer; border-radius: 4px; font-size: 12px; font-weight: bold;"><i class="fa-solid fa-link"></i> Rút gọn Link</button>
+                                <button data-title="${safeTitle}" onclick="copySamplePost(event, this)" style="background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; padding: 4px 10px; cursor: pointer; border-radius: 4px; font-size: 12px; font-weight: bold;">Copy</button>
+                            </div>
                         </div>
                         <p style="margin: 0; font-size: 13px; font-style: italic; color: #475569;" class="post-text">${job.samplePost}</p>
                         <div style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed #cbd5e1; display: flex; align-items: center; gap: 15px;">
@@ -505,6 +559,9 @@
         function closeAuthModal() { document.getElementById('authModal').style.display = 'none'; }
         function openAddJobModal() { document.getElementById('addJobModal').style.display = 'flex'; }
         function closeAddJobModal() { document.getElementById('addJobModal').style.display = 'none'; }
+        
+        function openGuideModal() { document.getElementById('guideModal').style.display = 'flex'; }
+        function closeGuideModal() { document.getElementById('guideModal').style.display = 'none'; }
 
         function toggleSocialInput(checkbox, inputId) {
             const inputElement = document.getElementById(inputId);
@@ -596,14 +653,59 @@
 
                 const textElement = copyBox.querySelector('.post-text');
                 if (!textElement.innerHTML.includes("👉 Ứng tuyển ngay")) {
-                    textElement.innerHTML += `<br><br>👉 Ứng tuyển ngay tại đây: <a href="${longRefLink}" target="_blank" style="color:#0284c7; font-weight:bold; text-decoration:underline;">${longRefLink}</a>`;
+                    textElement.innerHTML += `<br><br>👉 Ứng tuyển ngay tại đây: <a href="${longRefLink}" class="affiliate-link-tag" target="_blank" style="color:#0284c7; font-weight:bold; text-decoration:underline;">${longRefLink}</a>`;
                 }
+                
+                const shortenBtn = copyBox.querySelector('.btn-shorten-link');
+                if(shortenBtn) shortenBtn.style.display = 'block';
+
                 const qrContainer = copyBox.querySelector('.qrcode-box'); qrContainer.innerHTML = ""; 
                 new QRCode(qrContainer, { text: longRefLink, width: 120, height: 120, colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.M });
             } else alert("Chưa có nội dung mẫu.");
 
             btnElement.innerText = "Đã tạo Link & QR"; btnElement.style.background = "#059669"; btnElement.disabled = true; 
             try { fetch(SCRIPT_URL, { method: "POST", redirect: "follow", body: JSON.stringify({ action: "trackClick", userid: userInfo.userid, jobName: jobTitle, jobId: jobId }) }); } catch (e) {}
+        }
+
+        async function shortenLinkNow(event, btnElement) {
+            event.stopPropagation();
+            const copyBox = btnElement.closest('.copy-box-container');
+            const linkTag = copyBox.querySelector('.affiliate-link-tag');
+            
+            if(!linkTag) return;
+            
+            const longLink = linkTag.href;
+            if(longLink.includes("tinyurl.com")) {
+                alert("Link này đã được rút gọn rồi!");
+                return;
+            }
+
+            const originalText = btnElement.innerHTML;
+            btnElement.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...`;
+            btnElement.disabled = true;
+
+            try {
+                const res = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(longLink)}`);
+                if (res.ok) {
+                    const shortLink = await res.text();
+                    
+                    linkTag.href = shortLink;
+                    linkTag.innerText = shortLink;
+                    
+                    btnElement.innerHTML = `<i class="fa-solid fa-check"></i> Đã rút gọn`;
+                    btnElement.style.background = "#dcfce7";
+                    btnElement.style.color = "#166534";
+                    btnElement.style.borderColor = "#bbf7d0";
+                } else {
+                    alert("Lỗi máy chủ rút gọn, vui lòng thử lại sau.");
+                    btnElement.innerHTML = originalText;
+                    btnElement.disabled = false;
+                }
+            } catch(e) {
+                alert("Lỗi mạng, không thể rút gọn link lúc này.");
+                btnElement.innerHTML = originalText;
+                btnElement.disabled = false;
+            }
         }
 
         function copySamplePost(event, btnElement) {
@@ -659,10 +761,11 @@
         }
 
         function logoutUser() { if (confirm("Đăng xuất?")) { localStorage.removeItem('userInfo'); location.reload(); } }
-function showTrustMsg(message) {
-    document.getElementById('trustMsgContent').innerText = message;
-    document.getElementById('trustModal').style.display = 'flex';
-}
+        
+        function showTrustMsg(message) {
+            document.getElementById('trustMsgContent').innerText = message;
+            document.getElementById('trustModal').style.display = 'flex';
+        }
     </script>
 </body>
 </html>
