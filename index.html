@@ -380,7 +380,7 @@
     </div>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw9u_9DwmblYDtBf5WH3aedMCk3m7doCelgqnywJGj71opG7mgpJT1PwFmYrEl1fsfB/exec"; 
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw1QccuzPykHGxF_zHerZmq8tw2RD0UJWBsqwEl0SXdXxqUO-FyTN5zdlPjD1vmcy00/exec"; 
 
         let globalJobsData = []; 
 
@@ -664,7 +664,7 @@
             } else alert("Chưa có nội dung mẫu.");
 
             btnElement.innerText = "Đã tạo Link & QR"; btnElement.style.background = "#059669"; btnElement.disabled = true; 
-            try { fetch(SCRIPT_URL, { method: "POST", redirect: "follow", body: JSON.stringify({ action: "trackClick", userid: userInfo.userid, jobName: jobTitle, jobId: jobId }) }); } catch (e) {}
+            
         }
 
         async function shortenLinkNow(event, btnElement) {
