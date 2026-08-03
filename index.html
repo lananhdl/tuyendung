@@ -25,7 +25,7 @@
         .job-card { background: white; border-radius: 8px; margin-bottom: 15px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid transparent; transition: 0.3s; }
         .job-card:hover { border-color: var(--primary-color); }
         .job-header { display: flex; gap: 15px; cursor: pointer; align-items: center; }
-        .job-logo { width: 60px; height: 60px; background: #eee; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #888; font-size: 20px; }
+        .job-logo { width: 60px; height: 60px; background: #eee; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #888; font-size: 20px; overflow: hidden; }
         .job-info { flex: 1; }
         .job-title { font-size: 16px; color: var(--text-color); margin-bottom: 5px; display: flex; justify-content: space-between; }
         .job-company { color: #666; font-size: 14px; margin-bottom: 10px; }
@@ -62,12 +62,6 @@
         .daily-stat-box { font-size: 12px; color: #475569; margin-top: 6px; background: #fff; padding: 6px; border: 1px solid #e2e8f0; border-radius: 4px;}
         .error-msg { color: #dc2626; font-size: 13px; margin-bottom: 10px; display: none; text-align: center; font-weight: bold;}
         
-        .floating-contact { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 15px; z-index: 1000; }
-        .contact-btn { width: 50px; height: 50px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: transform 0.3s; color: white; text-decoration: none; cursor: pointer; border: none; font-weight: 800; font-size: 13px; font-family: 'Segoe UI', Arial, sans-serif;}
-        .contact-btn:hover { transform: scale(1.1); color: white; }
-        .messenger-btn { background: linear-gradient(45deg, #00B2FF, #006AFF); }
-        .zalo-btn { background: #0068FF; letter-spacing: 0.5px;}
-
         .ad-container { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 20px; }
         .ad-item { position: relative; display: block; transition: transform 0.2s, opacity 0.2s; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.15); background: white; text-decoration: none; max-width: 100%; }
         .ad-item:hover { transform: scale(1.02); opacity: 0.95; }
@@ -169,18 +163,18 @@
             </div>
         </div>
         
-         <!-- POPUP HƯỚNG DẪN HOÀN CHỈNH -->
+        <!-- POPUP HƯỚNG DẪN HOÀN CHỈNH -->
         <div id="guideModal" class="modal-overlay" style="display: none; align-items: center; justify-content: center; z-index: 9999;">
             <div style="background: white; padding: 25px 30px; border-radius: 8px; width: 650px; max-width: 95%; max-height: 85vh; overflow-y: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.3); position: relative; text-align: left;">
                 <span onclick="closeGuideModal()" style="position: absolute; top: 15px; right: 20px; cursor: pointer; font-size: 28px; color: #999; line-height: 1;">&times;</span>
                 <h3 style="color: #d97706; margin-bottom: 20px; font-size: 20px; text-align: center; border-bottom: 2px solid #fef3c7; padding-bottom: 10px;"><i class="fa-solid fa-list-check"></i> Hướng Dẫn Dành Cho Người Mới & Cashback</h3>
                 
                 <div style="font-size: 14px; color: #444; line-height: 1.7;">
-                    <!-- PHẦN GIỚI THIỆU CHUNG (CÓ THÊM CÂU GỢI Ý XEM LIST DƯỚI) -->
+                    <!-- PHẦN GIỚI THIỆU CHUNG -->
                     <div style="margin-bottom: 20px; background: #f8fafc; padding: 15px; border-left: 4px solid #0284c7; border-radius: 4px;">
                         <strong style="color: #0284c7; font-size: 15px;"><i class="fa-solid fa-briefcase"></i> Giới thiệu chung:</strong><br>
-                        Chào mừng bạn đến với hệ thống kiếm thu nhập trực tuyến thông qua hai hình thức chính: <br>
-                        <b>- Giới thiệu các chiến dịch dịch vụ/sản phẩm trực tuyến</b> (như việc làm, SIM du lịch, đặt vé máy bay, mua voucher, khóa học IELTS, v.v.) và đăng lên mạng xã hội. <br> <b> - Mua sắm hoàn tiền (Cashback)</b>. <br> Bạn có thể lướt xem trước các Giới thiệu các chiến dịch dịch vụ/sản phẩm trực tuyến ở list dưới trước để tìm hiểu. Công việc hoàn toàn miễn phí, không cần vốn, không ôm hàng, bạn chỉ cần sử dụng đường link định danh riêng để chia sẻ hoặc thực hiện giao dịch và nhận hoa hồng xứng đáng.
+                        Chào mừng bạn đến với hệ thống kiếm thu nhập trực tuyến thông qua hai hình thức chính:  <br> <b> - Giới thiệu các chiến dịch dịch vụ/sản phẩm trực tuyến</b> (như việc làm, SIM du lịch , đặt vé máy bay, voucher, khóa học, v.v.) <br> <b> - Mua sắm hoàn tiền (Cashback)</b>. 
+                         <br>  Bạn có thể lướt xem trước danh sách các bài sẽ đăng dưới trước để tìm hiểu. Mỗi bài đăng sẽ có mô tả chi tiết , quy định đăng bài và quy định hoa hồng riêng. Sau đó nếu thấy phù hợp bạn có thể thực hiện các bước như hướng dẫn sau:
                     </div>
 
                     <div style="margin-bottom: 15px;">
@@ -199,23 +193,24 @@
                         - Nhấn nút "Ứng tuyển ngay" ở cuối công việc.<br>
                         - Hệ thống sẽ hiển thị Bài đăng mẫu, Link Affiliate và Mã QR của riêng bạn.<br>
                         - Mẹo: Bạn có thể bấm nút "Rút gọn Link" để đường link nhìn ngắn gọn, chuyên nghiệp và uy tín hơn!<br>
-                        - Bạn hoàn toàn có thể tự dùng AI để viết lại nội dung content cho bài viết hoặc tự tạo Video. (Nhớ kiểm tra lại nội dung AI tạo trước khi đăng.<br>
+                        - Bạn hoàn toàn có thể đưa nội dung cho AI viết lại trước khi đăng (Hãy kiểm tra thật kỹ nội dung do AI tạo ra).
                     </div>
                     
                     <div style="margin-bottom: 15px;">
                         <strong style="color: #0284c7; font-size: 15px;">Bước 4: Chia sẻ & Nhận hoa hồng</strong><br>
                         - Copy bài mẫu kèm Link/QR của bạn đăng lên các hội nhóm Facebook, Zalo cá nhân, TikTok, v.v.<br>
+                        - Bạn hoàn toàn có thể tự dùng AI để viết lại nội dung content cho bài viết hoặc tự tạo Video. Phải kiểm tra lại nội dung AI tạo trước khi đăng.<br>
                         - Bất kỳ ai nhấn vào link của bạn và hoàn thành yêu cầu (tải app/mua hàng/đăng ký), hệ thống sẽ tự động cộng hoa hồng cho bạn.
                     </div>
 
                     <!-- HƯỚNG DẪN CASHBACK -->
                     <div style="margin-bottom: 15px; background: #fff7ed; padding: 12px; border-left: 4px solid #f97316; border-radius: 4px;">
-                        <strong style="color: #c2410c; font-size: 15px;"><i class="fa-solid fa-bag-shopping"></i> Nhất định phải biết về Cashback (Hoàn tiền):</strong><br>
-                        - <b>Cách thực hiện:</b> Bạn dán link sản phẩm Shopee/tiktok muốn mua vào khung "Gửi Yêu Cầu Tạo Link Mua Hộ / Hoàn Tiền" trên trang chủ. Admin sẽ tạo link mua hộ riêng và hiển thị vào bảng điều khiển cá nhân của bạn kèm theo Số tiền hoàn dự kiến.<br>
-                        - <b>Quy định bắt buộc khi mua hàng qua link cashback của shopee:</b><br>
+                        <strong style="color: #c2410c; font-size: 15px;"><i class="fa-solid fa-bag-shopping"></i> Về Cashback (Hoàn tiền):</strong><br>
+                        - <b>Cách thực hiện:</b> Bạn dán link sản phẩm Shopee muốn mua vào khung "Gửi Yêu Cầu Tạo Link Mua Hộ / Hoàn Tiền" trên trang chủ. Admin sẽ tạo link mua hộ riêng và hiển thị vào bảng điều khiển cá nhân của bạn kèm theo Số tiền hoàn dự kiến. Bạn vào link admin đã gửi để mua sắm hoặc gửi cho bạn bè và nhận lại hoa hồng.<br>
+                        - <b>Quy định bắt buộc khi mua hàng qua link cashback:</b><br>
                           &nbsp;&nbsp;+ Phải bấm trực tiếp vào link cashback để mua hàng.<br>
-                          &nbsp;&nbsp;+ <b>Tuyệt đối không gửi link qua tin nhắn riêng</b> trên Zalo hoặc Messenger (được phép chia sẻ qua bài đăng, group chat, hội nhóm chung).<br>
-                          &nbsp;&nbsp;+ Với Shopee khi mua hàng, <b>tuyệt đối không vào xem video hay livestream</b> trên ứng dụng Shopee.<br>
+                          &nbsp;&nbsp;+ <b>Tuyệt đối không gửi link qua tin nhắn riêng</b> trên Zalo hoặc Messenger (chỉ được phép chia sẻ qua group chat, hội nhóm chung).<br>
+                          &nbsp;&nbsp;+ Khi mua hàng, <b>tuyệt đối không vào xem video hay livestream</b> trên ứng dụng Shopee.<br>
                           &nbsp;&nbsp;+ Phải hoàn tất thanh toán đơn hàng thành công thì mới được hệ thống tính ghi nhận hoa hồng/hoàn tiền.<br>
                         - <b>Đối tượng áp dụng:</b> Tự mua cho chính mình hoặc chia sẻ cho bạn bè, người thân cùng mua đều được tính tiền hoàn! Tiền hoàn sẽ được báo khi đơn hàng hoàn tất và đối tác xác nhận.
                     </div>
@@ -224,15 +219,18 @@
                         <strong style="color: #b91c1c;"><i class="fa-solid fa-triangle-exclamation"></i> LƯU Ý ĐẶC BIỆT QUAN TRỌNG:</strong><br>
                         - Bài đăng không được spam dưới mọi hình thức.<br>
                         - Đọc thật kỹ phần Mô tả của từng việc trước khi đăng.<br>
-                        - Nếu công việc có ghi "Không dùng tên thương hiệu" hoặc tên brand , bạn TUYỆT ĐỐI KHÔNG được viết tên thương hiệu đó trong tiêu đề, hashtag hay nội dung bài đăng (Nếu vi phạm sẽ bị hủy toàn bộ hoa hồng).<br><br>
-                        - <b>Quy định thanh toán:</b> Số dư tối thiểu để yêu cầu rút tiền là 10.000đ. Lệnh rút tiền/hoa hồng sẽ được duyệt và thanh toán vào thứ 4 và thứ 6 hàng tuần. Hãy click vào tên của bạn ở bảng điều khiển để cập nhật thông tin ngân hàng!
+                        - Nếu công việc có ghi "Không dùng tên thương hiệu" hoặc brand name, brand logo, bạn TUYỆT ĐỐI KHÔNG được viết tên thương hiệu đó trong tiêu đề, hashtag hay nội dung bài đăng (Nếu vi phạm sẽ bị hủy toàn bộ hoa hồng).<br><br>
+                        - <b>Quy định thanh toán:</b> Số dư tối thiểu để yêu cầu rút tiền là 10.000đ. Lệnh rút tiền/hoa hồng sẽ được duyệt và thanh toán vào thứ 4 và thứ 6 hàng tuần. Hãy click vào tên của bạn ở bảng điều khiển để cập nhật thông tin ngân hàng sau khi bạn đã có hoa hồng và có thể rút về! </br>
+                        - Bạn không cần phải làm cả ngày, chỉ cần rảnh khi nào làm khi đó, có đăng bài thì có cơ hội kiếm thêm thu nhập.
                     </div>
                 </div>
+                
                 <div style="text-align: center; margin-top: 25px;">
                     <button onclick="closeGuideModal()" style="background: #0284c7; color: white; border: none; padding: 10px 30px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 15px;">Tôi đã hiểu & Bắt đầu ngay</button>
                 </div>
             </div>
         </div>
+
         <div style="max-width: 1400px; margin: 20px auto 0 auto; padding: 0 5%;">
             <div style="background: linear-gradient(to right, #fff7ed, #ffedd5); border-left: 5px solid #f97316; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                 <h3 style="color: #c2410c; margin-bottom: 8px; font-size: 17px;"><i class="fa-solid fa-wand-magic-sparkles"></i> Gửi Yêu Cầu Tạo Link Mua Hộ / Hoàn Tiền (Cashback)</h3>
@@ -411,18 +409,19 @@
                         <option value="Đồng Nai">Đồng Nai</option>
                     </select>
                 </div>
-                <div class="input-group"><input type="text" id="newDeadline" placeholder="Thời hạn (VD: 30/04/2026)" required></div>
+                <div class="input-group"><input type="text" id="newDeadline" placeholder="Thời hạn (VD: 31/08/2026)" required></div>
                 <div class="input-group"><textarea id="newDesc" rows="3" placeholder="Mô tả chi tiết" required></textarea></div>
                 <div class="input-group"><input type="text" id="newAffLink" placeholder="Link Affiliate gốc (VD: https://adpvn.co/s/...)" required></div>
                 <div class="input-group"><textarea id="newSample" rows="3" placeholder="Nội dung bài đăng mẫu"></textarea></div>
                 <div class="input-group"><textarea id="newCommission" rows="2" placeholder="Quy định hoa hồng thành công"></textarea></div>
+                <div class="input-group"><input type="text" id="newLogo" placeholder="Link ảnh Logo hoặc Mã màu (VD: #0284c7 hoặc link ảnh)"></div>
                 <button type="button" class="btn-submit" id="btnSubmitJob" style="background: #059669;" onclick="submitNewJob()">Đẩy lên Google Sheets</button>
             </form>
         </div>
     </div>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz_oLwSIbHczwke99TJlh4FDRfDYTvN0d9j55q-k6354T2JaIiv37oNKdrdlF6f-AfP/exec"; 
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwSAdy3XckxbT0MnluwJ0K-fwrxYoQiWryicr7Jooc-3X3YdRDCaT9SyFl6NYYDywE/exec"; 
         let globalJobsData = []; 
 
         window.addEventListener('DOMContentLoaded', async () => {
@@ -500,8 +499,20 @@
             if(jobs.length === 0) { container.innerHTML = `<div class="loading-spinner">Không tìm thấy công việc phù hợp.</div>`; return; }
             container.innerHTML = ""; 
             jobs.forEach((job) => {
-                const logo = job.company.substring(0, 2).toUpperCase();
                 const safeTitle = job.title.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+                
+                let logoContent = job.company.substring(0, 2).toUpperCase();
+                let logoStyle = "";
+                if (job.logo && job.logo.trim() !== "") {
+                    let logoVal = job.logo.trim();
+                    if (logoVal.startsWith("http") || logoVal.startsWith("https") || logoVal.startsWith("www")) {
+                        let directImg = getDirectImageUrl(logoVal);
+                        logoContent = `<img src="${directImg}" alt="Logo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">`;
+                    } else if (logoVal.startsWith("#")) {
+                        logoStyle = `background: ${logoVal}; color: white;`;
+                    }
+                }
+
                 const statHTML = `<div style="margin-top: 10px; font-size: 13px; color: #0284c7; font-weight: bold; display: none;" class="job-click-stat" data-jobid="${job.id}">📊 Tổng click: <span class="job-stat-val" style="color: #dc2626;">0</span> lần<div class="daily-stat-breakdown"></div></div>`;
                 
                 const bannerHTML = job.bannerImg ? `
@@ -537,7 +548,7 @@
                 container.innerHTML += `
                     <div class="job-card" onclick="toggleJob(this)">
                         <div class="job-header">
-                            <div class="job-logo">${logo}</div>
+                            <div class="job-logo" style="${logoStyle}">${logoContent}</div>
                             <div class="job-info">
                                 <div class="job-title"><strong>[${job.id}] ${job.title}</strong><i class="fa-regular fa-heart"></i></div>
                                 <div class="job-company">${job.company}</div>
@@ -620,25 +631,18 @@
 
         async function submitBankInfo() {
             const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-            if (!userInfo || !userInfo.userid) {
-                alert("Vui lòng đăng nhập lại!");
-                return;
-            }
+            if (!userInfo || !userInfo.userid) { alert("Vui lòng đăng nhập lại!"); return; }
             const bankName = document.getElementById('bankNameInput').value;
             const accountHolder = document.getElementById('accountHolderInput').value.trim();
             const accountNumber = document.getElementById('accountNumberInput').value.trim();
             const msgBox = document.getElementById('bankErrorMsg');
 
             if (!bankName || !accountHolder || !accountNumber) {
-                msgBox.innerText = "Vui lòng điền đầy đủ thông tin thanh toán!";
-                msgBox.style.display = "block";
-                return;
+                msgBox.innerText = "Vui lòng điền đầy đủ thông tin thanh toán!"; msgBox.style.display = "block"; return;
             }
 
             const btn = document.getElementById('btnSubmitBank');
-            btn.innerText = "Đang lưu...";
-            btn.disabled = true;
-            msgBox.style.display = "none";
+            btn.innerText = "Đang lưu..."; btn.disabled = true; msgBox.style.display = "none";
 
             try {
                 const res = await fetch(SCRIPT_URL, {
@@ -723,14 +727,14 @@
             const locationSelect = document.getElementById('newLocation'); const location = Array.from(locationSelect.selectedOptions).map(opt => opt.value).join(" / "); 
             const deadline = document.getElementById('newDeadline').value.trim(); const description = document.getElementById('newDesc').value.trim();
             const affLink = document.getElementById('newAffLink').value.trim(); const samplePost = document.getElementById('newSample').value.trim();
-            const commission = document.getElementById('newCommission').value.trim();
+            const commission = document.getElementById('newCommission').value.trim(); const logo = document.getElementById('newLogo').value.trim();
 
             if (!jobId || !title || !company || !affLink || !location) return alert("Điền các trường bắt buộc!");
             const btn = document.getElementById('btnSubmitJob'); btn.innerText = "Đang đẩy..."; btn.disabled = true;
 
             try {
                 const res = await fetch(SCRIPT_URL, {
-                    method: "POST", redirect: "follow", body: JSON.stringify({ action: "addJob", jobId, title, company, salary, location, deadline, description, affLink, samplePost, commission })
+                    method: "POST", redirect: "follow", body: JSON.stringify({ action: "addJob", jobId, title, company, salary, location, deadline, description, affLink, samplePost, commission, logo })
                 });
                 const result = await res.json();
                 if (result.status === "success") { alert("Thêm thành công!"); closeAddJobModal(); loadJobs(); document.getElementById('addJobForm').reset(); } 
@@ -897,8 +901,6 @@
 
         async function loadMyCashbackLinks(userid) {
             const listContainer = document.getElementById('myCashbackList');
-            
-            // Lấy danh sách các link cashback đã bị user bấm xóa lưu trong localStorage để lần sau không hiện nữa
             let hiddenLinks = JSON.parse(localStorage.getItem('hiddenCashback_' + userid) || '[]');
 
             try {
@@ -910,25 +912,18 @@
                 if (result.status === "success" && result.links && result.links.length > 0) {
                     let html = "";
                     result.links.forEach((item, index) => {
-                        // Nếu link cashback này đã bị user bấm X để ẩn thì bỏ qua
                         if (hiddenLinks.includes(item.affLink)) return;
-
                         let moneyText = (item.expectedMoney > 0) ? Number(item.expectedMoney).toLocaleString('vi-VN') + " đ" : "Đang cập nhật";
                         html += `
                             <div id="cb-item-${index}" style="background: white; padding: 10px; border-radius: 6px; margin-bottom: 8px; border: 1px solid #bae6fd; position: relative; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
-                                <!-- Dấu X để user bấm xoá/ẩn link cashback này đi sau khi đã mua xong -->
                                 <span onclick="hideCashbackItem('${userid}', '${item.affLink}', 'cb-item-${index}')" style="position: absolute; top: 6px; right: 10px; cursor: pointer; font-size: 16px; color: #999; font-weight: bold;" title="Ẩn link này đi">&times;</span>
-                                
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; padding-right: 15px;">
                                     <strong style="color: #333; font-size: 13px;"><i class="fa-solid fa-link"></i> Link Mua Hộ SP #${index+1}</strong>
                                     <span style="color: #059669; font-weight: bold; font-size: 11px;">Hoàn: ${moneyText}</span>
                                 </div>
-                                
-                                <!-- Link cashback được gửi về: User có thể click trực tiếp, thu gọn không tràn khung -->
                                 <div style="margin-bottom: 8px; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 90%; background: #f0fdf4; padding: 4px 6px; border-radius: 4px; border: 1px solid #bbf7d0;">
                                     <a href="${item.affLink}" target="_blank" style="color: #0284c7; text-decoration: none; font-weight: bold;" title="Bấm để mở link mua hộ">${item.affLink}</a>
                                 </div>
-
                                 <div style="display: flex; gap: 5px;">
                                     <button onclick="navigator.clipboard.writeText('${item.affLink}'); alert('Đã copy link mua hộ của bạn!');" style="background: #059669; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; width: 100%;">
                                         <i class="fa-solid fa-copy"></i> Copy Link Mua Hộ
@@ -946,7 +941,6 @@
             }
         }
 
-        // Hàm xử lý khi user bấm dấu X để ẩn link cashback đó vĩnh viễn khỏi màn hình của họ
         function hideCashbackItem(userid, affLink, elementId) {
             if (confirm("Bạn có chắc chắn muốn ẩn link mua hộ này không? (Lần sau sẽ không hiển thị lại nữa)")) {
                 let hiddenLinks = JSON.parse(localStorage.getItem('hiddenCashback_' + userid) || '[]');
@@ -993,8 +987,7 @@
             const userInfo = JSON.parse(localStorage.getItem('userInfo'));
             if (!userInfo || !userInfo.bankName || !userInfo.accountNumber) {
                 alert("Bạn chưa cập nhật thông tin ngân hàng! Vui lòng bấm vào tên của bạn ở trên để điền số tài khoản trước.");
-                openBankModal();
-                return;
+                openBankModal(); return;
             }
             const commText = document.getElementById('myCommissionCount').innerText;
             if (confirm("Bạn có chắc chắn muốn gửi yêu cầu rút tổng số tiền " + commText + " về tài khoản " + userInfo.bankName + " (" + userInfo.accountNumber + ") không?")) {
@@ -1002,25 +995,16 @@
                     const res = await fetch(SCRIPT_URL, {
                         method: "POST", redirect: "follow",
                         body: JSON.stringify({
-                            action: "requestWithdrawal",
-                            userid: userInfo.userid,
-                            fullname: userInfo.fullname,
-                            amount: commText,
-                            bankName: userInfo.bankName,
-                            accountNumber: userInfo.accountNumber,
-                            accountHolder: userInfo.accountHolder
+                            action: "requestWithdrawal", userid: userInfo.userid, fullname: userInfo.fullname,
+                            amount: commText, bankName: userInfo.bankName, accountNumber: userInfo.accountNumber, accountHolder: userInfo.accountHolder
                         })
                     });
                     const result = await res.json();
                     if (result.status === "success") {
                         alert("🎉 Yêu cầu rút tiền của bạn đã được gửi thành công!");
                         checkMyStats(userInfo.userid);
-                    } else {
-                        alert("Có lỗi xảy ra.");
-                    }
-                } catch (e) {
-                    alert("Lỗi kết nối mạng.");
-                }
+                    } else { alert("Có lỗi xảy ra."); }
+                } catch (e) { alert("Lỗi kết nối mạng."); }
             }
         }
 
