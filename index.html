@@ -170,7 +170,6 @@
                 <h3 style="color: #d97706; margin-bottom: 20px; font-size: 20px; text-align: center; border-bottom: 2px solid #fef3c7; padding-bottom: 10px;"><i class="fa-solid fa-list-check"></i> Hướng Dẫn Dành Cho Người Mới & Cashback</h3>
                 
                 <div style="font-size: 14px; color: #444; line-height: 1.7;">
-                    <!-- PHẦN GIỚI THIỆU CHUNG -->
                     <div style="margin-bottom: 20px; background: #f8fafc; padding: 15px; border-left: 4px solid #0284c7; border-radius: 4px;">
                         <strong style="color: #0284c7; font-size: 15px;"><i class="fa-solid fa-briefcase"></i> Giới thiệu chung:</strong><br>
                         Chào mừng bạn đến với hệ thống kiếm thu nhập trực tuyến thông qua hai hình thức chính:  <br> <b> - Giới thiệu các chiến dịch dịch vụ/sản phẩm trực tuyến</b> (như việc làm, SIM du lịch , đặt vé máy bay, voucher, khóa học, v.v.) <br> <b> - Mua sắm hoàn tiền (Cashback)</b>. 
@@ -203,7 +202,6 @@
                         - Bất kỳ ai nhấn vào link của bạn và hoàn thành yêu cầu (tải app/mua hàng/đăng ký), hệ thống sẽ tự động cộng hoa hồng cho bạn.
                     </div>
 
-                    <!-- HƯỚNG DẪN CASHBACK -->
                     <div style="margin-bottom: 15px; background: #fff7ed; padding: 12px; border-left: 4px solid #f97316; border-radius: 4px;">
                         <strong style="color: #c2410c; font-size: 15px;"><i class="fa-solid fa-bag-shopping"></i> Về Cashback (Hoàn tiền):</strong><br>
                         - <b>Cách thực hiện:</b> Bạn dán link sản phẩm Shopee muốn mua vào khung "Gửi Yêu Cầu Tạo Link Mua Hộ / Hoàn Tiền" trên trang chủ. Admin sẽ tạo link mua hộ riêng và hiển thị vào bảng điều khiển cá nhân của bạn kèm theo Số tiền hoàn dự kiến. Bạn vào link admin đã gửi để mua sắm hoặc gửi cho bạn bè và nhận lại hoa hồng.<br>
@@ -220,7 +218,7 @@
                         - Bài đăng không được spam dưới mọi hình thức.<br>
                         - Đọc thật kỹ phần Mô tả của từng việc trước khi đăng.<br>
                         - Nếu công việc có ghi "Không dùng tên thương hiệu" hoặc brand name, brand logo, bạn TUYỆT ĐỐI KHÔNG được viết tên thương hiệu đó trong tiêu đề, hashtag hay nội dung bài đăng (Nếu vi phạm sẽ bị hủy toàn bộ hoa hồng).<br><br>
-                        - <b>Quy định thanh toán:</b> Số dư tối thiểu để yêu cầu rút tiền là 10.000đ. Lệnh rút tiền/hoa hồng sẽ được duyệt và thanh toán vào thứ 4 và thứ 6 hàng tuần. Hãy click vào tên của bạn ở bảng điều khiển để cập nhật thông tin ngân hàng sau khi bạn đã có hoa hồng và có thể rút về! </br>
+                        - <b>Quy định thanh toán:</b> Số dư tối thiểu để yêu cầu rút tiền là 10.000đ. Lệnh rút tiền/hoa hồng sẽ được duyệt và thanh toán vào thứ 4 và thứ 6 hàng tuần. Hãy click vào tên của bạn ở bảng điều khiển để cập nhật thông tin ngân hàng sau khi bạn đã có hoa hồng và có thể rút về! <br>
                         - Bạn không cần phải làm cả ngày, chỉ cần rảnh khi nào làm khi đó, có đăng bài thì có cơ hội kiếm thêm thu nhập.
                     </div>
                 </div>
@@ -266,13 +264,19 @@
                     <p style="font-size: 11px; text-align: center; color: #555; margin-bottom: 10px; font-style: italic;">(Bấm vào tên để cài đặt thông tin ngân hàng nhận tiền)</p>
                     <hr style="border: 0; border-top: 1px dashed #bae6fd; margin: 10px 0;">
                     
+                    <!-- THỐNG KÊ CHI TIẾT TÁCH "ĐANG DUYỆT" VÀ "ĐÃ DUYỆT" -->
                     <div class="stats-text" style="margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div><i class="fa-solid fa-hand-pointer" style="color:#0284c7;"></i> Số Click: <span class="stats-count" id="myClickCount">...</span></div>
                             <button onclick="checkMyStats()" style="background: transparent; border: 1px solid #ccc; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;" title="Làm mới thống kê">🔄</button>
                         </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div><i class="fa-solid fa-sack-dollar" style="color:#059669;"></i> Tổng hoa hồng: <span class="stats-count" style="color:#059669;" id="myCommissionCount">0 đ</span></div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
+                            <div><i class="fa-solid fa-hourglass-half" style="color:#f59e0b;"></i> Đang duyệt:</div>
+                            <span style="color:#f59e0b; font-weight: bold;" id="myPendingCommission">0 đ</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
+                            <div><i class="fa-solid fa-sack-dollar" style="color:#059669;"></i> Đã duyệt (Có thể rút):</div>
+                            <span style="color:#059669; font-weight: bold; font-size: 16px;" id="myCommissionCount">0 đ</span>
                         </div>
                     </div>
 
@@ -421,7 +425,7 @@
     </div>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwSAdy3XckxbT0MnluwJ0K-fwrxYoQiWryicr7Jooc-3X3YdRDCaT9SyFl6NYYDywE/exec"; 
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx1reXu5muHtOqmRBJx5BxKRejg8VOtXUW2OJiuM08Rx4pkfui9KrIOORyN8_6X4sQ/exec"; 
         let globalJobsData = []; 
 
         window.addEventListener('DOMContentLoaded', async () => {
@@ -767,6 +771,13 @@
             } else alert("Chưa có nội dung mẫu.");
 
             btnElement.innerText = "Đã tạo Link & QR"; btnElement.style.background = "#059669"; btnElement.disabled = true; 
+
+            try {
+                fetch(SCRIPT_URL, { 
+                    method: "POST", redirect: "follow", 
+                    body: JSON.stringify({ action: "trackClick", userid: userInfo.userid, jobName: jobTitle, jobId: jobId }) 
+                });
+            } catch (e) {}
         }
 
         async function shortenLinkNow(event, btnElement) {
@@ -821,25 +832,37 @@
             loadMyOrders(userid);
         }
 
+        // TÁCH RÕ RÀNG SỐ TIỀN "ĐANG DUYỆT" VÀ "ĐÃ DUYỆT" + HIỂN THỊ NÚT RÚT TIỀN KHI TIỀN >= 10K
         async function checkMyStats(passedUserid = null) {
             const userInfo = JSON.parse(localStorage.getItem('userInfo')); if (!userInfo) return;
-            const userid = passedUserid || userInfo.userid; const countDisplay = document.getElementById('myClickCount');
+            const userid = passedUserid || userInfo.userid; 
+            
+            const countDisplay = document.getElementById('myClickCount');
             const commDisplay = document.getElementById('myCommissionCount');
+            const pendingCommDisplay = document.getElementById('myPendingCommission');
             const withdrawSection = document.getElementById('withdrawSection');
+            
             countDisplay.innerText = "..."; 
             try {
                 const res = await fetch(SCRIPT_URL, { method: "POST", redirect: "follow", body: JSON.stringify({ action: "getReferralStats", userid: userid }) });
                 const result = await res.json();
-                if (result.status === "error") { countDisplay.innerText = "Lỗi"; return; }
+                
+                if (result.status === "error") { countDisplay.innerText = "Lỗi kết nối"; return; }
+                
                 if (result.status === "success") {
                     countDisplay.innerText = result.clicks;
-                    const totalComm = parseFloat(result.commission || 0);
-                    commDisplay.innerText = totalComm.toLocaleString('vi-VN') + " đ";
+                    
+                    const approvedComm = parseFloat(result.commission || 0);
+                    const pendingComm = parseFloat(result.pendingCommission || 0);
+                    
+                    if(commDisplay) commDisplay.innerText = approvedComm.toLocaleString('vi-VN') + " đ";
+                    if(pendingCommDisplay) pendingCommDisplay.innerText = pendingComm.toLocaleString('vi-VN') + " đ";
 
+                    // LOGIC NÚT RÚT TIỀN
                     if (result.hasPendingWithdraw) {
                         withdrawSection.style.display = "block";
-                        withdrawSection.innerHTML = `<div style="background: #fef3c7; color: #b45309; padding: 10px; border-radius: 6px; text-align: center; font-weight: bold; font-size: 13px; border: 1px solid #fde68a;"><i class="fa-solid fa-clock"></i> Trạng thái: Chờ Thanh Toán</div>`;
-                    } else if (totalComm >= 10000) {
+                        withdrawSection.innerHTML = `<div style="background: #fef3c7; color: #b45309; padding: 10px; border-radius: 6px; text-align: center; font-weight: bold; font-size: 13px; border: 1px solid #fde68a;"><i class="fa-solid fa-clock"></i> Có lệnh rút tiền đang chờ xử lý</div>`;
+                    } else if (approvedComm >= 10000) {
                         withdrawSection.style.display = "block";
                         withdrawSection.innerHTML = `<button onclick="requestWithdrawal()" style="width: 100%; background: #059669; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"><i class="fa-solid fa-money-bill-transfer"></i> Yêu Cầu Rút Tiền (Duyệt T4 & T6)</button>`;
                     } else {
@@ -873,7 +896,10 @@
                         });
                     }
                 }
-            } catch (e) { countDisplay.innerText = "Lỗi"; }
+            } catch (e) { 
+                console.error("Lỗi:", e);
+                countDisplay.innerText = "Lỗi"; 
+            }
         }
 
         async function requestCashbackLink() {
@@ -964,13 +990,24 @@
                 if (result.status === "success" && result.orders && result.orders.length > 0) {
                     let html = "";
                     result.orders.forEach((item) => {
+                        // Phân loại màu sắc theo trạng thái
+                        let statusColor = "#f59e0b"; // Vàng (Đang duyệt)
+                        if (item.status.toLowerCase().includes("đã duyệt")) statusColor = "#059669"; // Xanh lá
+                        else if (item.status.toLowerCase().includes("từ chối") || item.status.toLowerCase().includes("hủy")) statusColor = "#dc2626"; // Đỏ
+
                         html += `
-                            <div style="background: white; padding: 8px; border-radius: 4px; margin-bottom: 6px; border: 1px solid #bae6fd;">
-                                <div style="display: flex; justify-content: space-between; font-weight: bold; color: #333;">
-                                    <span>Mã: ${item.orderCode}</span>
-                                    <span style="color: #059669;">+${Number(item.commission).toLocaleString('vi-VN')} đ</span>
+                            <div style="background: white; padding: 10px; border-radius: 6px; margin-bottom: 8px; border: 1px solid #bae6fd; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                                <div style="display: flex; justify-content: space-between; font-weight: bold; color: #333; margin-bottom: 4px;">
+                                    <span style="font-size: 13px;">🛒 ${item.productName || "Sản phẩm / Chiến dịch"}</span>
+                                    <span style="color: ${statusColor}; font-size: 13px;">+${Number(item.commission).toLocaleString('vi-VN')} đ</span>
                                 </div>
-                                <div style="font-size: 11px; color: #666;">Thời gian: ${item.time}</div>
+                                <div style="font-size: 11px; color: #666; display: flex; justify-content: space-between; margin-bottom: 3px;">
+                                    <span>Mã: ${item.orderCode}</span>
+                                    <span style="font-style: italic; color: ${statusColor}; font-weight: bold;">${item.status}</span>
+                                </div>
+                                <div style="font-size: 11px; color: #888;">
+                                    <i class="fa-regular fa-clock"></i> ${item.time || "Chưa cập nhật"}
+                                </div>
                             </div>
                         `;
                     });
