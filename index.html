@@ -95,6 +95,20 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; display: inline-flex; align-items: center; gap: 8px; animation: pulse-btn 2s infinite; text-transform: uppercase;
         }
         .guide-btn:hover { background: linear-gradient(45deg, #d97706, #b45309); transform: translateY(-2px); animation: none; }
+        
+        /* CSS cho thẻ Video & Zalo */
+        .video-card:hover { background: #fee2e2 !important; border-color: #f87171 !important; transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .zalo-float {
+            position: fixed; bottom: 20px; right: 20px; background-color: #0068ff; color: white; width: 55px; height: 55px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 1000;
+            text-decoration: none; animation: pulse-zalo 2s infinite; border: 2px solid white; transition: 0.2s;
+        }
+        .zalo-float:hover { transform: scale(1.1); }
+        @keyframes pulse-zalo {
+            0% { box-shadow: 0 0 0 0 rgba(0, 104, 255, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(0, 104, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 104, 255, 0); }
+        }
     </style>
 </head>
 <body>
@@ -104,6 +118,11 @@
         <h2 style="color: #333; margin-bottom: 10px;">Đang chuyển hướng đến trang đích...</h2>
         <p style="color: #666; font-size: 15px;">Hệ thống đang ghi nhận thông tin click và chuyển hướng, vui lòng đợi giây lát.</p>
     </div>
+
+    <!-- NÚT ZALO NỔI Ở GÓC PHẢI -->
+    <a href="https://zalo.me/0971087697" target="_blank" class="zalo-float" title="Liên hệ Zalo Hỗ Trợ">
+        <strong style="font-family: Arial, sans-serif; font-size: 16px;">Zalo</strong>
+    </a>
 
     <div id="main-ui">
         <div id="header-ads" class="ad-container" style="width: 100%; margin: 0 0 15px 0;"></div>
@@ -149,8 +168,35 @@
             </div>
         </div>
         
+        <!-- BỔ SUNG: KHU VỰC VIDEO HƯỚNG DẪN -->
+        <div style="max-width: 1400px; margin: 20px auto 0 auto; padding: 0 5%;">
+            <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-left: 5px solid #ef4444;">
+                <h3 style="color: #b91c1c; margin: 0 0 15px 0; font-size: 16px; text-transform: uppercase;">
+                    <i class="fa-brands fa-youtube"></i> Video Hướng Dẫn Dành Cho CTV
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px;">
+                    <a href="https://youtu.be/m3dLqSONLZc" target="_blank" class="video-card" style="display: flex; align-items: center; gap: 12px; background: #fef2f2; padding: 15px; border-radius: 8px; text-decoration: none; color: #333; font-weight: bold; border: 1px solid #fecaca; transition: all 0.2s;">
+                        <i class="fa-brands fa-youtube" style="color: #ef4444; font-size: 28px;"></i>
+                        <span style="font-size: 14px;">1. Hướng dẫn cách đăng bài</span>
+                    </a>
+                    <a href="https://youtu.be/ULTS0CXyRB8" target="_blank" class="video-card" style="display: flex; align-items: center; gap: 12px; background: #fef2f2; padding: 15px; border-radius: 8px; text-decoration: none; color: #333; font-weight: bold; border: 1px solid #fecaca; transition: all 0.2s;">
+                        <i class="fa-brands fa-youtube" style="color: #ef4444; font-size: 28px;"></i>
+                        <span style="font-size: 14px;">2. Ví dụ cách đăng bài thực tế</span>
+                    </a>
+                    <a href="https://youtu.be/pvKieQo4NLo" target="_blank" class="video-card" style="display: flex; align-items: center; gap: 12px; background: #fef2f2; padding: 15px; border-radius: 8px; text-decoration: none; color: #333; font-weight: bold; border: 1px solid #fecaca; transition: all 0.2s;">
+                        <i class="fa-brands fa-youtube" style="color: #ef4444; font-size: 28px;"></i>
+                        <span style="font-size: 14px;">3. Hướng dẫn Cashback</span>
+                    </a>
+                    <a href="https://youtu.be/GMffXly-oTc" target="_blank" class="video-card" style="display: flex; align-items: center; gap: 12px; background: #fef2f2; padding: 15px; border-radius: 8px; text-decoration: none; color: #333; font-weight: bold; border: 1px solid #fecaca; transition: all 0.2s;">
+                        <i class="fa-brands fa-youtube" style="color: #ef4444; font-size: 28px;"></i>
+                        <span style="font-size: 14px;">4. Nhận tiền đã thanh toán</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <div style="max-width: 1400px; margin: 20px auto 0 auto; padding: 0 5%; text-align: center;">
-            <button class="guide-btn" onclick="openGuideModal()"><i class="fa-solid fa-book-open-reader"></i> Hướng Dẫn Từng Bước (Cho Người Mới & Cashback)</button>
+            <button class="guide-btn" onclick="openGuideModal()"><i class="fa-solid fa-book-open-reader"></i> Đọc Hướng Dẫn Chi Tiết Ở Đây</button>
         </div>
 
         <div id="trustModal" class="modal-overlay" style="display: none; align-items: center; justify-content: center; z-index: 9999;">
@@ -264,7 +310,6 @@
                     <p style="font-size: 11px; text-align: center; color: #555; margin-bottom: 10px; font-style: italic;">(Bấm vào tên để cài đặt thông tin ngân hàng nhận tiền)</p>
                     <hr style="border: 0; border-top: 1px dashed #bae6fd; margin: 10px 0;">
                     
-                    <!-- THỐNG KÊ CHI TIẾT TÁCH "ĐANG DUYỆT" VÀ "ĐÃ DUYỆT" -->
                     <div class="stats-text" style="margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div><i class="fa-solid fa-hand-pointer" style="color:#0284c7;"></i> Số Click: <span class="stats-count" id="myClickCount">...</span></div>
@@ -280,7 +325,6 @@
                         </div>
                     </div>
 
-                    <!-- VÙNG RÚT TIỀN / TRẠNG THÁI CHỜ THANH TOÁN -->
                     <div id="withdrawSection" style="display: none; margin-bottom: 12px;"></div>
 
                     <div style="margin-top: 10px; border-top: 1px dashed #bae6fd; padding-top: 10px;">
@@ -1049,4 +1093,4 @@
         function showTrustMsg(message) { document.getElementById('trustMsgContent').innerText = message; document.getElementById('trustModal').style.display = 'flex'; }
     </script>
 </body>
-</html>
+</html>"
