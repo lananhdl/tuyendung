@@ -615,8 +615,7 @@
                                 <p style="margin: 5px 0 0 0; font-size: 13px; color: #581c87;">${job.commission || "Chưa có quy định"}</p>
                             </div>
                             ${statHTML} ${sampleHTML}
-                            <button class="btn-apply" data-title="${safeTitle}" data-jobid="${job.id}" onclick="trackAndApply(event, this)">Ứng tuyển ngay</button>
-                        </div>
+                        <button class="btn-apply" data-title="${safeTitle}" data-jobid="${job.id}" data-afflink="${job.affLink || ''}" onclick="trackAndApply(event, this)">Ứng tuyển ngay</button>                        </div>
                     </div>
                 `;
             });
@@ -792,37 +791,71 @@
         }
 
         async function trackAndApply(event, btnElement) {
-            event.stopPropagation();
-            const jobTitle = btnElement.getAttribute('data-title'); const jobId = btnElement.getAttribute('data-jobid');
-            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-            if (!userInfo || !userInfo.userid) { localStorage.setItem('pendingJob', jobTitle); btnElement.id = 'pendingBtnObj'; openAuthModal('login'); return; }
+    event.stopPropagation();
+    
+   
+    const jobTitle = btnElement.getAttribute('data-title'); 
+    const jobId = btnElement.getAttribute('data-jobid');
+    const rawAffLink = btnElement.getAttribute('data-afflink');
+    
+    
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    if (!userInfo || !userInfo.userid) { 
+        localStorage.setItem('pendingJob', jobTitle); 
+        btnElement.id = 'pendingBtnObj'; 
+        openAuthModal('login'); 
+        return; 
+    }
 
-            const copyBox = btnElement.parentElement.querySelector('.copy-box-container');
-            if (copyBox) {
-                copyBox.style.display = 'block';
-                const baseUrl = window.location.origin + window.location.pathname; const encodedJob = encodeURIComponent(jobTitle);
-                const longRefLink = `${baseUrl}?ref=${userInfo.userid}&job=${encodedJob}`;
+    
+    const copyBox = btnElement.parentElement.querySelector('.copy-box-container');
+    if (copyBox) {
+        copyBox.style.display = 'block';
+        
+        let finalLink = "";
 
-                const textElement = copyBox.querySelector('.post-text');
-                if (!textElement.innerHTML.includes("👉 Ứng tuyển ngay")) {
-                    textElement.innerHTML += `<br><br>👉 Ứng tuyển ngay tại đây: <a href="${longRefLink}" class="affiliate-link-tag" target="_blank" style="color:#0284c7; font-weight:bold; text-decoration:underline;">${longRefLink}</a>`;
-                }
-                const shortenBtn = copyBox.querySelector('.btn-shorten-link');
-                if(shortenBtn) shortenBtn.style.display = 'block';
-
-                const qrContainer = copyBox.querySelector('.qrcode-box'); qrContainer.innerHTML = ""; 
-                new QRCode(qrContainer, { text: longRefLink, width: 120, height: 120, colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.M });
-            } else alert("Chưa có nội dung mẫu.");
-
-            btnElement.innerText = "Đã tạo Link & QR"; btnElement.style.background = "#059669"; btnElement.disabled = true; 
-
-            try {
-                fetch(SCRIPT_URL, { 
-                    method: "POST", redirect: "follow", 
-                    body: JSON.stringify({ action: "trackClick", userid: userInfo.userid, jobName: jobTitle, jobId: jobId }) 
-                });
-            } catch (e) {}
+        if (rawAffLink && rawAffLink !== "undefined" && rawAffLink.trim() !== "" && rawAffLink.trim().length < 40) {
+            const cleanLink = rawAffLink.trim();
+            const separator = cleanLink.includes("?") ? "&" : "?";
+            finalLink = `${cleanLink}${separator}ref=${userInfo.userid}`;
+        } else {
+            const baseUrl = window.location.origin + window.location.pathname; 
+            const encodedJob = encodeURIComponent(jobTitle);
+            finalLink = `${baseUrl}?ref=${userInfo.userid}&job=${encodedJob}`;
         }
+
+        
+        const textElement = copyBox.querySelector('.post-text');
+        if (!textElement.innerHTML.includes("👉 Ứng tuyển ngay")) {
+            textElement.innerHTML += `<br><br>👉 Ứng tuyển ngay tại đây: <a href="${finalLink}" class="affiliate-link-tag" target="_blank" style="color:#0284c7; font-weight:bold; text-decoration:underline;">${finalLink}</a>`;
+        }
+        
+        
+        const shortenBtn = copyBox.querySelector('.btn-shorten-link');
+        if (shortenBtn) shortenBtn.style.display = 'block';
+
+        
+        const qrContainer = copyBox.querySelector('.qrcode-box'); 
+        qrContainer.innerHTML = ""; 
+        new QRCode(qrContainer, { text: finalLink, width: 120, height: 120, colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.M });
+    } else {
+        alert("Chưa có nội dung mẫu.");
+    }
+
+
+    btnElement.innerText = "Đã tạo Link & QR"; 
+    btnElement.style.background = "#059669"; 
+    btnElement.disabled = true; 
+
+    try {
+        fetch(SCRIPT_URL, { 
+            method: "POST", redirect: "follow", 
+            body: JSON.stringify({ action: "trackClick", userid: userInfo.userid, jobName: jobTitle, jobId: jobId }) 
+        });
+    } catch (e) {
+        // Bỏ qua lỗi 
+    }
+}
 
         async function shortenLinkNow(event, btnElement) {
             event.stopPropagation();
