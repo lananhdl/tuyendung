@@ -819,7 +819,9 @@
             const separator = cleanLink.includes("?") ? "&" : "?";
             finalLink = `${cleanLink}${separator}ref=${userInfo.userid}`;
         } else {
-            const baseUrl = window.location.origin + window.location.pathname; 
+            // Ép baseUrl luôn cố định về trang gốc, loại bỏ hoàn toàn phần /jobit/ nếu có
+            const baseUrl = window.location.origin + '/';
+ 
             const encodedJob = encodeURIComponent(jobTitle);
             finalLink = `${baseUrl}?ref=${userInfo.userid}&job=${encodedJob}`;
         }
