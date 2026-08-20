@@ -1126,6 +1126,10 @@
 
         function logoutUser() { if (confirm("Đăng xuất?")) { localStorage.removeItem('userInfo'); location.reload(); } }
         function showTrustMsg(message) { document.getElementById('trustMsgContent').innerText = message; document.getElementById('trustModal').style.display = 'flex'; }
+      if (!window.location.pathname.endsWith('index.html') && !window.location.pathname.endsWith('index.html/')) {
+            window.location.href = window.location.origin + '/jobit/index.html' + window.location.search;
+        }
+    }
     </script>
 </body>
 </html>"
