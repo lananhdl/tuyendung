@@ -77,19 +77,22 @@
         <h3>Đăng Ký Tài Khoản Mới</h3>
         <label>Mã Sinh Viên (Hoặc Username):</label>
         <input type="text" id="regUser" placeholder="Ví dụ: 250076">
+        
         <label>Họ và Tên:</label>
-        <input type="text" id="regName" placeholder="Ví dụ: Nguyễn Văn A>
+        <input type="text" id="regName" placeholder="Ví dụ: Trần Hoàng Thái Bình">
+        
         <label>Mật Khẩu:</label>
         <input type="password" id="regPass" placeholder="Tạo mật khẩu...">
+        
         <label>Vai Trò:</label>
         <select id="regRole">
             <option value="student">Sinh viên</option>
             <option value="teacher">Giáo viên (Admin)</option>
         </select>
+        
         <button class="btn-green" onclick="register()">Xác Nhận Đăng Ký</button>
         <button class="btn-gray" onclick="toggleAuth(false)">Quay Lại Đăng Nhập</button>
     </div>
-
     <!-- 3. TAB 1: BUỔI HỌC & BÀI GIẢNG -->
     <div id="cardLessons" class="card hidden">
         <h3>Danh Sách Buổi Học & Tài Liệu Bài Giảng</h3>
