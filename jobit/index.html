@@ -65,7 +65,7 @@
     <div id="cardLogin" class="card">
         <h3>Đăng Nhập Hệ Thống</h3>
         <label>Mã Sinh Viên / Tên Đăng Nhập:</label>
-        <input type="text" id="loginUser" placeholder="Nhập mã SV (VD: 250076)">
+        <input type="text" id="loginUser" placeholder="Nhập mã SV (VD: 250076) hoặc admin...">
         <label>Mật Khẩu:</label>
         <input type="password" id="loginPass" placeholder="Nhập mật khẩu...">
         <button class="btn-green" onclick="login()">Đăng Nhập</button>
@@ -76,10 +76,10 @@
     <div id="cardRegister" class="card hidden">
         <h3>Đăng Ký Tài Khoản Mới</h3>
         <label>Mã Sinh Viên (Hoặc Username):</label>
-        <input type="text" id="regUser" placeholder="Ví dụ: 250001">
+        <input type="text" id="regUser" placeholder="Ví dụ: 250076">
         
         <label>Họ và Tên:</label>
-        <input type="text" id="regName" placeholder="Ví dụ: Nguyễn Văn A">
+        <input type="text" id="regName" placeholder="Ví dụ: Trần Hoàng Thái Bình">
         
         <label>Mật Khẩu:</label>
         <input type="password" id="regPass" placeholder="Tạo mật khẩu...">
@@ -93,6 +93,7 @@
         <button class="btn-green" onclick="register()">Xác Nhận Đăng Ký</button>
         <button class="btn-gray" onclick="toggleAuth(false)">Quay Lại Đăng Nhập</button>
     </div>
+
     <!-- 3. TAB 1: BUỔI HỌC & BÀI GIẢNG -->
     <div id="cardLessons" class="card hidden">
         <h3>Danh Sách Buổi Học & Tài Liệu Bài Giảng</h3>
@@ -265,7 +266,7 @@
 
     <script>
         // Dán URL Web App Google Apps Script của bạn vào đây
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxcmQYdoxAEnqH4zlU5AVJLGo-fUyTcik2rKCbPVRCH8IwNeJaynv39xnnUUxS59wPvAg/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxMqXLWKc47PAe1Xtn2LBwN_X49lRjticVpzLQy3wAj2o3NstKu6IOmqSM0djboTNai1Q/exec';
 
         let currentUser = null;
         let examsList = [];
@@ -583,6 +584,7 @@
             document.getElementById('timeRemaining').innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
 
+        // NỘP BÀI THI - DÙNG GET QUA URLSearchParams (KHÔNG BAO GIỜ BỊ LỖI Failed to fetch)
         function submitExam(autoSubmit) {
             if (!autoSubmit && !confirm('Bạn có chắc chắn muốn nộp bài?')) return;
             clearInterval(timerInterval);
@@ -600,7 +602,10 @@
                 });
             }
 
-            const payload = {
+            const answersJsonStr = JSON.stringify(answers);
+
+            // Gửi qua GET - tương thích 100% với Google Apps Script không bị chặn CORS
+            const params = new URLSearchParams({
                 action: 'submitExam',
                 examId: currentActiveExam.id,
                 examType: currentActiveExam.type,
@@ -608,39 +613,26 @@
                 username: currentUser.username,
                 fullname: currentUser.fullname,
                 role: currentUser.role,
-                answersJson: JSON.stringify(answers)
-            };
-
-            // Dùng POST dạng text/plain để Google Apps Script không bị chặn CORS và parse JSON mượt mà
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'text/plain;charset=utf-8'
-                },
-                body: JSON.stringify(payload)
-            })
-            .then(r => r.text())
-            .then(text => {
-                let res;
-                try {
-                    res = JSON.parse(text);
-                } catch(err) {
-                    throw new Error("Phản hồi từ máy chủ không hợp lệ: " + text);
-                }
-                
-                if (res.status === 'success') {
-                    alert(res.message);
-                    switchMainTab('results');
-                } else {
-                    alert(res.message);
-                    switchMainTab('exams');
-                }
-            })
-            .catch(err => {
-                console.error("Chi tiết lỗi nộp bài:", err);
-                alert('Lỗi nộp bài: ' + err.message);
+                answersJson: answersJsonStr
             });
+
+            fetch(`${SCRIPT_URL}?${params.toString()}`)
+                .then(r => r.json())
+                .then(res => {
+                    if (res.status === 'success') {
+                        alert(res.message);
+                        switchMainTab('results');
+                    } else {
+                        alert(res.message);
+                        switchMainTab('exams');
+                    }
+                })
+                .catch(err => {
+                    console.error("Chi tiết lỗi nộp bài:", err);
+                    alert('Lỗi nộp bài: ' + err.message);
+                });
         }
+
         // TAB 4: KẾT QUẢ ĐIỂM THI CỦA TÔI
         function loadMyResults() {
             const cont = document.getElementById('myResultsContainer');
