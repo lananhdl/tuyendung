@@ -611,16 +611,35 @@
                 answersJson: JSON.stringify(answers)
             };
 
+            // Dùng POST dạng text/plain để Google Apps Script không bị chặn CORS và parse JSON mượt mà
             fetch(SCRIPT_URL, {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8'
+                },
                 body: JSON.stringify(payload)
             })
-            .then(r => r.json())
-            .then(res => {
-                alert(res.message);
-                switchMainTab('results');
+            .then(r => r.text())
+            .then(text => {
+                let res;
+                try {
+                    res = JSON.parse(text);
+                } catch(err) {
+                    throw new Error("Phản hồi từ máy chủ không hợp lệ: " + text);
+                }
+                
+                if (res.status === 'success') {
+                    alert(res.message);
+                    switchMainTab('results');
+                } else {
+                    alert(res.message);
+                    switchMainTab('exams');
+                }
             })
-            .catch(() => alert('Lỗi nộp bài!'));
+            .catch(err => {
+                console.error("Chi tiết lỗi nộp bài:", err);
+                alert('Lỗi nộp bài: ' + err.message);
+            });
         }
 
         // TAB 4: KẾT QUẢ ĐIỂM THI CỦA TÔI
