@@ -16,6 +16,8 @@
         .btn-gray { background: #718096; }
         .btn-warning { background: #d69e2e; color: white; }
         .btn-danger { background: #e53e3e; }
+        .btn-purple { background: #805ad5; color: white; }
+        .btn-purple:hover { background: #6b46c1; }
         .user-bar { display: flex; justify-content: space-between; align-items: center; background: #edf2f7; padding: 12px 18px; border-radius: 6px; }
         .nav-tabs { display: flex; gap: 8px; margin-top: 15px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; flex-wrap: wrap; }
         .nav-tabs button { background: #edf2f7; color: #4a5568; border: 1px solid #cbd5e0; }
@@ -58,6 +60,7 @@
         <button id="tabBtnAtt" onclick="switchMainTab('attendance')">📅 Điểm Danh Của Tôi</button>
         <button id="tabBtnExams" onclick="switchMainTab('exams')">📝 Bài Kiểm Tra</button>
         <button id="tabBtnResults" onclick="switchMainTab('results')">📊 Điểm Của Tôi</button>
+        <button type="button" class="btn-purple" onclick="openTreasureHunt()">⚔️ Java Treasure Hunt</button>
         <button id="tabBtnAdmin" class="btn-warning hidden" onclick="switchMainTab('admin')">⚙️ Quản Trị Giáo Viên</button>
     </div>
 
@@ -65,7 +68,7 @@
     <div id="cardLogin" class="card">
         <h3>Đăng Nhập Hệ Thống</h3>
         <label>Mã Sinh Viên / Tên Đăng Nhập:</label>
-        <input type="text" id="loginUser" placeholder="Nhập mã SV (VD: 250076) hoặc admin...">
+        <input type="text" id="loginUser" placeholder="Nhập mã SV (VD: 250076)...">
         <label>Mật Khẩu:</label>
         <input type="password" id="loginPass" placeholder="Nhập mật khẩu...">
         <button class="btn-green" onclick="login()">Đăng Nhập</button>
@@ -265,7 +268,7 @@
     </div>
 
     <script>
-        // Dán URL Web App Google Apps Script của bạn vào đây
+        // URL Web App Google Apps Script của bạn
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxMqXLWKc47PAe1Xtn2LBwN_X49lRjticVpzLQy3wAj2o3NstKu6IOmqSM0djboTNai1Q/exec';
 
         let currentUser = null;
@@ -276,6 +279,17 @@
         let timerInterval = null;
         let remainingSeconds = 0;
         let currentGradingSubId = null;
+
+        // Tự động phục hồi phiên đăng nhập nếu sinh viên quay lại từ trang Treasure Hunt
+        window.addEventListener('DOMContentLoaded', () => {
+            try {
+                const savedUser = sessionStorage.getItem('currentUser');
+                if (savedUser) {
+                    currentUser = JSON.parse(savedUser);
+                    initLoggedInUser();
+                }
+            } catch (e) {}
+        });
 
         // BẢO MẬT & GIÁM SÁT TAB
         document.addEventListener('keydown', function(e) {
@@ -332,26 +346,33 @@
                 .then(d => {
                     if (d.status === 'success') {
                         currentUser = d.user;
-                        document.getElementById('barName').innerText = currentUser.fullname;
-                        document.getElementById('barRole').innerText = currentUser.role === 'teacher' ? 'Giáo Viên' : 'Sinh Viên';
-                        document.getElementById('userBar').classList.remove('hidden');
-                        document.getElementById('mainNav').classList.remove('hidden');
-                        document.getElementById('cardLogin').classList.add('hidden');
-
-                        if (currentUser.role === 'teacher') {
-                            document.getElementById('tabBtnAdmin').classList.remove('hidden');
-                        } else {
-                            document.getElementById('tabBtnAdmin').classList.add('hidden');
-                        }
-                        switchMainTab('lessons');
+                        // Lưu vào sessionStorage để trang Treasure Hunt dùng chung phiên
+                        sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+                        initLoggedInUser();
                     } else {
                         alert(d.message);
                     }
                 });
         }
 
+        function initLoggedInUser() {
+            document.getElementById('barName').innerText = currentUser.fullname;
+            document.getElementById('barRole').innerText = currentUser.role === 'teacher' ? 'Giáo Viên' : 'Sinh Viên';
+            document.getElementById('userBar').classList.remove('hidden');
+            document.getElementById('mainNav').classList.remove('hidden');
+            document.getElementById('cardLogin').classList.add('hidden');
+
+            if (currentUser.role === 'teacher') {
+                document.getElementById('tabBtnAdmin').classList.remove('hidden');
+            } else {
+                document.getElementById('tabBtnAdmin').classList.add('hidden');
+            }
+            switchMainTab('lessons');
+        }
+
         function logout() {
             currentUser = null;
+            sessionStorage.removeItem('currentUser');
             clearInterval(timerInterval);
             document.querySelectorAll('.card').forEach(c => c.classList.add('hidden'));
             document.getElementById('userBar').classList.add('hidden');
@@ -359,10 +380,18 @@
             document.getElementById('cardLogin').classList.remove('hidden');
         }
 
+        // MỞ TRANG THỬ THÁCH TREASURE HUNT
+        function openTreasureHunt() {
+            if (!currentUser) return alert('Vui lòng đăng nhập trước!');
+            window.location.href = 'treasure.html';
+        }
+
         // CHUYỂN TABS
         function switchMainTab(tab) {
             clearInterval(timerInterval);
-            document.querySelectorAll('.nav-tabs button').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.nav-tabs button').forEach(b => {
+                if (b.innerText.indexOf('Treasure') === -1) b.classList.remove('active');
+            });
             document.querySelectorAll('.card').forEach(c => c.classList.add('hidden'));
 
             if (tab === 'lessons') {
@@ -432,7 +461,7 @@
             const sumBox = document.getElementById('studentAttSummary');
             cont.innerHTML = 'Đang tải thông tin điểm danh...';
 
-            fetch(`${SCRIPT_URL}?action=getAttendanceSummary&username=${currentUser.username}&role=${currentUser.role}`)
+            fetch(`${SCRIPT_URL}?action=getAttendanceSummary&username=${encodeURIComponent(currentUser.username)}&role=${currentUser.role}`)
                 .then(r => r.json())
                 .then(data => {
                     if (data.length === 0 || !data[0].details || data[0].details.length === 0) {
@@ -584,7 +613,7 @@
             document.getElementById('timeRemaining').innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
 
-        // NỘP BÀI THI - DÙNG GET QUA URLSearchParams (KHÔNG BAO GIỜ BỊ LỖI Failed to fetch)
+        // NỘP BÀI THI - DÙNG GET QUA URLSearchParams (TƯƠNG THÍCH 100%, KHÔNG BỊ CORS)
         function submitExam(autoSubmit) {
             if (!autoSubmit && !confirm('Bạn có chắc chắn muốn nộp bài?')) return;
             clearInterval(timerInterval);
@@ -604,7 +633,6 @@
 
             const answersJsonStr = JSON.stringify(answers);
 
-            // Gửi qua GET - tương thích 100% với Google Apps Script không bị chặn CORS
             const params = new URLSearchParams({
                 action: 'submitExam',
                 examId: currentActiveExam.id,
@@ -638,7 +666,7 @@
             const cont = document.getElementById('myResultsContainer');
             cont.innerHTML = 'Đang tải kết quả...';
 
-            fetch(`${SCRIPT_URL}?action=getResults&username=${currentUser.username}&role=${currentUser.role}`)
+            fetch(`${SCRIPT_URL}?action=getResults&username=${encodeURIComponent(currentUser.username)}&role=${currentUser.role}`)
                 .then(r => r.json())
                 .then(data => {
                     if (data.length === 0) {
@@ -693,7 +721,7 @@
                 });
         }
 
-        // 1. TẢI BẢNG ĐIỂM DANH (CHECKBOX ĐI HỌC / BỎ TÍCH LÀ VẮNG)
+        // 1. TẢI BẢNG ĐIỂM DANH
         function loadAttendanceSheet() {
             const sessId = document.getElementById('selectSessionForAtt').value;
             if (!sessId) return alert('Chưa có buổi học nào!');
