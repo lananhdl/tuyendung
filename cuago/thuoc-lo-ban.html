@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>Thước Lỗ Ban | Huỳnh Gia Door</title>
+<meta content="Tra cứu Thước Lỗ Ban 52,2 cm, 42,9 cm và 38,8 cm. Nhập kích thước hoặc kéo thước để xem kết quả tham khảo." name="description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&amp;family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&amp;family=Allura&amp;display=swap" rel="stylesheet"/>
+<link href="style.css" rel="stylesheet"/>
+<style>
+/* KOTDOOR-style ruler area — rebuilt from the supplied KOTDOOR page structure.
+   The ruler itself is HTML/CSS (no raster ruler image); data follows the source ruler names. */
+.lb-page{background:#fff;color:#222;min-height:100vh;padding:86px 0 80px}
+.lb-shell{width:min(1250px,94vw);margin:0 auto}
+.lb-intro{display:none}
+.lb-control{display:flex;justify-content:flex-end;align-items:center;background:transparent;border:0;box-shadow:none;padding:0;margin:24px 0 0}
+.lb-control-copy{display:none}
+.lb-control-right{display:flex;align-items:center;gap:7px}
+.lb-input{width:76px;height:31px;border:2px solid #f2a300;background:#fff;color:#e51d1d;text-align:center;padding:0 6px;font-size:17px;font-weight:700;outline:none}
+.lb-input:focus{border-color:#e51d1d}
+.lb-unit{font-size:14px;color:#222}
+.lb-apply{display:none}
+.lb-drag-guide{display:none}
+.lb-shared-rulers{position:relative;background:#fff;border:0;box-shadow:none;overflow:hidden;margin-top:8px}
+.lb-shared-viewport{position:relative;overflow:hidden;touch-action:none;cursor:grab;user-select:none}
+.lb-shared-viewport.dragging{cursor:grabbing}
+.lb-center-line{position:absolute;z-index:80;top:0;bottom:0;left:88.6%;width:2px;transform:translateX(-50%);background:#d52b2b;pointer-events:none}
+.lb-center-line:before{content:"";position:absolute;top:-1px;left:50%;transform:translate(-50%,0);border-left:10px solid transparent;border-right:10px solid transparent;border-top:14px solid #d52b2b}
+.lb-center-line:after{content:"";position:absolute;bottom:0;left:50%;transform:translate(-50%,0);border-left:7px solid transparent;border-right:7px solid transparent;border-bottom:10px solid #d52b2b}
+.lb-ruler-row{position:relative;background:#fff;padding:0;margin:0}
+.lb-ruler-row + .lb-ruler-row{border-top:0}
+.lb-ruler-label{padding:12px 0 9px;font-family:Montserrat,Arial,sans-serif;font-size:16px;color:#222;background:#fff}
+.lb-ruler-label strong{display:inline;font-family:Montserrat,Arial,sans-serif;font-size:18px;font-weight:700;line-height:1.25;color:#222}
+.lb-ruler-label .lb-ruler-desc{display:inline;margin-left:6px;font-size:16px;line-height:1.4;color:#555;font-weight:400}
+.lb-ruler-viewport{height:128px;overflow:hidden;position:relative;border-bottom:1px solid #333}
+.lb-track{position:absolute;left:0;top:0;height:128px;display:flex;will-change:transform}
+.lb-cycle{height:128px;display:flex;flex-direction:column;flex:none;background:#fff;border:0}
+.lb-cm-row{height:41px;display:flex;border-top:1px solid #333;border-bottom:1px solid #aaa;background:#f7f7f5}
+.lb-cm{height:41px;position:relative;flex:none;border-right:1px solid #b9b9b5}
+.lb-cm i{position:absolute;left:0;top:0;height:12px;border-left:1px solid #666}
+.lb-cm.mid i{height:20px}
+.lb-cm.major i{height:35px;border-left:2px solid #222}
+.lb-cm span{position:absolute;top:17px;left:50%;transform:translateX(-50%);font-size:13px;color:#555;white-space:nowrap;font-weight:500}
+.mm-ticks{position:absolute;inset:0;pointer-events:none}.mm-tick{position:absolute;top:0;width:1px;height:7px;background:#777}.mm-tick.mm5{height:11px;background:#555}.mm-tick.mm0{height:0;background:transparent}
+.lb-major-row{height:40px;display:flex;border-bottom:1px solid #aaa}
+.lb-major{height:40px;display:flex;align-items:center;justify-content:center;text-align:center;flex:none;border-right:1px solid #aaa;padding:3px;font-size:13px;font-weight:700;line-height:1.1}
+.lb-major.good{background:#fff;color:#e33a3a}.lb-major.bad{background:#e7e7e4;color:#444}.lb-major.neutral{background:#f3f3f1;color:#444}
+.lb-sub-row{height:47px;display:flex}.lb-sub{height:47px;display:flex;align-items:center;justify-content:center;text-align:center;flex:none;border-right:1px solid #aaa;padding:2px;font-size:12px;line-height:1.05;font-weight:600;color:#444}.lb-sub.good{color:#e33a3a;background:#fff}.lb-sub.bad{background:#e7e7e4;color:#444}.lb-sub.neutral{background:#f3f3f1;color:#444}
+/* V10.17 — keep the KOTDOOR-style ruler's major/sub-cung content visible under every ruler. */
+.lb-ruler-viewport{height:128px;overflow:hidden;position:relative}
+.lb-track,.lb-cycle,.lb-major-row,.lb-sub-row{visibility:visible;opacity:1}
+.lb-major-row,.lb-sub-row{overflow:visible}
+.lb-major,.lb-sub{visibility:visible;opacity:1}
+
+.lb-scrollbar{display:none}
+.lb-results{margin-top:22px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:stretch}
+.lb-result{background:#fff;border:1px solid #d9d4ce;padding:20px 20px 22px;min-height:198px;display:flex;flex-direction:column;box-sizing:border-box}
+.lb-result:last-child{border-bottom:1px solid #d9d4ce}
+.lb-result h3{margin:0 0 6px;padding:0;border:0;font-family:Montserrat,Arial,sans-serif;font-size:15px;font-weight:700;color:#3d3935;line-height:1.35}
+.lb-result .lb-result-sub{display:block;font-size:12px;line-height:1.45;color:#8a827a;margin:0 0 14px}.lb-result-measure{display:block;font-family:'Playfair Display',serif;font-size:30px;line-height:1.05;font-weight:500;color:#171412;margin:0 0 8px}
+.lb-result-name{font-size:15px;font-weight:700;margin:0 0 5px;line-height:1.4;color:#171412}.lb-result-meta{font-size:12px;line-height:1.55;color:#6b655f;margin:0}.lb-result-meta .lb-red-value,.lb-result-name .lb-red-value{color:#171412;font-weight:700}
+.lb-badge{display:block;margin-top:auto;padding:5px 8px;border:1px solid #c8c0b8;font-size:9px;line-height:1.2;letter-spacing:.09em;color:#7b736b;background:#f7f5f2}
+.lb-badge.good{border-color:#e5a5a5;color:#d52b2b;background:#fff}.lb-badge.bad{border-color:#c8c0b8;color:#756e67;background:#f5f3f0}.lb-badge.neutral{border-color:#c8c0b8;color:#756e67;background:#f5f3f0}
+.lb-guide{margin-top:20px;background:#fff;border:1px solid #efd58a;padding:0}
+.lb-guide h2{font:700 17px/1.3 Montserrat,Arial,sans-serif;margin:0;padding:12px 14px;border-bottom:1px solid #efd58a;color:#e21f1f}
+.lb-guide p,.lb-guide li{font-size:13px;line-height:1.75;color:#444}.lb-guide p:first-of-type{padding-top:12px}.lb-guide p,.lb-guide ul{margin-left:14px;margin-right:14px}.lb-guide ul{padding-left:18px}
+.lb-quick-table{margin-top:20px}
+@media(max-width:760px){
+ .lb-page{padding-top:70px}.lb-shell{width:94vw}.lb-control{margin-top:18px}.lb-ruler-label{padding:10px 0 7px;font-size:12px}.lb-ruler-label strong{font-size:14px}.lb-ruler-label .lb-ruler-desc{font-size:12px}.lb-ruler-viewport{height:112px}.lb-track,.lb-cycle{height:112px}.lb-cm-row,.lb-cm{height:36px}.lb-cm i{height:10px}.lb-cm.mid i{height:18px}.lb-cm.major i{height:30px}.lb-cm span{top:15px;font-size:10px}.lb-major-row,.lb-major{height:35px}.lb-major{font-size:9px}.lb-sub-row,.lb-sub{height:41px}.lb-sub{font-size:8px}.lb-center-line{left:88.6%}.lb-results{grid-template-columns:1fr;gap:10px}.lb-result{min-height:0;padding:15px 14px 16px}.lb-result h3{font-size:13px}.lb-result .lb-result-sub{font-size:11px;margin-bottom:10px}.lb-result-measure{font-size:27px}.lb-result-name,.lb-result-meta{font-size:12px}.lb-guide h2{font-size:15px}.lb-guide p,.lb-guide li{font-size:11px}
+}
+
+/* V10.10 — 52.2 quick-reference table rebuilt from the supplied reference layout */
+.lb-quick-table{margin-top:18px;background:#fff;border:0;padding:0;box-shadow:none}
+.lb-quick-table h2{font:700 14px/1.25 Arial,Helvetica,sans-serif;margin:0 0 10px;color:#181716}
+.lb-quick-table .lb-table-intro{font-size:10px;line-height:1.5;color:#77716a;margin:0 0 12px}
+.lb-quick-scroll{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;border:0;background:#fff}
+.lb-reference-table{width:100%;min-width:900px;border-collapse:collapse;table-layout:fixed;font-family:Arial,Helvetica,sans-serif;font-size:10px;color:#222}
+.lb-reference-table col{}
+.lb-reference-table th,.lb-reference-table td{border:1px solid #aaa;box-sizing:border-box}
+.lb-reference-table thead{display:table-header-group}
+.lb-reference-table thead tr{height:0}
+.lb-reference-table thead th{height:0;padding:0;border-color:transparent;font-size:0;line-height:0;color:transparent}
+.lb-reference-table .col-category{width:15%}
+.lb-reference-table .col-name{width:15%}
+.lb-reference-table .col-mm{width:8.75%}
+.lb-reference-table tbody tr{height:23px}
+.lb-reference-table .lb-category{font-size:11px;font-weight:700;text-align:center;vertical-align:middle;letter-spacing:.02em;padding:4px 3px}
+.lb-reference-table .lb-cung-name{text-align:left;padding:3px 7px;font-weight:600;white-space:nowrap}
+.lb-reference-table .lb-mm{text-align:center;padding:3px 2px;font-weight:400;white-space:nowrap}
+.lb-reference-table .tot td{color:#ff3340}
+.lb-reference-table .xau td{color:#262626}
+.lb-reference-table .lb-category.tot{color:#ff3340}
+.lb-reference-table .lb-category.xau{color:#222}
+.lb-reference-table .tot td.lb-cung-name,.lb-reference-table .tot td.lb-mm{font-weight:500}
+.lb-reference-table .xau td.lb-cung-name{font-weight:600}
+.lb-reference-table .xau td{background:#f1f1f1}
+.lb-reference-table .tot td{background:#fff}
+.lb-reference-table tbody tr:first-child td{border-top-color:#999}
+.lb-quick-table-note{font-size:10px;line-height:1.7;color:#77716a;margin:10px 0 0}
+@media(max-width:760px){
+  .lb-quick-table{margin-top:18px}
+  .lb-quick-table h2{font-size:14px}
+  .lb-quick-scroll{border:0}
+  .lb-reference-table{min-width:900px;font-size:10px}
+  .lb-reference-table .lb-category{font-size:10px}
+}
+
+/* V10.11 — larger, cleaner ruler labels + shared hotline */
+.header-phone{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:10px;color:inherit;text-decoration:none;white-space:nowrap;z-index:2}
+.header-phone span{font-family:Arial,sans-serif;font-size:24px;line-height:1}
+.header-phone strong{font-family:Montserrat,Arial,sans-serif;font-size:20px;font-weight:700;letter-spacing:.045em}
+.header-phone:hover{color:var(--red)}
+.lb-ruler-label{padding:18px 20px 13px;font-family:Montserrat,Arial,sans-serif}
+.lb-ruler-label strong{display:inline-block;font-family:'Playfair Display',serif;font-size:19px;font-weight:600;line-height:1.2;color:#25211e;letter-spacing:-.01em}
+.lb-ruler-label .lb-ruler-desc{display:inline-block;margin-left:9px;font-size:14px;line-height:1.5;color:#5f5952;font-weight:500}
+.floating-contact{position:fixed;z-index:90;right:20px;bottom:22px;display:flex;flex-direction:column;gap:8px}
+.floating-contact a{width:48px;height:48px;border:1px solid #ffffffaa;background:#fff;color:#222;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 5px 20px #0002;cursor:pointer;transition:.3s}
+.floating-contact span{font-size:16px;line-height:1}.floating-contact small{font-size:7px;letter-spacing:.08em;margin-top:3px}.floating-contact a:hover{background:var(--red);color:#fff;transform:translateX(-5px)}
+@media(max-width:760px){
+ .header-phone{gap:6px}.header-phone span{font-size:19px}.header-phone strong{font-size:14px;letter-spacing:.025em}
+ .lb-ruler-label{padding:14px 12px 10px}
+ .lb-ruler-label strong{font-size:15px}
+ .lb-ruler-label .lb-ruler-desc{font-size:12px;margin-left:6px}
+ .floating-contact{right:12px;bottom:12px}.floating-contact a{width:43px;height:43px}
+}
+</style>
+</head>
+<body class="lb-light-page">
+<!-- HEADER: same structure/classes as index.html -->
+<header class="site-header" id="siteHeader">
+<a aria-label="Huỳnh Gia Door" class="logo" href="index.html#top">
+<span class="logo-script">Nhà đẹp từ cửa</span>
+<span class="logo-sub">HUỲNH GIA DOOR</span>
+</a>
+<a class="header-phone" href="tel:0792358779" aria-label="Gọi 079.2358.779"><span>☎</span><strong>079.2358.779</strong></a>
+<div class="header-tools">
+<a aria-label="Trang chủ" class="icon-btn" href="index.html#top">⌂</a>
+<a aria-label="Sản phẩm" class="icon-btn" href="index.html#san-pham">🛒</a>
+<button aria-label="Tìm kiếm" class="icon-btn search-btn" id="searchBtn"></button>
+<button aria-expanded="false" class="menu-trigger" id="menuTrigger">
+<span>MENU</span><i></i><i></i><i></i>
+</button>
+</div>
+</header>
+<!-- FULLSCREEN MENU: same structure/content as index.html -->
+<div aria-hidden="true" class="mega-menu" id="megaMenu">
+<div class="menu-backdrop"></div>
+<div class="menu-close-area"><button aria-label="Đóng menu" class="menu-close" id="menuClose">×</button></div>
+<div class="mega-inner">
+<div class="mega-grid">
+<section class="mega-cell mega-products">
+<h3>CÁC DÒNG SẢN PHẨM</h3>
+<a href="index.html#san-pham">CỬA GỖ CÔNG NGHIỆP</a>
+<a href="product.html?slug=abs">CỬA NHỰA ABS HÀN QUỐC</a>
+<a href="product.html?slug=composite">CỬA NHỰA COMPOSITE</a>
+<a href="product.html?slug=taiwan">CỬA NHỰA ĐÀI LOAN</a>
+<a href="product.html?slug=mdf">CỬA GỖ MDF LAMINATE</a>
+<a href="product.html?slug=mdf">CỬA GỖ MDF MELAMINE</a>
+<a href="product.html?slug=mdf">CỬA GỖ MDF VENEER</a>
+<a href="product.html?slug=fire">CỬA GỖ CHỐNG CHÁY</a>
+<a href="product.html?slug=fire">CỬA THÉP CHỐNG CHÁY</a>
+<a href="index.html#san-pham">KHÓA ĐIỆN TỬ</a>
+<a href="index.html#san-pham">PHỤ KIỆN CỬA</a>
+</section>
+<section class="mega-cell"><h3>GIẢI PHÁP</h3>
+<a href="index.html#giai-phap">NHÀ PHỐ · BIỆT THỰ</a><a href="index.html#giai-phap">CĂN HỘ · CHUNG CƯ</a><a href="index.html#giai-phap">KHÁCH SẠN · RESORT</a><a href="index.html#giai-phap">VĂN PHÒNG · THƯƠNG MẠI</a><a href="index.html#giai-phap">CHỐNG CHÁY</a><a href="index.html#giai-phap">THÔNG PHÒNG CHỐNG ẨM</a><a href="index.html#giai-phap">CÔNG TRÌNH DỰ ÁN</a>
+</section>
+<section class="mega-cell"><h3>TÀI LIỆU HỖ TRỢ</h3>
+<a href="index.html#lien-he">TƯ VẤN THIẾT KẾ KIẾN TRÚC SƯ</a><a href="index.html#lien-he">CHỦ ĐẦU TƯ</a><a href="index.html#lien-he">TỔNG THẦU THI CÔNG</a><a href="index.html#lien-he">PHÂN PHỐI · ĐẠI LÝ</a><a href="index.html#lien-he">ĐỘI THỢ THI CÔNG</a>
+</section>
+<section class="mega-cell"><h3>TRUYỀN THÔNG</h3>
+<a href="index.html#tin-tuc">CHÍNH SÁCH</a><a href="index.html#tin-tuc">SỰ KIỆN</a><a href="index.html#tin-tuc">TIN TỨC</a><a href="index.html#tin-tuc">SẢN PHẨM · GIẢI PHÁP</a><a href="index.html#tin-tuc">KHUYẾN MẠI · ƯU ĐÃI</a><a href="index.html#tin-tuc">GIẢI THƯỞNG</a><a href="index.html#tin-tuc">TUYỂN DỤNG</a>
+</section>
+<section class="mega-cell mega-bottom mega-projects"><h3>DỰ ÁN</h3>
+<a href="index.html#du-an">TT THƯƠNG MẠI, VĂN PHÒNG</a><a href="index.html#du-an">KHÁCH SẠN, RESORT</a><a href="index.html#du-an">CHUNG CƯ, NHÀ DÂN DỤNG</a><a href="index.html#du-an">CÔNG TRÌNH VĂN HÓA</a><a href="index.html#du-an">CÔNG TRÌNH GIÁO DỤC</a><a href="index.html#du-an">CÔNG TRÌNH Y TẾ</a><a href="index.html#du-an">NHÀ MÁY, NHÀ XƯỞNG</a>
+</section>
+<section class="mega-cell mega-bottom mega-about"><h3>VỀ HUỲNH GIA DOOR</h3>
+<a href="index.html#gioi-thieu">GIỚI THIỆU</a><a href="index.html#gioi-thieu">TẦM NHÌN, SỨ MỆNH, GIÁ TRỊ</a><a href="index.html#gioi-thieu">ĐỐI TÁC</a><a href="index.html#gioi-thieu">QUẢN LÝ CHẤT LƯỢNG</a><a href="index.html#gioi-thieu">THƯ VIỆN</a>
+</section>
+<section class="mega-cell mega-bottom mega-contact"><h3>LIÊN HỆ</h3>
+<a href="index.html#lien-he">ĐỊA CHỈ LIÊN HỆ</a><a href="index.html#lien-he">DỊCH VỤ KHÁCH HÀNG</a><a href="index.html#lien-he">HỆ THỐNG PHÂN PHỐI, ĐẠI LÝ</a><a href="index.html#lien-he">FORM LIÊN HỆ</a><a href="thuoc-lo-ban.html">THƯỚC LỖ BAN</a><a href="https://share.google/fv93hf1bNYympQqq8" rel="noopener" target="_blank">BẢN ĐỒ / VỊ TRÍ ↗</a>
+</section>
+</div>
+</div>
+</div>
+<!-- SEARCH OVERLAY -->
+<div aria-hidden="true" class="search-overlay" id="searchOverlay">
+<div class="search-panel">
+<button aria-label="Đóng tìm kiếm" class="search-close" id="searchClose">×</button>
+<span>TÌM KIẾM</span>
+<h2>Bạn đang tìm gì?</h2>
+<form id="searchForm"><input autocomplete="off" id="searchInput" placeholder="Tên sản phẩm, cửa, phụ kiện..." type="search"/><button type="submit">TÌM KIẾM ↗</button></form>
+<p id="searchHint">Ví dụ: cửa composite, cửa gỗ MDF, cửa chống cháy...</p>
+</div>
+</div>
+<main id="top">
+<div aria-hidden="true" class="scene-indicator" id="sceneIndicator"><span class="scene-current">01</span><i></i><span>07</span></div>
+<main class="lb-page">
+<section class="lb-shell">
+<div class="lb-intro">
+<span class="lb-kicker">HUỲNH GIA DOOR · CÔNG CỤ THAM KHẢO</span>
+<h1 class="lb-title">Thước <em>Lỗ Ban</em></h1>
+<p class="lb-lead">Nhập kích thước hoặc kéo thước. Một thao tác kéo sẽ đồng thời dịch chuyển cả ba thước để bạn đối chiếu 52,2 cm, 42,9 cm và 38,8 cm trên cùng một kích thước.</p>
+</div>
+<div class="lb-control">
+<div class="lb-control-copy"><small>KÍCH THƯỚC ĐANG TRA</small><strong>Nhập số đo theo milimet</strong></div>
+<div class="lb-control-right"><input aria-label="Kích thước theo milimet" class="lb-input" id="lbInput" min="1" max="5000" step="1" type="number" value="127"/><span class="lb-unit">mm</span><button class="lb-apply" id="lbApply">XEM KẾT QUẢ</button></div>
+</div>
+<div class="lb-drag-guide"><span>← Kéo qua trái / phải để xem thước</span><b>Vạch đỏ ở giữa = vị trí đang đo</b><span>Hãy kéo thước →</span></div>
+<div class="lb-shared-rulers" id="lbSharedRulers">
+<div class="lb-shared-viewport" id="lbSharedViewport">
+<div class="lb-center-line"></div>
+<div id="rulerRows"></div>
+</div>
+<div class="lb-scrollbar"><div class="lb-scrollbar-thumb" id="lbScrollbarThumb"></div></div>
+</div>
+<div class="lb-results" id="lbResults"></div>
+<div class="lb-guide">
+<h2>Hướng dẫn xem Thước Lỗ Ban</h2>
+<p>Thước Lỗ Ban là cây thước được Lỗ Ban – ông Tổ nghề mộc ở Trung Quốc thời Xuân Thu – phát minh ra. Tuy nhiên, trên thực tế, trong ngành Địa lý (phong thủy) cổ phương Đông, ngoài thước Lỗ Ban (Lỗ Ban xích), còn có nhiều loại thước khác được áp dụng như thước Đinh Lan (Đinh Lan xích), thước Áp Bạch (Áp Bạch xích). Bản thân thước Lỗ Ban cũng bao gồm nhiều phiên bản khác nhau, chẳng hạn các bản 52,2 cm và 42,9 cm.</p>
+<p>Do có nhiều bài viết, thông tin về thước Lỗ Ban với các kích thước khác nhau, ở đây chúng tôi chỉ giới thiệu 3 loại thước phổ biến nhất trên thị trường Việt Nam hiện nay, gồm các loại kích thước Lỗ Ban <strong>52,2 cm; 42,9 cm và 38,8 cm</strong>, cụ thể như sau:</p>
+<ul>
+<li><strong>Đo kích thước rỗng (thông thủy):</strong> dùng Thước Lỗ Ban 52,2 cm.</li>
+<li><strong>Đo kích thước đặc:</strong> áp dụng cho khối xây dựng (bếp, bệ, bậc…): dùng Thước Lỗ Ban 42,9 cm.</li>
+<li><strong>Đo Âm phần:</strong> áp dụng cho mồ mả, đồ nội thất (bàn thờ, tủ thờ, khuôn khổ bài vị…): dùng Thước Lỗ Ban 38,8 cm.</li>
+</ul>
+</div>
+<section aria-labelledby="quick52-title" class="lb-quick-table">
+<h2 id="quick52-title">Bảng tra nhanh thước Lỗ Ban 52.2</h2>
+
+<div class="lb-quick-scroll"><table class="lb-reference-table"><thead><tr><th class="col-category">CUNG</th><th class="col-name"></th><th class="col-mm">1</th><th class="col-mm">2</th><th class="col-mm">3</th><th class="col-mm">4</th><th class="col-mm">5</th><th class="col-mm">6</th><th class="col-mm">7</th><th class="col-mm">8</th></tr></thead><tbody><tr class="lb-row tot"><td class="lb-category tot" rowspan="5">QUÝ NHÂN</td><td class="lb-cung-name">Quyền lộc</td><td class="lb-mm">13,05</td><td class="lb-mm">533,05</td><td class="lb-mm">1.053,05</td><td class="lb-mm">1.573,05</td><td class="lb-mm">2.093,05</td><td class="lb-mm">2.613,05</td><td class="lb-mm">3.133,05</td><td class="lb-mm">3.653,05</td></tr><tr class="lb-row tot"><td class="lb-cung-name">Trung tín</td><td class="lb-mm">26,10</td><td class="lb-mm">546,10</td><td class="lb-mm">1.066,10</td><td class="lb-mm">1.586,10</td><td class="lb-mm">2.106,10</td><td class="lb-mm">2.626,10</td><td class="lb-mm">3.146,10</td><td class="lb-mm">3.666,10</td></tr><tr class="lb-row tot"><td class="lb-cung-name">Tác quan</td><td class="lb-mm">39,15</td><td class="lb-mm">559,15</td><td class="lb-mm">1.079,15</td><td class="lb-mm">1.599,15</td><td class="lb-mm">2.119,15</td><td class="lb-mm">2.639,15</td><td class="lb-mm">3.159,15</td><td class="lb-mm">3.679,15</td></tr><tr class="lb-row tot"><td class="lb-cung-name">Phát đạt</td><td class="lb-mm">52,20</td><td class="lb-mm">572,20</td><td class="lb-mm">1.092,20</td><td class="lb-mm">1.612,20</td><td class="lb-mm">2.132,20</td><td class="lb-mm">2.652,20</td><td class="lb-mm">3.172,20</td><td class="lb-mm">3.692,20</td></tr><tr class="lb-row tot"><td class="lb-cung-name">Thông minh</td><td class="lb-mm">65,25</td><td class="lb-mm">585,25</td><td class="lb-mm">1.105,25</td><td class="lb-mm">1.625,25</td><td class="lb-mm">2.145,25</td><td class="lb-mm">2.665,25</td><td class="lb-mm">3.185,25</td><td class="lb-mm">3.705,25</td></tr><tr class="lb-row xau"><td class="lb-category xau" rowspan="5">HIỂM HỌA</td><td class="lb-cung-name">Án thành</td><td class="lb-mm">78,30</td><td class="lb-mm">598,30</td><td class="lb-mm">1.118,30</td><td class="lb-mm">1.638,30</td><td class="lb-mm">2.158,30</td><td class="lb-mm">2.678,30</td><td class="lb-mm">3.198,30</td><td class="lb-mm">3.718,30</td></tr><tr class="lb-row xau"><td class="lb-cung-name">Hỗn nhân</td><td class="lb-mm">91,35</td><td class="lb-mm">611,35</td><td class="lb-mm">1.131,35</td><td class="lb-mm">1.651,35</td><td class="lb-mm">2.171,35</td><td class="lb-mm">2.691,35</td><td class="lb-mm">3.211,35</td><td class="lb-mm">3.731,35</td></tr><tr class="lb-row xau"><td class="lb-cung-name">Thất hiếu</td><td class="lb-mm">104,40</td><td class="lb-mm">624,40</td><td class="lb-mm">1.144,40</td><td class="lb-mm">1.664,40</td><td class="lb-mm">2.184,40</td><td class="lb-mm">2.704,40</td><td class="lb-mm">3.224,40</td><td class="lb-mm">3.744,40</td></tr><tr class="lb-row xau"><td class="lb-cung-name">Tai họa</td><td class="lb-mm">117,45</td><td class="lb-mm">637,45</td><td class="lb-mm">1.157,45</td><td class="lb-mm">1.677,45</td><td class="lb-mm">2.197,45</td><td class="lb-mm">2.717,45</td><td class="lb-mm">3.237,45</td><td class="lb-mm">3.757,45</td></tr><tr class="lb-row xau"><td class="lb-cung-name">Thường bệnh</td><td class="lb-mm">130,50</td><td class="lb-mm">650,50</td><td class="lb-mm">1.170,50</td><td class="lb-mm">1.690,50</td><td class="lb-mm">2.210,50</td><td class="lb-mm">2.730,50</td><td class="lb-mm">3.250,50</td><td class="lb-mm">3.770,50</td></tr><tr class="lb-row xau"><td class="lb-category xau" rowspan="5">THIÊN TAI</td><td class="lb-cung-name">Hoàn tử</td><td class="lb-mm">143,55</td><td class="lb-mm">663,55</td><td class="lb-mm">1.183,55</td><td class="lb-mm">1.703,55</td><td class="lb-mm">2.223,55</td><td class="lb-mm">2.743,55</td><td class="lb-mm">3.263,55</td><td class="lb-mm">3.783,55</td></tr><tr class="lb-row xau"><td class="lb-cung-name">Quan tài</td><td class="lb-mm">156,60</td><td class="lb-mm">676,60</td><td class="lb-mm">1.196,60</td><td class="lb-mm">1.716,60</td><td class="lb-mm">2.236,60</td><td class="lb-mm">2.756,60</td><td class="lb-mm">3.276,60</td><td class="lb-mm">3.796,60</td></tr><tr class="lb-row xau"><td class="lb-cung-name">Thân tàn</td><td class="lb-mm">169,65</td><td class="lb-mm">689,65</td><td class="lb-mm">1.209,65</td><td class="lb-mm">1.729,65</td><td class="lb-mm">2.249,65</td><td class="lb-mm">2.769,65</td><td class="lb-mm">3.289,65</td><td class="lb-mm">3.809,65</td></tr><tr class="lb-row xau"><td class="lb-cung-name">Thất tài</td><td class="lb-mm">182,70</td><td class="lb-mm">702,70</td><td class="lb-mm">1.222,70</td><td class="lb-mm">1.742,70</td><td class="lb-mm">2.262,70</td><td class="lb-mm">2.782,70</td><td class="lb-mm">3.302,70</td><td class="lb-mm">3.822,70</td></tr><tr class="lb-row xau"><td class="lb-cung-name">Hệ quả</td><td class="lb-mm">195,75</td><td class="lb-mm">715,75</td><td class="lb-mm">1.235,75</td><td class="lb-mm">1.755,75</td><td class="lb-mm">2.275,75</td><td class="lb-mm">2.795,75</td><td class="lb-mm">3.315,75</td><td class="lb-mm">3.835,75</td></tr><tr class="lb-row tot"><td class="lb-category tot" rowspan="5">THIÊN TÀI</td><td class="lb-cung-name">Thi thơ</td><td class="lb-mm">208,80</td><td class="lb-mm">728,80</td><td class="lb-mm">1.248,80</td><td class="lb-mm">1.768,80</td><td class="lb-mm">2.288,80</td><td class="lb-mm">2.808,80</td><td class="lb-mm">3.328,80</td><td class="lb-mm">3.848,80</td></tr><tr class="lb-row tot"><td class="lb-cung-name">Văn học</td><td class="lb-mm">221,85</td><td class="lb-mm">741,85</td><td class="lb-mm">1.261,85</td><td class="lb-mm">1.781,85</td><td class="lb-mm">2.301,85</td><td class="lb-mm">2.821,85</td><td class="lb-mm">3.341,85</td><td class="lb-mm">3.861,85</td></tr><tr class="lb-row tot"><td class="lb-cung-name">Thanh quý</td><td class="lb-mm">234,90</td><td class="lb-mm">754,90</td><td class="lb-mm">1.274,90</td><td class="lb-mm">1.794,90</td><td class="lb-mm">2.314,90</td><td class="lb-mm">2.834,90</td><td class="lb-mm">3.354,90</td><td class="lb-mm">3.874,90</td></tr><tr class="lb-row tot"><td class="lb-cung-name">Tác lộc</td><td class="lb-mm">247,95</td><td class="lb-mm">767,95</td><td class="lb-mm">1.287,95</td><td class="lb-mm">1.807,95</td><td class="lb-mm">2.327,95</td><td class="lb-mm">2.847,95</td><td class="lb-mm">3.367,95</td><td class="lb-mm">3.887,95</td></tr><tr class="lb-row tot"><td class="lb-cung-name">Thiên lộc</td><td class="lb-mm">261,00</td><td class="lb-mm">781,00</td><td class="lb-mm">1.301,00</td><td class="lb-mm">1.821,00</td><td class="lb-mm">2.341,00</td><td class="lb-mm">2.861,00</td><td class="lb-mm">3.381,00</td><td class="lb-mm">3.901,00</td></tr><tr class="lb-row tot"><td class="lb-category tot" rowspan="5">NHÂN LỘC</td><td class="lb-cung-name">Trí tồn</td><td class="lb-mm">274,05</td><td class="lb-mm">794,05</td><td class="lb-mm">1.314,05</td><td class="lb-mm">1.834,05</td><td class="lb-mm">2.354,05</td><td class="lb-mm">2.874,05</td><td class="lb-mm">3.394,05</td><td class="lb-mm">3.914,05</td></tr><tr class="lb-row tot"><td class="lb-cung-name">Phú quý</td><td class="lb-mm">287,10</td><td class="lb-mm">807,10</td><td class="lb-mm">1.327,10</td><td class="lb-mm">1.847,10</td><td class="lb-mm">2.367,10</td><td class="lb-mm">2.887,10</td><td class="lb-mm">3.407,10</td><td class="lb-mm">3.927,10</td></tr><tr class="lb-row tot"><td class="lb-cung-name">Tiến bửu</td><td class="lb-mm">300,15</td><td class="lb-mm">820,15</td><td class="lb-mm">1.340,15</td><td class="lb-mm">1.860,15</td><td class="lb-mm">2.380,15</td><td class="lb-mm">2.900,15</td><td class="lb-mm">3.420,15</td><td class="lb-mm">3.940,15</td></tr><tr class="lb-row tot"><td class="lb-cung-name">Thập thiện</td><td class="lb-mm">313,20</td><td class="lb-mm">833,20</td><td class="lb-mm">1.353,20</td><td class="lb-mm">1.873,20</td><td class="lb-mm">2.393,20</td><td class="lb-mm">2.913,20</td><td class="lb-mm">3.433,20</td><td class="lb-mm">3.953,20</td></tr><tr class="lb-row tot"><td class="lb-cung-name">Văn chương</td><td class="lb-mm">326,25</td><td class="lb-mm">846,25</td><td class="lb-mm">1.366,25</td><td class="lb-mm">1.886,25</td><td class="lb-mm">2.406,25</td><td class="lb-mm">2.926,25</td><td class="lb-mm">3.446,25</td><td class="lb-mm">3.966,25</td></tr><tr class="lb-row xau"><td class="lb-category xau" rowspan="5">CÔ ĐỘC</td><td class="lb-cung-name">Bạc nghịch</td><td class="lb-mm">339,30</td><td class="lb-mm">859,30</td><td class="lb-mm">1.379,30</td><td class="lb-mm">1.899,30</td><td class="lb-mm">2.419,30</td><td class="lb-mm">2.939,30</td><td class="lb-mm">3.459,30</td><td class="lb-mm">3.979,30</td></tr><tr class="lb-row xau"><td class="lb-cung-name">Vô vọng</td><td class="lb-mm">352,35</td><td class="lb-mm">872,35</td><td class="lb-mm">1.392,35</td><td class="lb-mm">1.912,35</td><td class="lb-mm">2.432,35</td><td class="lb-mm">2.952,35</td><td class="lb-mm">3.472,35</td><td class="lb-mm">3.992,35</td></tr><tr class="lb-row xau"><td class="lb-cung-name">Ly tán</td><td class="lb-mm">365,40</td><td class="lb-mm">885,40</td><td class="lb-mm">1.405,40</td><td class="lb-mm">1.925,40</td><td class="lb-mm">2.445,40</td><td class="lb-mm">2.965,40</td><td class="lb-mm">3.485,40</td><td class="lb-mm">4.005,40</td></tr><tr class="lb-row xau"><td class="lb-cung-name">Tửu thục</td><td class="lb-mm">378,45</td><td class="lb-mm">898,45</td><td class="lb-mm">1.418,45</td><td class="lb-mm">1.938,45</td><td class="lb-mm">2.458,45</td><td class="lb-mm">2.978,45</td><td class="lb-mm">3.498,45</td><td class="lb-mm">4.018,45</td></tr><tr class="lb-row xau"><td class="lb-cung-name">Dâm dục</td><td class="lb-mm">391,50</td><td class="lb-mm">911,50</td><td class="lb-mm">1.431,50</td><td class="lb-mm">1.951,50</td><td class="lb-mm">2.471,50</td><td class="lb-mm">2.991,50</td><td class="lb-mm">3.511,50</td><td class="lb-mm">4.031,50</td></tr><tr class="lb-row xau"><td class="lb-category xau" rowspan="5">THIÊN TẶC</td><td class="lb-cung-name">Phong bệnh</td><td class="lb-mm">404,55</td><td class="lb-mm">924,55</td><td class="lb-mm">1.444,55</td><td class="lb-mm">1.964,55</td><td class="lb-mm">2.484,55</td><td class="lb-mm">3.004,55</td><td class="lb-mm">3.524,55</td><td class="lb-mm">4.044,55</td></tr><tr class="lb-row xau"><td class="lb-cung-name">Chiêu ôn</td><td class="lb-mm">417,60</td><td class="lb-mm">937,60</td><td class="lb-mm">1.457,60</td><td class="lb-mm">1.977,60</td><td class="lb-mm">2.497,60</td><td class="lb-mm">3.017,60</td><td class="lb-mm">3.537,60</td><td class="lb-mm">4.057,60</td></tr><tr class="lb-row xau"><td class="lb-cung-name">Ôn tài</td><td class="lb-mm">430,65</td><td class="lb-mm">950,65</td><td class="lb-mm">1.470,65</td><td class="lb-mm">1.990,65</td><td class="lb-mm">2.510,65</td><td class="lb-mm">3.030,65</td><td class="lb-mm">3.550,65</td><td class="lb-mm">4.070,65</td></tr><tr class="lb-row xau"><td class="lb-cung-name">Ngục tù</td><td class="lb-mm">443,70</td><td class="lb-mm">963,70</td><td class="lb-mm">1.483,70</td><td class="lb-mm">2.003,70</td><td class="lb-mm">2.523,70</td><td class="lb-mm">3.043,70</td><td class="lb-mm">3.563,70</td><td class="lb-mm">4.083,70</td></tr><tr class="lb-row xau"><td class="lb-cung-name">Quang tài</td><td class="lb-mm">456,75</td><td class="lb-mm">976,75</td><td class="lb-mm">1.496,75</td><td class="lb-mm">2.016,75</td><td class="lb-mm">2.536,75</td><td class="lb-mm">3.056,75</td><td class="lb-mm">3.576,75</td><td class="lb-mm">4.096,75</td></tr><tr class="lb-row tot"><td class="lb-category tot" rowspan="5">TỂ TƯỚNG</td><td class="lb-cung-name">Đại tài</td><td class="lb-mm">469,80</td><td class="lb-mm">989,80</td><td class="lb-mm">1.509,80</td><td class="lb-mm">2.029,80</td><td class="lb-mm">2.549,80</td><td class="lb-mm">3.069,80</td><td class="lb-mm">3.589,80</td><td class="lb-mm">4.109,80</td></tr><tr class="lb-row tot"><td class="lb-cung-name">Thi thơ</td><td class="lb-mm">482,85</td><td class="lb-mm">1.002,85</td><td class="lb-mm">1.522,85</td><td class="lb-mm">2.042,85</td><td class="lb-mm">2.562,85</td><td class="lb-mm">3.082,85</td><td class="lb-mm">3.602,85</td><td class="lb-mm">4.122,85</td></tr><tr class="lb-row tot"><td class="lb-cung-name">Hoạch tài</td><td class="lb-mm">495,90</td><td class="lb-mm">1.015,90</td><td class="lb-mm">1.535,90</td><td class="lb-mm">2.055,90</td><td class="lb-mm">2.575,90</td><td class="lb-mm">3.095,90</td><td class="lb-mm">3.615,90</td><td class="lb-mm">4.135,90</td></tr><tr class="lb-row tot"><td class="lb-cung-name">Hiếu tử</td><td class="lb-mm">508,95</td><td class="lb-mm">1.028,95</td><td class="lb-mm">1.548,95</td><td class="lb-mm">2.068,95</td><td class="lb-mm">2.588,95</td><td class="lb-mm">3.108,95</td><td class="lb-mm">3.628,95</td><td class="lb-mm">4.148,95</td></tr><tr class="lb-row tot"><td class="lb-cung-name">Quý nhân</td><td class="lb-mm">522,00</td><td class="lb-mm">1.042,00</td><td class="lb-mm">1.562,00</td><td class="lb-mm">2.082,00</td><td class="lb-mm">2.602,00</td><td class="lb-mm">3.122,00</td><td class="lb-mm">3.642,00</td><td class="lb-mm">4.162,00</td></tr></tbody></table></div>
+
+</section>
+<a class="lb-back" href="index.html">← QUAY LẠI HUỲNH GIA DOOR</a>
+</section>
+</main>
+<div class="floating-contact" aria-label="Liên hệ nhanh"><a href="tel:0792358779" title="Gọi 079.2358.779"><span>☎</span><small>GỌI</small></a><a href="https://zalo.me/0792358779" target="_blank" rel="noopener" title="Zalo"><span>Z</span><small>ZALO</small></a></div>
+<script>
+const DATA = [
+  {id:'52', cm:52.2, title:'Thước Lỗ Ban 52.2cm', desc:'Khoảng thông thủy (cửa, cửa sổ...)', major:[
+    {name:'QUÝ NHÂN',tone:'good'}, {name:'HIỂM HỌA',tone:'bad'}, {name:'THIÊN TAI',tone:'bad'}, {name:'THIÊN TÀI',tone:'good'},
+    {name:'NHÂN LỘC',tone:'good'}, {name:'CÔ ĐỘC',tone:'bad'}, {name:'THIÊN TẶC',tone:'bad'}, {name:'TỂ TƯỚNG',tone:'good'}
+  ], subs:['Quyền lộc','Trung tín','Tác quan','Phát đạt','Thông minh','Án thành','Hỗn nhân','Thất hiếu','Tai họa','Thường bệnh','Hoàn tử','Quan tài','Thân tàn','Thất tài','Hệ quả','Thi thơ','Văn học','Thanh quý','Tác lộc','Thiên lộc','Trí tồn','Phú quý','Tiến bửu','Thập thiện','Văn chương','Bạc nghịch','Vô vọng','Ly tán','Tửu thục','Dâm dục','Phong bệnh','Chiêu ôn','Ôn tài','Ngục tù','Quang tài','Đại tài','Thi thơ','Hoạch tài','Hiếu tử','Quý nhân'], majorCount:8, subPer:5,
+    notes:{'Quý nhân':'Khoảng Quý Nhân theo thước 52,2 cm.','Hiểm họa':'Khoảng Hiểm Họa theo thước 52,2 cm.','Thiên tai':'Khoảng Thiên Tai theo thước 52,2 cm.','Thiên tài':'Khoảng Thiên Tài theo thước 52,2 cm.','Nhân lộc':'Khoảng Nhân Lộc theo thước 52,2 cm.','Cô độc':'Khoảng Cô Độc theo thước 52,2 cm.','Thiên tặc':'Khoảng Thiên Tặc theo thước 52,2 cm.','Tể tướng':'Khoảng Tể Tướng theo thước 52,2 cm.'}
+  },
+  {id:'429', cm:42.9, title:'Thước Lỗ Ban 42.9cm (Dương trạch)', desc:'Khối xây dựng (bếp, bệ, bậc...)', major:[
+    {name:'TÀI',tone:'good'}, {name:'BỆNH',tone:'bad'}, {name:'LY',tone:'bad'}, {name:'NGHĨA',tone:'good'},
+    {name:'QUAN',tone:'good'}, {name:'KIẾP',tone:'bad'}, {name:'HẠI',tone:'bad'}, {name:'BẢN',tone:'good'}
+  ], subs:['Tài Đức','Bảo Khố','Lục Hợp','Nghênh Phúc','Thoái Tài','Công Sự','Lao Chấp','Cô Quả','Trường Khố','Kiếp Tài','Quan Quỷ','Thất Thoát','Thêm Đinh','Ích Lợi','Quý Tử','Đại Cát','Thuận Khoa','Hoạch Tài','Tiến Ích','Phú Quý','Tử Biệt','Thoái Khẩu','Ly Hương','Thất Tài','Họa Chí','Tử Tuyệt','Lâm Bệnh','Khẩu Thiệt','Tài Chí','Đăng Khoa','Tiến Bảo','Hưng Vượng'], majorCount:8, subPer:4,
+    notes:{'Tài':'Khoảng Tài theo thước 42,9 cm.','Bệnh':'Khoảng Bệnh theo thước 42,9 cm.','Ly':'Khoảng Ly theo thước 42,9 cm.','Nghĩa':'Khoảng Nghĩa theo thước 42,9 cm.','Quan':'Khoảng Quan theo thước 42,9 cm.','Kiếp':'Khoảng Kiếp theo thước 42,9 cm.','Hại':'Khoảng Hại theo thước 42,9 cm.','Bản':'Khoảng Bản theo thước 42,9 cm.'}
+  },
+  {id:'388', cm:38.8, title:'Thước Lỗ Ban 38.8cm (âm phần)', desc:'Đồ nội thất (bàn thờ, tủ...)', major:[
+    {name:'ĐINH',tone:'good'}, {name:'HẠI',tone:'bad'}, {name:'VƯỢNG',tone:'good'}, {name:'KHỔ',tone:'bad'}, {name:'NGHĨA',tone:'good'},
+    {name:'QUAN',tone:'good'}, {name:'TỬ',tone:'bad'}, {name:'HƯNG',tone:'good'}, {name:'THẤT',tone:'bad'}, {name:'TÀI',tone:'good'}
+  ], subs:['Phúc Tinh','Cập Đệ','Tài Vượng','Đăng Khoa','Khẩu Thiệt','Lâm Bệnh','Tử Tuyệt','Tai Chí','Thiên Đức','Hỷ Sự','Tiến Bảo','Nạp Phúc','Thất Thoát','Quan Quỷ','Kiếp Tài','Vô Tự','Đại Cát','Tài Vượng','Ích Lợi','Thiên Khố','Phú Quý','Tiến Bảo','Hoạch Tài','Thuận Khoa','Ly Hương','Tử Biệt','Thoái Đinh','Thất Tài','Đăng Khoa','Quý Tử','Thêm Đinh','Hưng Vượng','Cô Quả','Lao Chấp','Công Sự','Thoái Tài','Nghênh Phúc','Lục Hợp','Tiến Bảo','Tài Đức'], majorCount:10, subPer:4,
+    notes:{'Đinh':'Khoảng Đinh theo thước 38,8 cm.','Hại':'Khoảng Hại theo thước 38,8 cm.','Vượng':'Khoảng Vượng theo thước 38,8 cm.','Khổ':'Khoảng Khổ theo thước 38,8 cm.','Nghĩa':'Khoảng Nghĩa theo thước 38,8 cm.','Quan':'Khoảng Quan theo thước 38,8 cm.','Tử':'Khoảng Tử theo thước 38,8 cm.','Hưng':'Khoảng Hưng theo thước 38,8 cm.','Thất':'Khoảng Thất theo thước 38,8 cm.','Tài':'Khoảng Tài theo thước 38,8 cm.'}
+  }
+];
+
+const PX_PER_MM = 13.4; // 1 mm = 8px; 1 cm = 80px
+// Mỗi thước hiển thị liên tục từ 0 → 5 m; các cung được lặp theo đúng chu kỳ 52.2 / 42.9 / 38.8 cm.
+const MAX_MM = 5000; // Thước hiển thị liên tục từ 0 → 5.000 mm (5 m)
+const MIN_MM = 1;
+const viewport = document.getElementById('lbSharedViewport');
+const rowsHost = document.getElementById('rulerRows');
+const resultsHost = document.getElementById('lbResults');
+const input = document.getElementById('lbInput');
+const apply = document.getElementById('lbApply');
+const thumb = document.getElementById('lbScrollbarThumb');
+let offsetPx = 0;
+let measurement = 127;
+let dragging = false, startX = 0, startOffset = 0;
+
+function toneClass(i){ return i%3===0 ? 'good' : (i%3===1 ? 'bad' : 'neutral'); }
+function fmt(n){ return Number.isInteger(n) ? String(n) : n.toFixed(1); }
+function cyclePositionMm(d, mm){
+  const cycleMm = d.cm * 10;
+  const n = ((mm % cycleMm) + cycleMm) % cycleMm;
+  return n;
+}
+function normalizeOffset(){
+  // Thước dùng một dải liên tục 0 → 5 m, không lặp vị trí kéo.
+  const minOffset = -(MAX_MM * PX_PER_MM);
+  offsetPx = Math.max(minOffset, Math.min(0, offsetPx));
+}
+function clampOffset(){ normalizeOffset(); }
+function cycleMarkup(d){
+  const cycleMm = d.cm * 10;
+  const cycleW = cycleMm * PX_PER_MM;
+  const majorW = cycleW / d.majorCount;
+  const subW = majorW / d.subPer;
+  const cycle = document.createElement('div');
+  cycle.className='lb-cycle'; cycle.style.width=cycleW+'px';
+  const cmRow=document.createElement('div'); cmRow.className='lb-cm-row';
+  const cmWidth=PX_PER_MM*10;
+  const cycleCm=d.cm;
+  const cmCount=Math.ceil(cycleCm);
+  for(let i=0;i<cmCount;i++){
+    const remainingCm=cycleCm-i;
+    const cellCm=Math.min(1,Math.max(0,remainingCm));
+    if(cellCm<=0) continue;
+    const cellPx=cellCm*cmWidth;
+    const isLast=i===cmCount-1;
+    const cm=document.createElement('div');
+    cm.className='lb-cm '+(i%10===0?'major':(i%5===0?'mid':''));
+    cm.style.width=cellPx+'px';
+    const label=isLast ? fmt(cycleCm)+' cm' : i+' cm';
+    const ticks=isLast ? '' : '<div class="mm-ticks">' + Array.from({length:10},(_,m)=>'<b class="mm-tick '+(m===0?'mm0':m===5?'mm5':'')+'" style="left:'+m*10+'%"></b>').join('') + '</div>';
+    cm.innerHTML='<i></i>' + '<span>'+label+'</span>' + ticks;
+    cmRow.appendChild(cm);
+  }
+  const majorRow=document.createElement('div'); majorRow.className='lb-major-row';
+  d.major.forEach((m)=>{ const el=document.createElement('div'); el.className='lb-major '+m.tone; el.style.width=majorW+'px'; el.textContent=m.name; majorRow.appendChild(el); });
+  const subRow=document.createElement('div'); subRow.className='lb-sub-row';
+  d.subs.forEach((s,i)=>{ const el=document.createElement('div'); el.className='lb-sub '+toneClass(i); el.style.width=subW+'px'; el.textContent=s; subRow.appendChild(el); });
+  cycle.append(cmRow,majorRow,subRow);
+  return cycle;
+}
+function buildFullTrack(d){
+  // Build ONE exact ruler cycle first, then repeat that complete cycle until 5 m.
+  // This keeps the three layers synchronized: measurement ticks → major cung → minor cung.
+  const track=document.createElement('div');
+  track.className='lb-track';
+  track.style.width=(MAX_MM*PX_PER_MM)+'px';
+
+  const cycleMm=d.cm*10;
+  const majorStepMm=cycleMm/d.majorCount;
+  const subStepMm=cycleMm/d.subs.length;
+
+  function buildCycle(startMm, visibleMm){
+    const cycle=document.createElement('div');
+    cycle.className='lb-cycle';
+    cycle.style.width=(visibleMm*PX_PER_MM)+'px';
+
+    // 1) Measurement row — every cm has a label and every cm has 10 mm ticks.
+    const cmRow=document.createElement('div');
+    cmRow.className='lb-cm-row';
+    const firstCm=Math.floor(startMm/10);
+    const lastCm=Math.ceil((startMm+visibleMm)/10);
+    for(let cm=firstCm; cm<lastCm; cm++){
+      const cellStart=Math.max(startMm,cm*10);
+      const cellEnd=Math.min(startMm+visibleMm,(cm+1)*10);
+      const cellMm=cellEnd-cellStart;
+      if(cellMm<=0) continue;
+      const el=document.createElement('div');
+      el.className='lb-cm '+(cm%10===0?'major':(cm%5===0?'mid':''));
+      el.style.width=(cellMm*PX_PER_MM)+'px';
+      el.innerHTML='<i></i><span>'+cm+' cm</span>';
+      // mm ticks are positioned inside each full centimetre cell.
+      if(cellMm>=9.999){
+        const ticks=document.createElement('div');
+        ticks.className='mm-ticks';
+        for(let m=0;m<10;m++){
+          const tick=document.createElement('b');
+          tick.className='mm-tick '+(m===0?'mm0':(m===5?'mm5':''));
+          tick.style.left=(m*10)+'%';
+          ticks.appendChild(tick);
+        }
+        el.appendChild(ticks);
+      }
+      cmRow.appendChild(el);
+    }
+
+    // 2) Major cung row — exactly one full cycle of major cung names.
+    const majorRow=document.createElement('div');
+    majorRow.className='lb-major-row';
+    for(let i=0;i<d.majorCount;i++){
+      const segStart=i*majorStepMm;
+      const segEnd=Math.min(visibleMm,(i+1)*majorStepMm);
+      const w=segEnd-segStart;
+      if(w<=0) break;
+      const el=document.createElement('div');
+      el.className='lb-major '+d.major[i].tone;
+      el.style.width=(w*PX_PER_MM)+'px';
+      el.textContent=d.major[i].name;
+      majorRow.appendChild(el);
+    }
+
+    // 3) Minor cung row — exactly the sub-cung sequence belonging to this cycle.
+    const subRow=document.createElement('div');
+    subRow.className='lb-sub-row';
+    for(let i=0;i<d.subs.length;i++){
+      const segStart=i*subStepMm;
+      const segEnd=Math.min(visibleMm,(i+1)*subStepMm);
+      const w=segEnd-segStart;
+      if(w<=0) break;
+      const el=document.createElement('div');
+      el.className='lb-sub '+toneClass(i%d.subs.length);
+      el.style.width=(w*PX_PER_MM)+'px';
+      el.textContent=d.subs[i];
+      subRow.appendChild(el);
+    }
+
+    cycle.append(cmRow,majorRow,subRow);
+    return cycle;
+  }
+
+  let builtMm=0;
+  while(builtMm<MAX_MM-0.0001){
+    const visibleMm=Math.min(cycleMm,MAX_MM-builtMm);
+    track.appendChild(buildCycle(builtMm,visibleMm));
+    builtMm+=visibleMm;
+  }
+  return track;
+}
+
+function buildRows(){
+  rowsHost.innerHTML='';
+  DATA.forEach(d=>{
+    const row=document.createElement('section'); row.className='lb-ruler-row'; row.dataset.id=d.id;
+    row.innerHTML='<div class="lb-ruler-label"><strong>'+d.title+'</strong><span class="lb-ruler-desc">'+d.desc+'</span></div><div class="lb-ruler-viewport"><div class="lb-track"></div></div>';
+    const oldTrack=row.querySelector('.lb-track');
+    oldTrack.replaceWith(buildFullTrack(d));
+    rowsHost.appendChild(row);
+  });
+}
+function trackFor(d){ return document.querySelector('.lb-ruler-row[data-id="'+d.id+'"]').querySelector('.lb-track'); }
+function render(){
+  const markerPx=viewport.clientWidth*0.886;
+  DATA.forEach(d=>{
+    const track=trackFor(d);
+    const posPx=measurement*PX_PER_MM;
+    const x=markerPx-posPx;
+    track.style.transform='translateX('+x+'px)';
+  });
+}
+function subAt(d,mm){
+  const cycleMm=d.cm*10;
+  const n=((mm%cycleMm)+cycleMm)%cycleMm;
+  const subSize=cycleMm/d.subs.length;
+  const idx=Math.min(d.subs.length-1,Math.floor(n/subSize));
+  const majorIdx=Math.floor(idx/d.subPer);
+  return {n,idx,major:d.major[majorIdx],name:d.subs[idx],majorIdx};
+}
+function renderResults(){
+  resultsHost.innerHTML='';
+  DATA.forEach(d=>{
+    const hit=subAt(d,measurement);
+    const card=document.createElement('article'); card.className='lb-result';
+    const good=hit.major.tone==='good', bad=hit.major.tone==='bad';
+    const badge=good?'CÁT · THAM KHẢO':bad?'HUNG · THAM KHẢO':'TRUNG TÍNH · THAM KHẢO';
+    const note=d.notes[hit.major.name.charAt(0)+hit.major.name.slice(1).toLowerCase()] || d.notes[hit.major.name] || 'Thông tin cung đang được tra cứu theo vị trí trên thước.';
+    card.innerHTML='<h3>'+d.title+'</h3><div class="lb-result-sub">'+d.desc+'</div><div class="lb-result-measure">'+fmt(measurement)+' mm</div><div class="lb-result-name">Cung <span class="lb-red-value">'+hit.name+'</span></div><div class="lb-result-meta">Nằm trong khoảng <strong class="lb-red-value">'+hit.major.name+'</strong> · '+note+'</div><span class="lb-badge '+(good?'good':bad?'bad':'neutral')+'">'+badge+'</span>';
+    resultsHost.appendChild(card);
+  });
+}
+function setMeasurement(mm, center=true){
+  let val=Math.max(MIN_MM,Math.min(MAX_MM,Math.round(Number(mm)||127)));
+  measurement=val; input.value=val;
+  offsetPx=-(val*PX_PER_MM);
+  render(); renderResults();
+}
+function valueFromOffset(){
+  const local=Math.max(0,Math.min(MAX_MM,(-offsetPx)/PX_PER_MM));
+  return Math.max(MIN_MM,Math.min(MAX_MM,Math.round(local)));
+}
+function pointerDown(x){ dragging=true; startX=x; startOffset=offsetPx; viewport.classList.add('dragging'); }
+function pointerMove(x){ if(!dragging)return; offsetPx=startOffset+(x-startX); normalizeOffset(); measurement=valueFromOffset(); input.value=measurement; render(); renderResults(); }
+function pointerUp(){ if(!dragging)return; dragging=false; viewport.classList.remove('dragging'); setMeasurement(valueFromOffset(),false); }
+viewport.addEventListener('pointerdown',e=>{ viewport.setPointerCapture(e.pointerId); pointerDown(e.clientX); });
+viewport.addEventListener('pointermove',e=>pointerMove(e.clientX));
+viewport.addEventListener('pointerup',pointerUp); viewport.addEventListener('pointercancel',pointerUp);
+viewport.addEventListener('wheel',e=>{ e.preventDefault(); offsetPx-=e.deltaX || e.deltaY; normalizeOffset(); render(); setMeasurement(valueFromOffset(),false); },{passive:false});
+apply.addEventListener('click',()=>setMeasurement(input.value,true));
+input.addEventListener('keydown',e=>{if(e.key==='Enter')setMeasurement(input.value,true)});
+input.addEventListener('change',()=>setMeasurement(input.value,true));
+window.addEventListener('resize',render);
+buildRows();
+setMeasurement(127,true);
+
+/* Header interactions: same behavior as index.html */
+const menu=document.getElementById('megaMenu'), trigger=document.getElementById('menuTrigger'), close=document.getElementById('menuClose'), searchOverlay=document.getElementById('searchOverlay'), searchBtn=document.getElementById('searchBtn'), searchClose=document.getElementById('searchClose'), searchInput=document.getElementById('searchInput');
+function setMenu(open){menu.classList.toggle('open',open);menu.setAttribute('aria-hidden',String(!open));trigger.setAttribute('aria-expanded',String(open));document.body.classList.toggle('menu-open',open)}
+trigger.addEventListener('click',()=>setMenu(true));close.addEventListener('click',()=>setMenu(false));menu.querySelector('.menu-backdrop').addEventListener('click',()=>setMenu(false));menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setMenu(false)));
+function setSearch(open){searchOverlay.classList.toggle('open',open);searchOverlay.setAttribute('aria-hidden',String(!open));if(open)setTimeout(()=>searchInput.focus(),150)}
+searchBtn.addEventListener('click',()=>setSearch(true));searchClose.addEventListener('click',()=>setSearch(false));searchOverlay.addEventListener('click',e=>{if(e.target===searchOverlay)setSearch(false)});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){setMenu(false);setSearch(false)}});
+document.getElementById('searchForm').addEventListener('submit',e=>{e.preventDefault();const q=searchInput.value.trim();if(q) location.href='index.html?search='+encodeURIComponent(q);});
+window.addEventListener('scroll',()=>document.getElementById('siteHeader').classList.toggle('solid',window.scrollY>30),{passive:true});
+</script>
+</main></body>
+</html>
