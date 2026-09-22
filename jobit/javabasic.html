@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java Căn Bản - Sơ Đồ Khối & Trực Quan Tương Tác</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        java: {
+                            orange: '#E65100',
+                            red: '#C2410C',
+                            blue: '#0284C7',
+                            lightBg: '#F8FAFC'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Smooth transitions for flowchart elements */
+        .fc-node {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0.45;
+            filter: grayscale(40%);
+        }
+        .fc-node.node-active {
+            opacity: 1;
+            filter: grayscale(0%);
+            transform-origin: center;
+        }
+        .fc-node.node-visited {
+            opacity: 0.9;
+            filter: grayscale(0%);
+        }
+        /* Animated dynamic signal on active flow paths */
+        .flow-path {
+            stroke-dasharray: 8, 6;
+            transition: stroke 0.3s ease, stroke-width 0.3s ease, opacity 0.3s ease;
+            opacity: 0.35;
+        }
+        .flow-path.path-active {
+            opacity: 1;
+            stroke-dasharray: 8, 6;
+            animation: flowDash 0.8s linear infinite;
+        }
+        @keyframes flowDash {
+            from { stroke-dashoffset: 28; }
+            to { stroke-dashoffset: 0; }
+        }
+        /* Code lines highlighting in light mode */
+        .code-row {
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+        .code-row.active-line {
+            background-color: #FFF7ED;
+            border-left: 3px solid #EA580C;
+        }
+        .code-row.active-line .line-num {
+            color: #EA580C;
+            font-weight: 700;
+        }
+        /* Glow effect on active flowchart block */
+        @keyframes nodeGlowLight {
+            0%, 100% { filter: drop-shadow(0 4px 10px rgba(234, 88, 12, 0.35)); }
+            50% { filter: drop-shadow(0 6px 18px rgba(234, 88, 12, 0.65)); }
+        }
+        .glow-pulse {
+            animation: nodeGlowLight 1.8s infinite;
+        }
+        /* Custom scrollbar for clean white look */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #F1F5F9; }
+        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col font-sans select-none overflow-hidden">
+
+    <header class="h-16 border-b border-slate-200 bg-white/95 backdrop-blur px-4 sm:px-6 flex items-center justify-between z-30 shrink-0 shadow-sm">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white shadow-md shadow-orange-500/25">
+                <i class="fa-brands fa-java text-2xl"></i>
+            </div>
+            <div>
+                <h1 class="font-bold text-sm sm:text-base tracking-tight flex items-center gap-2">
+                    <span class="text-slate-900">Java Interactive Flowchart</span>
+                    <span class="text-[11px] px-2 py-0.5 rounded-full bg-orange-100 text-orange-700 border border-orange-200 font-mono font-semibold">Giáo Trình Trực Quan</span>
+                </h1>
+                <p class="text-xs text-slate-500 hidden sm:block">Chữ to, sơ đồ khối rõ nét & trực quan hóa bộ nhớ</p>
+            </div>
+        </div>
+
+        <!-- Topic Selector Dropdown & Step Status -->
+        <div class="flex items-center gap-3">
+            <label for="lesson-select" class="text-xs font-semibold text-slate-600 hidden md:inline">Bài học:</label>
+            <select id="lesson-select" class="bg-slate-50 text-slate-800 border border-slate-300 text-xs sm:text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-orange-500 font-semibold shadow-sm cursor-pointer hover:bg-white transition">
+                <option value="0">1. Khai báo & Gán biến</option>
+                <option value="1">2. Nhập dữ liệu Scanner</option>
+                <option value="2">3. Rẽ nhánh If - Else</option>
+                <option value="3">4. Vòng lặp For</option>
+                <option value="4">5. Vòng lặp While</option>
+            </select>
+
+            <!-- Step Progress Counter Badge -->
+            <div class="bg-orange-50 px-3 py-1.5 rounded-lg border border-orange-200 text-xs font-mono flex items-center gap-2 text-orange-800 shadow-sm">
+                <i class="fa-solid fa-play text-orange-600 text-[10px] animate-pulse"></i>
+                <span id="step-indicator" class="font-bold">Bước: 1 / 5</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 relative overflow-hidden flex flex-col p-3 sm:p-5" id="presentation-stage">
+        <div class="w-full max-w-7xl mx-auto h-full flex flex-col bg-white border border-slate-200/80 rounded-2xl shadow-xl p-4 sm:p-6 overflow-hidden relative" id="slide-container">
+            
+            <!-- Slide Title & Breadcrumb -->
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-3 shrink-0">
+                <div class="flex items-center gap-3">
+                    <span id="slide-badge" class="text-[11px] uppercase tracking-wider font-mono font-bold px-2.5 py-1 rounded bg-orange-100 text-orange-700 border border-orange-300">
+                        BÀI HỌC 01
+                    </span>
+                    <h2 id="slide-title" class="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">
+                        Khai báo & Khởi tạo biến
+                    </h2>
+                </div>
+                <!-- Interactive Action Hint -->
+                <div class="flex items-center gap-2 text-xs text-slate-600">
+                    <span class="inline-flex items-center gap-1.5 bg-slate-100 px-3 py-1 rounded-full border border-slate-300 shadow-inner">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+                        <span id="interaction-hint" class="font-medium">Nhấp chuột bất kỳ hoặc nhấn <kbd class="font-mono font-bold text-orange-600 bg-white px-1.5 py-0.5 rounded border border-slate-300 shadow-sm">Space</kbd> để tiếp tục</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Main Content Area: Left (Code/RAM/Console) & Right (Large Flowchart) -->
+            <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 py-3 min-h-0">
+                
+                <!-- LEFT COLUMN: Code Editor + RAM Inspector + Virtual Terminal -->
+                <div class="lg:col-span-5 flex flex-col gap-3 min-h-0">
+                    <!-- Java Code View -->
+                    <div class="flex-1 flex flex-col rounded-xl bg-slate-50 border border-slate-300/80 overflow-hidden shadow-sm">
+                        <div class="bg-slate-200/80 px-3.5 py-2 border-b border-slate-300 flex items-center justify-between text-xs text-slate-700">
+                            <span class="flex items-center gap-2 font-mono font-bold text-slate-800">
+                                <i class="fa-brands fa-java text-orange-600 text-sm"></i>
+                                <span id="file-name-label">Program.java</span>
+                            </span>
+                            <span class="text-[11px] uppercase font-mono font-semibold tracking-wider text-slate-500">Mã nguồn Java</span>
+                        </div>
+                        <div class="p-3 font-mono text-xs sm:text-[13px] overflow-y-auto leading-relaxed flex-1 bg-white" id="code-container">
+                            <!-- Injected code lines -->
+                        </div>
+                    </div>
+
+                    <!-- Bottom: Memory Inspector & Virtual Console -->
+                    <div class="h-44 grid grid-cols-1 sm:grid-cols-2 gap-3 shrink-0">
+                        <!-- Memory / Variables Watcher -->
+                        <div class="rounded-xl bg-slate-50 border border-slate-300/80 p-3 flex flex-col justify-between shadow-sm">
+                            <div class="text-[11px] font-mono font-bold text-slate-700 uppercase tracking-wider flex items-center justify-between border-b border-slate-200 pb-1.5">
+                                <span class="flex items-center gap-1.5 text-sky-700">
+                                    <i class="fa-solid fa-microchip"></i> Bộ nhớ RAM (Stack)
+                                </span>
+                                <span class="text-[10px] bg-sky-100 text-sky-800 px-1.5 py-0.5 rounded font-bold">Watch</span>
+                            </div>
+                            <div class="flex-1 flex items-center justify-center p-1" id="memory-watcher">
+                                <!-- Dynamic memory blocks -->
+                            </div>
+                        </div>
+
+                        <!-- Virtual Terminal Output -->
+                        <div class="rounded-xl bg-slate-900 border border-slate-800 p-3 flex flex-col justify-between font-mono shadow-sm">
+                            <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center justify-between border-b border-slate-800 pb-1.5">
+                                <span class="flex items-center gap-1.5 text-emerald-400">
+                                    <i class="fa-solid fa-terminal text-xs"></i> Virtual Console
+                                </span>
+                                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            </div>
+                            <div class="flex-1 overflow-y-auto p-1 text-xs text-slate-200 flex flex-col justify-end space-y-1" id="terminal-watcher">
+                                <div class="text-slate-500 text-[11px]">$ java Program</div>
+                                <div id="terminal-content" class="text-emerald-300 font-semibold"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN: Standard High-Contrast Large SVG Flowchart Canvas -->
+                <div class="lg:col-span-7 flex flex-col rounded-xl bg-slate-50 border border-slate-300/80 p-3 sm:p-4 min-h-0 relative shadow-sm">
+                    <!-- Flowchart Header Legend -->
+                    <div class="flex items-center justify-between border-b border-slate-200 pb-2 mb-2 shrink-0 text-xs">
+                        <span class="font-mono font-bold text-slate-900 flex items-center gap-2 text-sm">
+                            <i class="fa-solid fa-diagram-project text-orange-600"></i>
+                            <span>SƠ ĐỒ KHỐI THUẬT TOÁN (FLOWCHART)</span>
+                        </span>
+                        <!-- Flowchart Legend -->
+                        <div class="hidden sm:flex items-center gap-3 text-xs font-mono font-semibold text-slate-600">
+                            <span class="flex items-center gap-1.5"><span class="w-3.5 h-2.5 rounded-full border-2 border-emerald-600 bg-emerald-100 inline-block"></span> Bắt đầu/End</span>
+                            <span class="flex items-center gap-1.5"><span class="w-3.5 h-2.5 border-2 border-sky-600 bg-sky-100 inline-block rounded-sm"></span> Xử lý</span>
+                            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rotate-45 border-2 border-amber-600 bg-amber-100 inline-block"></span> Điều kiện</span>
+                        </div>
+                    </div>
+
+                    <!-- Flowchart SVG Container -->
+                    <div class="flex-1 flex items-center justify-center overflow-hidden relative bg-white rounded-lg border border-slate-200 shadow-inner" id="flowchart-container">
+                        <!-- SVG injected dynamically -->
+                    </div>
+
+                    <!-- Step Explanation Box -->
+                    <div class="mt-2.5 p-3 rounded-lg bg-white border-l-4 border-orange-500 border border-slate-200 text-xs sm:text-sm flex items-start gap-2.5 shrink-0 shadow-sm" id="step-explanation-box">
+                        <i class="fa-solid fa-circle-info text-orange-600 text-base mt-0.5 shrink-0"></i>
+                        <p id="step-explanation-text" class="text-slate-800 leading-relaxed font-sans font-medium">
+                            Giải thích chi tiết bước thực thi...
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Progress Indicator Bar -->
+            <div class="shrink-0 flex items-center justify-between pt-2 border-t border-slate-200 text-xs text-slate-500">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-mono font-bold text-slate-600">Tiến trình bài:</span>
+                    <div class="flex items-center gap-2" id="step-dots-container">
+                        <!-- Step dots -->
+                    </div>
+                </div>
+                <div class="font-mono text-xs font-medium text-slate-500 hidden sm:block">
+                    Interactive Java Visualizer 2.0
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="h-16 border-t border-slate-200 bg-white/95 backdrop-blur px-4 sm:px-6 flex items-center justify-between z-30 shrink-0 shadow-sm">
+        <div class="flex items-center gap-3">
+            <button id="btn-prev" class="px-4 py-2 rounded-xl bg-slate-100 border border-slate-300 hover:bg-slate-200 text-slate-700 transition flex items-center gap-2 text-xs sm:text-sm font-semibold shadow-sm active:scale-95">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span class="hidden sm:inline">Lùi một bước</span>
+            </button>
+            <button id="btn-next" class="px-5 py-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-bold text-xs sm:text-sm shadow-md shadow-orange-600/30 transition flex items-center gap-2 active:scale-95">
+                <span>Bước kế tiếp</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+            <button id="btn-reset" title="Khởi động lại bài học" class="p-2.5 rounded-xl bg-slate-100 border border-slate-300 text-slate-600 hover:text-orange-600 hover:border-orange-300 transition text-xs sm:text-sm shadow-sm active:scale-95">
+                <i class="fa-solid fa-rotate-left"></i>
+            </button>
+        </div>
+
+        <!-- Slide Index Tracker -->
+        <div class="flex items-center gap-2 font-mono text-xs sm:text-sm">
+            <span class="text-slate-600 font-bold">Chủ đề:</span>
+            <span class="text-orange-600 font-extrabold text-base" id="current-slide-index">1</span>
+            <span class="text-slate-400">/</span>
+            <span class="text-slate-700 font-semibold" id="total-slides-count">5</span>
+        </div>
+
+        <!-- Keyboard Guide -->
+        <div class="hidden md:flex items-center gap-2 text-xs text-slate-500 font-medium">
+            <span>Phím tắt:</span>
+            <kbd class="px-2 py-0.5 bg-slate-100 border border-slate-300 rounded text-slate-700 font-mono font-bold shadow-sm">Space</kbd>
+            <kbd class="px-2 py-0.5 bg-slate-100 border border-slate-300 rounded text-slate-700 font-mono font-bold shadow-sm">←</kbd>
+            <kbd class="px-2 py-0.5 bg-slate-100 border border-slate-300 rounded text-slate-700 font-mono font-bold shadow-sm">→</kbd>
+            <kbd class="px-2 py-0.5 bg-slate-100 border border-slate-300 rounded text-slate-700 font-mono font-bold shadow-sm">R</kbd>
+        </div>
+    </footer>
+
+    <script>
+        /*
+         * Lesson Database with Light-Mode Optimized Flowcharts:
+         * Larger SVG Canvas, bold 15px-17px typography, high contrast colors,
+         * and clear geometric boundaries.
+         */
+        const lessons = [
+            // ================= LESSON 1 =================
+            {
+                id: 0,
+                badge: "Bài Học 01 • Khởi Đầu Nền Tảng",
+                title: "Khai Báo & Gán Biến (Variables)",
+                fileName: "VariableDemo.java",
+                codeLines: [
+                    { line: 1, text: 'public class VariableDemo {' },
+                    { line: 2, text: '    public static void main(String[] args) {' },
+                    { line: 3, text: '        int age;          // 1. Khai báo ô nhớ age' },
+                    { line: 4, text: '        age = 20;         // 2. Gán giá trị 20 vào age' },
+                    { line: 5, text: '        System.out.println("Tuổi: " + age); // 3. Xuất màn hình' },
+                    { line: 6, text: '    }' },
+                    { line: 7, text: '}' }
+                ],
+                flowchartSvg: `
+                    <svg viewBox="0 0 460 560" class="w-full h-full max-h-[490px] select-none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                <path d="M 0 1 L 10 5 L 0 9 z" fill="#475569" />
+                            </marker>
+                            <marker id="arrow-active" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                <path d="M 0 1 L 10 5 L 0 9 z" fill="#EA580C" />
+                            </marker>
+                        </defs>
+
+                        <!-- Flow Connections -->
+                        <line id="path-0" x1="230" y1="58" x2="230" y2="110" stroke="#475569" stroke-width="3" marker-end="url(#arrow)" class="flow-path"/>
+                        <line id="path-1" x1="230" y1="176" x2="230" y2="225" stroke="#475569" stroke-width="3" marker-end="url(#arrow)" class="flow-path"/>
+                        <line id="path-2" x1="230" y1="291" x2="230" y2="340" stroke="#475569" stroke-width="3" marker-end="url(#arrow)" class="flow-path"/>
+                        <line id="path-3" x1="230" y1="406" x2="230" y2="455" stroke="#475569" stroke-width="3" marker-end="url(#arrow)" class="flow-path"/>
+
+                        <!-- NODE 0: Start Oval -->
+                        <g id="node-0" class="fc-node">
+                            <rect x="130" y="12" width="200" height="46" rx="23" fill="#DCFCE7" stroke="#16A34A" stroke-width="2.5"/>
+                            <text x="230" y="41" fill="#14532D" font-size="16" font-family="Inter" font-weight="800" text-anchor="middle">BẮT ĐẦU (START)</text>
+                        </g>
+
+                        <!-- NODE 1: Declare Variable Rectangle -->
+                        <g id="node-1" class="fc-node">
+                            <rect x="100" y="110" width="260" height="66" rx="10" fill="#E0F2FE" stroke="#0284C7" stroke-width="2.5"/>
+                            <text x="230" y="137" fill="#0369A1" font-size="16" font-family="Fira Code" font-weight="700" text-anchor="middle">int age;</text>
+                            <text x="230" y="160" fill="#075985" font-size="13" font-family="Inter" font-weight="600" text-anchor="middle">Cấp phát 4 bytes RAM (chưa có giá trị)</text>
+                        </g>
+
+                        <!-- NODE 2: Assign Value Rectangle -->
+                        <g id="node-2" class="fc-node">
+                            <rect x="100" y="225" width="260" height="66" rx="10" fill="#FEF3C7" stroke="#D97706" stroke-width="2.5"/>
+                            <text x="230" y="252" fill="#B45309" font-size="16" font-family="Fira Code" font-weight="700" text-anchor="middle">age = 20;</text>
+                            <text x="230" y="275" fill="#92400E" font-size="13" font-family="Inter" font-weight="600" text-anchor="middle">Lưu số nguyên 20 vào ô nhớ age</text>
+                        </g>
+
+                        <!-- NODE 3: I/O Parallelogram (System.out) -->
+                        <g id="node-3" class="fc-node">
+                            <polygon points="120,340 370,340 340,406 90,406" fill="#F3E8FF" stroke="#9333EA" stroke-width="2.5"/>
+                            <text x="230" y="367" fill="#6B21A8" font-size="15" font-family="Fira Code" font-weight="700" text-anchor="middle">Xuất: "Tuổi: " + age</text>
+                            <text x="230" y="390" fill="#7E22CE" font-size="13" font-family="Inter" font-weight="600" text-anchor="middle">In kết quả ra màn hình Console</text>
+                        </g>
+
+                        <!-- NODE 4: End Oval -->
+                        <g id="node-4" class="fc-node">
+                            <rect x="130" y="455" width="200" height="46" rx="23" fill="#FFE4E6" stroke="#E11D48" stroke-width="2.5"/>
+                            <text x="230" y="484" fill="#881337" font-size="16" font-family="Inter" font-weight="800" text-anchor="middle">KẾT THÚC (END)</text>
+                        </g>
+                    </svg>
+                `,
+                steps: [
+                    {
+                        activeNodeId: "node-0",
+                        activePathId: null,
+                        activeLineNum: 2,
+                        explanation: "BẮT ĐẦU: Hệ điều hành nạp chương trình vào bộ nhớ và gọi hàm main() để bắt đầu phiên thực thi.",
+                        memoryHtml: `<span class="text-xs text-slate-500 italic font-medium">Chưa cấp phát biến nào</span>`,
+                        terminalText: `Chương trình sẵn sàng chạy...`
+                    },
+                    {
+                        activeNodeId: "node-1",
+                        activePathId: "path-0",
+                        activeLineNum: 3,
+                        explanation: "KHAI BÁO BIẾN (int age): Trình biên dịch tạo nhãn 'age' và dự trữ một ô nhớ kiểu int (4 Bytes = 32 bit). Giá trị hiện thời chưa xác định.",
+                        memoryHtml: `
+                            <div class="w-full p-2.5 rounded-lg border-2 border-dashed border-sky-500 bg-sky-50 text-center">
+                                <div class="text-xs text-sky-800 font-mono font-bold">int age (4 bytes)</div>
+                                <div class="text-sm font-mono text-slate-500 mt-1 font-semibold">Giá trị: <em>undefined</em></div>
+                            </div>
+                        `,
+                        terminalText: `> Đã cấp phát ô nhớ cho biến age`
+                    },
+                    {
+                        activeNodeId: "node-2",
+                        activePathId: "path-1",
+                        activeLineNum: 4,
+                        explanation: "GÁN GIÁ TRỊ (age = 20): Dữ liệu số nguyên 20 được ghi thẳng vào vùng nhớ của biến age trên thanh RAM.",
+                        memoryHtml: `
+                            <div class="w-full p-2.5 rounded-lg border-2 border-amber-500 bg-amber-50 text-center shadow-sm">
+                                <div class="text-xs text-amber-800 font-mono font-bold">int age (4 bytes)</div>
+                                <div class="text-xl font-mono text-amber-900 font-black">20</div>
+                            </div>
+                        `,
+                        terminalText: `> age = 20 đã được nạp vào RAM`
+                    },
+                    {
+                        activeNodeId: "node-3",
+                        activePathId: "path-2",
+                        activeLineNum: 5,
+                        explanation: "XUẤT DỮ LIỆU (I/O Output): Máy tính đọc giá trị 20 từ ô nhớ age và đẩy thành chuỗi ký tự hiển thị ra cửa sổ Console.",
+                        memoryHtml: `
+                            <div class="w-full p-2.5 rounded-lg border-2 border-purple-500 bg-purple-50 text-center">
+                                <div class="text-xs text-purple-800 font-mono font-bold">int age</div>
+                                <div class="text-lg font-mono text-purple-900 font-extrabold">20</div>
+                            </div>
+                        `,
+                        terminalText: `Tuổi: 20`
+                    },
+                    {
+                        activeNodeId: "node-4",
+                        activePathId: "path-3",
+                        activeLineNum: 6,
+                        explanation: "KẾT THÚC: Hàm main kết thúc, thu hồi các biến cục bộ và giải phóng bộ nhớ Stack an toàn.",
+                        memoryHtml: `<span class="text-xs text-emerald-600 font-bold">Ô nhớ giải phóng an toàn ✓</span>`,
+                        terminalText: `Tuổi: 20\nProcess finished with exit code 0`
+                    }
+                ]
+            },
+
+            // ================= LESSON 2 =================
+            {
+                id: 1,
+                badge: "Bài Học 02 • Tương Tác Bàn Phím",
+                title: "Nhập Xuất Dữ Liệu Với Scanner",
+                fileName: "ScannerApp.java",
+                codeLines: [
+                    { line: 1, text: 'import java.util.Scanner;' },
+                    { line: 2, text: 'public class ScannerApp {' },
+                    { line: 3, text: '    public static void main(String[] args) {' },
+                    { line: 4, text: '        Scanner sc = new Scanner(System.in); // 1. Khởi tạo Scanner' },
+                    { line: 5, text: '        System.out.print("Nhập n: ");        // 2. Nhắc người dùng' },
+                    { line: 6, text: '        int n = sc.nextInt();                 // 3. Đọc số nguyên từ phím' },
+                    { line: 7, text: '        System.out.println("Bạn nhập: " + n); // 4. Hiển thị lại' },
+                    { line: 8, text: '    }' },
+                    { line: 9, text: '}' }
+                ],
+                flowchartSvg: `
+                    <svg viewBox="0 0 460 560" class="w-full h-full max-h-[490px] select-none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <marker id="arrow2" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                <path d="M 0 1 L 10 5 L 0 9 z" fill="#475569" />
+                            </marker>
+                        </defs>
+
+                        <!-- Paths -->
+                        <line id="path-0" x1="230" y1="48" x2="230" y2="88" stroke="#475569" stroke-width="3" marker-end="url(#arrow2)" class="flow-path"/>
+                        <line id="path-1" x1="230" y1="148" x2="230" y2="188" stroke="#475569" stroke-width="3" marker-end="url(#arrow2)" class="flow-path"/>
+                        <line id="path-2" x1="230" y1="248" x2="230" y2="288" stroke="#475569" stroke-width="3" marker-end="url(#arrow2)" class="flow-path"/>
+                        <line id="path-3" x1="230" y1="348" x2="230" y2="388" stroke="#475569" stroke-width="3" marker-end="url(#arrow2)" class="flow-path"/>
+                        <line id="path-4" x1="230" y1="448" x2="230" y2="488" stroke="#475569" stroke-width="3" marker-end="url(#arrow2)" class="flow-path"/>
+
+                        <!-- Nodes -->
+                        <!-- Node 0: Start -->
+                        <g id="node-0" class="fc-node">
+                            <rect x="130" y="8" width="200" height="40" rx="20" fill="#DCFCE7" stroke="#16A34A" stroke-width="2.5"/>
+                            <text x="230" y="34" fill="#14532D" font-size="16" font-family="Inter" font-weight="800" text-anchor="middle">BẮT ĐẦU</text>
+                        </g>
+
+                        <!-- Node 1: Create Scanner -->
+                        <g id="node-1" class="fc-node">
+                            <rect x="90" y="88" width="280" height="60" rx="10" fill="#E0F2FE" stroke="#0284C7" stroke-width="2.5"/>
+                            <text x="230" y="114" fill="#0369A1" font-size="15" font-family="Fira Code" font-weight="700" text-anchor="middle">Scanner sc = new ...</text>
+                            <text x="230" y="136" fill="#075985" font-size="13" font-family="Inter" font-weight="600" text-anchor="middle">Mở luồng kết nối bàn phím (System.in)</text>
+                        </g>
+
+                        <!-- Node 2: Prompt text -->
+                        <g id="node-2" class="fc-node">
+                            <polygon points="110,188 370,188 350,248 90,248" fill="#FEF3C7" stroke="#D97706" stroke-width="2.5"/>
+                            <text x="230" y="214" fill="#B45309" font-size="15" font-family="Fira Code" font-weight="700" text-anchor="middle">In câu nhắc: "Nhập n: "</text>
+                            <text x="230" y="235" fill="#92400E" font-size="13" font-family="Inter" font-weight="600" text-anchor="middle">Yêu cầu người dùng gõ số</text>
+                        </g>
+
+                        <!-- Node 3: Wait & Read nextInt -->
+                        <g id="node-3" class="fc-node">
+                            <polygon points="100,288 380,288 360,348 80,348" fill="#DCFCE7" stroke="#16A34A" stroke-width="2.5"/>
+                            <text x="230" y="314" fill="#15803D" font-size="15" font-family="Fira Code" font-weight="700" text-anchor="middle">Nhập: n = sc.nextInt()</text>
+                            <text x="230" y="335" fill="#14532D" font-size="13" font-family="Inter" font-weight="600" text-anchor="middle">Chờ Enter & Lưu số vào biến n</text>
+                        </g>
+
+                        <!-- Node 4: Print result -->
+                        <g id="node-4" class="fc-node">
+                            <polygon points="110,388 370,388 350,448 90,448" fill="#F3E8FF" stroke="#9333EA" stroke-width="2.5"/>
+                            <text x="230" y="414" fill="#6B21A8" font-size="15" font-family="Fira Code" font-weight="700" text-anchor="middle">In: "Bạn nhập: " + n</text>
+                            <text x="230" y="435" fill="#7E22CE" font-size="13" font-family="Inter" font-weight="600" text-anchor="middle">Xuất dữ liệu n ra màn hình</text>
+                        </g>
+
+                        <!-- Node 5: End -->
+                        <g id="node-5" class="fc-node">
+                            <rect x="130" y="488" width="200" height="40" rx="20" fill="#FFE4E6" stroke="#E11D48" stroke-width="2.5"/>
+                            <text x="230" y="514" fill="#881337" font-size="16" font-family="Inter" font-weight="800" text-anchor="middle">KẾT THÚC</text>
+                        </g>
+                    </svg>
+                `,
+                steps: [
+                    {
+                        activeNodeId: "node-0",
+                        activePathId: null,
+                        activeLineNum: 3,
+                        explanation: "BẮT ĐẦU: Chương trình khởi động hàm main(), chuẩn bị mở các luồng giao tiếp.",
+                        memoryHtml: `<span class="text-xs text-slate-500 font-medium">Chưa tạo đối tượng</span>`,
+                        terminalText: `$ Ready`
+                    },
+                    {
+                        activeNodeId: "node-1",
+                        activePathId: "path-0",
+                        activeLineNum: 4,
+                        explanation: "KHỞI TẠO SCANNER: Đối tượng Scanner được tạo và liên kết trực tiếp với System.in (luồng bàn phím máy tính).",
+                        memoryHtml: `
+                            <div class="w-full p-2.5 rounded-lg border-2 border-sky-500 bg-sky-50 text-center">
+                                <div class="text-xs text-sky-800 font-mono font-bold">Reference Object</div>
+                                <div class="text-sm font-mono font-black text-sky-900">sc -> System.in [Active]</div>
+                            </div>
+                        `,
+                        terminalText: `> Khởi tạo bộ đệm bàn phím...`
+                    },
+                    {
+                        activeNodeId: "node-2",
+                        activePathId: "path-1",
+                        activeLineNum: 5,
+                        explanation: "LỆNH XUẤT (System.out.print): In câu nhắc ra màn hình để người dùng biết cần phải gõ dữ liệu.",
+                        memoryHtml: `
+                            <div class="text-xs text-slate-600 text-center font-mono font-bold">Đang chờ bàn phím...</div>
+                        `,
+                        terminalText: `Nhập n: _`
+                    },
+                    {
+                        activeNodeId: "node-3",
+                        activePathId: "path-2",
+                        activeLineNum: 6,
+                        explanation: "ĐỌC DỮ LIỆU (sc.nextInt()): Chương trình tạm dừng cho đến khi người dùng gõ số '88' và nhấn phím Enter. Scanner trích xuất số 88 và gán vào n.",
+                        memoryHtml: `
+                            <div class="w-full p-2.5 rounded-lg border-2 border-emerald-500 bg-emerald-50 text-center shadow-sm">
+                                <div class="text-xs text-emerald-800 font-mono font-bold">Biến: int n</div>
+                                <div class="text-xl font-mono text-emerald-900 font-black">88</div>
+                            </div>
+                        `,
+                        terminalText: `Nhập n: 88\n[Người dùng gõ 88 & Enter]`
+                    },
+                    {
+                        activeNodeId: "node-4",
+                        activePathId: "path-3",
+                        activeLineNum: 7,
+                        explanation: "XUẤT KẾT QUẢ: Lấy giá trị biến n = 88 từ RAM và ghép chuỗi hiển thị ra màn hình người dùng.",
+                        memoryHtml: `
+                            <div class="w-full p-2.5 rounded-lg border-2 border-purple-500 bg-purple-50 text-center">
+                                <div class="text-xs text-purple-800 font-mono font-bold">int n = 88</div>
+                                <div class="text-sm text-purple-900 font-semibold">Đã xuất ra màn hình</div>
+                            </div>
+                        `,
+                        terminalText: `Nhập n: 88\nBạn nhập: 88`
+                    },
+                    {
+                        activeNodeId: "node-5",
+                        activePathId: "path-4",
+                        activeLineNum: 8,
+                        explanation: "KẾT THÚC: Dữ liệu đã được xử lý xong, giải phóng luồng bàn phím an toàn.",
+                        memoryHtml: `<span class="text-xs text-emerald-600 font-bold">Hoàn tất tương tác nhập xuất ✓</span>`,
+                        terminalText: `Nhập n: 88\nBạn nhập: 88\nProcess finished with exit code 0`
+                    }
+                ]
+            },
+
+            // ================= LESSON 3 =================
+            {
+                id: 2,
+                badge: "Bài Học 03 • Quyết Định Luồng Thực Thi",
+                title: "Câu Điều Kiện Rẽ Nhánh (If - Else)",
+                fileName: "IfElseBranch.java",
+                codeLines: [
+                    { line: 1, text: 'public class IfElseBranch {' },
+                    { line: 2, text: '    public static void main(String[] args) {' },
+                    { line: 3, text: '        double score = 7.5;              // 1. Gán điểm = 7.5' },
+                    { line: 4, text: '        if (score >= 5.0) {              // 2. Kiểm tra điều kiện' },
+                    { line: 5, text: '            System.out.println("ĐẬU!");  // 3. Nhánh Đúng (True)' },
+                    { line: 6, text: '        } else {' },
+                    { line: 7, text: '            System.out.println("HỌC LẠI");// 4. Nhánh Sai (False)' },
+                    { line: 8, text: '        }' },
+                    { line: 9, text: '    }' },
+                    { line: 10, text: '}' }
+                ],
+                flowchartSvg: `
+                    <svg viewBox="0 0 480 560" class="w-full h-full max-h-[490px] select-none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <marker id="arrow3" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                <path d="M 0 1 L 10 5 L 0 9 z" fill="#475569" />
+                            </marker>
+                        </defs>
+
+                        <!-- Paths -->
+                        <line id="path-0" x1="240" y1="46" x2="240" y2="92" stroke="#475569" stroke-width="3" marker-end="url(#arrow3)" class="flow-path"/>
+                        <line id="path-1" x1="240" y1="156" x2="240" y2="202" stroke="#475569" stroke-width="3" marker-end="url(#arrow3)" class="flow-path"/>
+
+                        <!-- True branch: Left -->
+                        <path id="path-true" d="M 150 252 L 100 252 L 100 310" fill="none" stroke="#16A34A" stroke-width="3.5" marker-end="url(#arrow3)" class="flow-path"/>
+                        <!-- False branch: Right -->
+                        <path id="path-false" d="M 330 252 L 380 252 L 380 310" fill="none" stroke="#DC2626" stroke-width="3.5" marker-end="url(#arrow3)" class="flow-path"/>
+
+                        <!-- Converge Paths to End -->
+                        <path id="path-merge-true" d="M 100 376 L 100 440 L 220 485" fill="none" stroke="#475569" stroke-width="2.5" marker-end="url(#arrow3)" class="flow-path"/>
+                        <path id="path-merge-false" d="M 380 376 L 380 440 L 260 485" fill="none" stroke="#475569" stroke-width="2.5" marker-end="url(#arrow3)" class="flow-path"/>
+
+                        <!-- Nodes -->
+                        <!-- Node 0: Start -->
+                        <g id="node-0" class="fc-node">
+                            <rect x="140" y="8" width="200" height="38" rx="19" fill="#DCFCE7" stroke="#16A34A" stroke-width="2.5"/>
+                            <text x="240" y="33" fill="#14532D" font-size="16" font-family="Inter" font-weight="800" text-anchor="middle">BẮT ĐẦU</text>
+                        </g>
+
+                        <!-- Node 1: Process score -->
+                        <g id="node-1" class="fc-node">
+                            <rect x="100" y="92" width="280" height="64" rx="10" fill="#E0F2FE" stroke="#0284C7" stroke-width="2.5"/>
+                            <text x="240" y="119" fill="#0369A1" font-size="16" font-family="Fira Code" font-weight="700" text-anchor="middle">double score = 7.5;</text>
+                            <text x="240" y="142" fill="#075985" font-size="13" font-family="Inter" font-weight="600" text-anchor="middle">Gán điểm sinh viên vào bộ nhớ</text>
+                        </g>
+
+                        <!-- Node 2: Large Diamond Condition -->
+                        <g id="node-2" class="fc-node">
+                            <polygon points="240,202 340,252 240,302 140,252" fill="#FEF3C7" stroke="#D97706" stroke-width="3"/>
+                            <text x="240" y="248" fill="#92400E" font-size="16" font-family="Fira Code" font-weight="800" text-anchor="middle">score >= 5.0 ?</text>
+                            <text x="240" y="268" fill="#B45309" font-size="12" font-family="Inter" font-weight="700" text-anchor="middle">So sánh logic</text>
+                            
+                            <!-- Bold Decision Labels with Background Badges -->
+                            <rect x="40" y="235" width="95" height="26" rx="6" fill="#DCFCE7" stroke="#16A34A" stroke-width="2"/>
+                            <text x="87" y="253" fill="#14532D" font-size="13" font-family="Inter" font-weight="800" text-anchor="middle">ĐÚNG (True)</text>
+
+                            <rect x="345" y="235" width="95" height="26" rx="6" fill="#FEE2E2" stroke="#DC2626" stroke-width="2"/>
+                            <text x="392" y="253" fill="#991B1B" font-size="13" font-family="Inter" font-weight="800" text-anchor="middle">SAI (False)</text>
+                        </g>
+
+                        <!-- Node 3: True branch output -->
+                        <g id="node-3" class="fc-node">
+                            <polygon points="30,310 170,310 150,376 10,376" fill="#DCFCE7" stroke="#16A34A" stroke-width="2.5"/>
+                            <text x="90" y="337" fill="#14532D" font-size="16" font-family="Fira Code" font-weight="800" text-anchor="middle">In: "ĐẬU!"</text>
+                            <text x="90" y="359" fill="#166534" font-size="13" font-family="Inter" font-weight="700" text-anchor="middle">Khối lệnh IF</text>
+                        </g>
+
+                        <!-- Node 4: False branch output -->
+                        <g id="node-4" class="fc-node">
+                            <polygon points="310,310 450,310 430,376 290,376" fill="#FFE4E6" stroke="#E11D48" stroke-width="2.5"/>
+                            <text x="370" y="337" fill="#881337" font-size="15" font-family="Fira Code" font-weight="800" text-anchor="middle">In: "HỌC LẠI"</text>
+                            <text x="370" y="359" fill="#9F1239" font-size="13" font-family="Inter" font-weight="700" text-anchor="middle">Khối lệnh ELSE</text>
+                        </g>
+
+                        <!-- Node 5: End -->
+                        <g id="node-5" class="fc-node">
+                            <rect x="140" y="485" width="200" height="40" rx="20" fill="#FFE4E6" stroke="#E11D48" stroke-width="2.5"/>
+                            <text x="240" y="511" fill="#881337" font-size="16" font-family="Inter" font-weight="800" text-anchor="middle">KẾT THÚC</text>
+                        </g>
+                    </svg>
+                `,
+                steps: [
+                    {
+                        activeNodeId: "node-0",
+                        activePathId: null,
+                        activeLineNum: 2,
+                        explanation: "BẮT ĐẦU: Chuẩn bị nạp điểm số của sinh viên để đánh giá kết quả môn học.",
+                        memoryHtml: `<span class="text-xs text-slate-500 font-medium">Chưa có dữ liệu</span>`,
+                        terminalText: `$ Ready`
+                    },
+                    {
+                        activeNodeId: "node-1",
+                        activePathId: "path-0",
+                        activeLineNum: 3,
+                        explanation: "KHỞI TẠO BIẾN (double score = 7.5): Cấp phát 8 Bytes RAM để lưu trữ điểm số 7.5.",
+                        memoryHtml: `
+                            <div class="w-full p-2.5 rounded-lg border-2 border-sky-500 bg-sky-50 text-center">
+                                <div class="text-xs text-sky-800 font-mono font-bold">double score</div>
+                                <div class="text-xl font-mono font-black text-sky-900">7.5</div>
+                            </div>
+                        `,
+                        terminalText: `> Điểm xét duyệt: 7.5`
+                    },
+                    {
+                        activeNodeId: "node-2",
+                        activePathId: "path-1",
+                        activeLineNum: 4,
+                        explanation: "KIỂM TRA ĐIỀU KIỆN (score >= 5.0): Máy tính so sánh: 7.5 >= 5.0 -> Kết quả biểu thức là TRUE (Đúng). Luồng chương trình rẽ sang nhánh TRÁI.",
+                        memoryHtml: `
+                            <div class="w-full p-2.5 rounded-lg border-2 border-amber-500 bg-amber-50 text-center shadow-sm">
+                                <div class="text-xs text-amber-800 font-mono font-bold">7.5 >= 5.0 ?</div>
+                                <div class="text-base font-mono font-extrabold text-emerald-700">TRUE (ĐÚNG)</div>
+                            </div>
+                        `,
+                        terminalText: `> Đánh giá: 7.5 >= 5.0 => TRUE`
+                    },
+                    {
+                        activeNodeId: "node-3",
+                        activePathId: "path-true",
+                        activeLineNum: 5,
+                        explanation: "THỰC THI KHỐI IF: Do điều kiện đúng, dòng code in 'ĐẬU!' được thực hiện. Khối 'else' hoàn toàn bị bỏ qua!",
+                        memoryHtml: `
+                            <div class="w-full p-2.5 rounded-lg border-2 border-emerald-500 bg-emerald-50 text-center">
+                                <div class="text-xs text-emerald-800 font-mono font-bold">NHÁNH ĐƯỢC CHỌN</div>
+                                <div class="text-sm font-mono font-extrabold text-emerald-900">System.out.println("ĐẬU!")</div>
+                            </div>
+                        `,
+                        terminalText: `> Đánh giá: 7.5 >= 5.0 => TRUE\nĐẬU!`
+                    },
+                    {
+                        activeNodeId: "node-5",
+                        activePathId: "path-merge-true",
+                        activeLineNum: 8,
+                        explanation: "KẾT THÚC: Cả 2 nhánh hội tụ về điểm kết thúc. Quá trình kiểm tra điều kiện hoàn tất.",
+                        memoryHtml: `<span class="text-xs text-emerald-600 font-bold">Rẽ nhánh thành công ✓</span>`,
+                        terminalText: `ĐẬU!\nProcess finished with exit code 0`
+                    }
+                ]
+            },
+
+            // ================= LESSON 4 =================
+            {
+                id: 3,
+                badge: "Bài Học 04 • Vòng Lặp Biết Trước Số Lần",
+                title: "Vòng Lặp For (Step-by-Step)",
+                fileName: "ForLoopDemo.java",
+                codeLines: [
+                    { line: 1, text: 'public class ForLoopDemo {' },
+                    { line: 2, text: '    public static void main(String[] args) {' },
+                    { line: 3, text: '        // for (1.Khởi tạo; 2.Điều kiện; 3.Bước nhảy)' },
+                    { line: 4, text: '        for (int i = 1; i <= 3; i++) {' },
+                    { line: 5, text: '            System.out.println("Lặp: " + i);' },
+                    { line: 6, text: '        }' },
+                    { line: 7, text: '        System.out.println("Kết thúc lặp!");' },
+                    { line: 8, text: '    }' },
+                    { line: 9, text: '}' }
+                ],
+                flowchartSvg: `
+                    <svg viewBox="0 0 480 560" class="w-full h-full max-h-[490px] select-none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <marker id="arrow4" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                <path d="M 0 1 L 10 5 L 0 9 z" fill="#475569" />
+                            </marker>
+                        </defs>
+
+                        <!-- Paths -->
+                        <line id="path-0" x1="220" y1="42" x2="220" y2="82" stroke="#475569" stroke-width="3" marker-end="url(#arrow4)" class="flow-path"/>
+                        <line id="path-1" x1="220" y1="142" x2="220" y2="182" stroke="#475569" stroke-width="3" marker-end="url(#arrow4)" class="flow-path"/>
+
+                        <!-- Condition TRUE down to Body -->
+                        <line id="path-true" x1="220" y1="262" x2="220" y2="304" stroke="#16A34A" stroke-width="3.5" marker-end="url(#arrow4)" class="flow-path"/>
+                        
+                        <!-- Body to Increment i++ -->
+                        <line id="path-inc" x1="220" y1="364" x2="220" y2="404" stroke="#475569" stroke-width="3" marker-end="url(#arrow4)" class="flow-path"/>
+
+                        <!-- Loop Back Path: from i++ up to Condition -->
+                        <path id="path-loopback" d="M 100 432 L 35 432 L 35 222 L 132 222" fill="none" stroke="#0284C7" stroke-width="3.5" marker-end="url(#arrow4)" class="flow-path"/>
+
+                        <!-- Condition FALSE to End (Exit Loop) -->
+                        <path id="path-false" d="M 308 222 L 410 222 L 410 496 L 315 496" fill="none" stroke="#DC2626" stroke-width="3.5" marker-end="url(#arrow4)" class="flow-path"/>
+
+                        <!-- Nodes -->
+                        <!-- Node 0: Start -->
+                        <g id="node-0" class="fc-node">
+                            <rect x="130" y="6" width="180" height="36" rx="18" fill="#DCFCE7" stroke="#16A34A" stroke-width="2.5"/>
+                            <text x="220" y="30" fill="#14532D" font-size="15" font-family="Inter" font-weight="800" text-anchor="middle">BẮT ĐẦU</text>
+                        </g>
+
+                        <!-- Node 1: Init i = 1 -->
+                        <g id="node-1" class="fc-node">
+                            <rect x="100" y="82" width="240" height="60" rx="10" fill="#E0F2FE" stroke="#0284C7" stroke-width="2.5"/>
+                            <text x="220" y="108" fill="#0369A1" font-size="16" font-family="Fira Code" font-weight="700" text-anchor="middle">(1) int i = 1;</text>
+                            <text x="220" y="130" fill="#075985" font-size="13" font-family="Inter" font-weight="600" text-anchor="middle">Khởi tạo biến đếm ban đầu</text>
+                        </g>
+
+                        <!-- Node 2: Diamond Check condition i <= 3 -->
+                        <g id="node-2" class="fc-node">
+                            <polygon points="220,182 308,222 220,262 132,222" fill="#FEF3C7" stroke="#D97706" stroke-width="3"/>
+                            <text x="220" y="218" fill="#92400E" font-size="16" font-family="Fira Code" font-weight="800" text-anchor="middle">(2) i &lt;= 3 ?</text>
+                            <text x="220" y="238" fill="#B45309" font-size="12" font-family="Inter" font-weight="700" text-anchor="middle">Kiểm tra điều kiện</text>
+
+                            <!-- Branch Badges -->
+                            <rect x="230" y="270" width="75" height="24" rx="5" fill="#DCFCE7" stroke="#16A34A" stroke-width="1.5"/>
+                            <text x="267" y="286" fill="#14532D" font-size="11" font-family="Inter" font-weight="800" text-anchor="middle">ĐÚNG (Lặp)</text>
+
+                            <rect x="325" y="195" width="85" height="24" rx="5" fill="#FEE2E2" stroke="#DC2626" stroke-width="1.5"/>
+                            <text x="367" y="211" fill="#991B1B" font-size="11" font-family="Inter" font-weight="800" text-anchor="middle">SAI (Thoát)</text>
+                        </g>
+
+                        <!-- Node 3: Loop Body output -->
+                        <g id="node-3" class="fc-node">
+                            <polygon points="120,304 320,304 300,364 100,364" fill="#F3E8FF" stroke="#9333EA" stroke-width="2.5"/>
+                            <text x="210" y="330" fill="#6B21A8" font-size="15" font-family="Fira Code" font-weight="700" text-anchor="middle">In: "Lặp: " + i</text>
+                            <text x="210" y="351" fill="#7E22CE" font-size="13" font-family="Inter" font-weight="600" text-anchor="middle">Thực thi thân vòng lặp</text>
+                        </g>
+
+                        <!-- Node 4: Increment i++ -->
+                        <g id="node-4" class="fc-node">
+                            <rect x="100" y="404" width="240" height="56" rx="10" fill="#DCFCE7" stroke="#16A34A" stroke-width="2.5"/>
+                            <text x="220" y="428" fill="#15803D" font-size="16" font-family="Fira Code" font-weight="700" text-anchor="middle">(3) i++ (i = i + 1)</text>
+                            <text x="220" y="449" fill="#14532D" font-size="13" font-family="Inter" font-weight="600" text-anchor="middle">Tăng biến đếm và quay lại</text>
+                        </g>
+
+                        <!-- Node 5: End -->
+                        <g id="node-5" class="fc-node">
+                            <rect x="125" y="478" width="190" height="36" rx="18" fill="#FFE4E6" stroke="#E11D48" stroke-width="2.5"/>
+                            <text x="220" y="502" fill="#881337" font-size="15" font-family="Inter" font-weight="800" text-anchor="middle">KẾT THÚC LẶP</text>
+                        </g>
+                    </svg>
+                `,
+                steps: [
+                    {
+                        activeNodeId: "node-0",
+                        activePathId: null,
+                        activeLineNum: 4,
+                        explanation: "BẮT ĐẦU: Chuẩn bị thiết lập vòng lặp for với biến đếm i từ 1 đến 3.",
+                        memoryHtml: `<span class="text-xs text-slate-500 font-medium">Chưa khởi tạo biến i</span>`,
+                        terminalText: `$ Ready`
+                    },
+                    {
+                        activeNodeId: "node-1",
+                        activePathId: "path-0",
+                        activeLineNum: 4,
+                        explanation: "BƯỚC 1: KHỞI TẠO (int i = 1). Bước này chỉ chạy DUY NHẤT một lần lúc bắt đầu vòng for.",
+                        memoryHtml: `
+                            <div class="w-full p-2.5 rounded-lg border-2 border-sky-500 bg-sky-50 text-center">
+                                <div class="text-xs text-sky-800 font-mono font-bold">Biến đếm: int i</div>
+                                <div class="text-xl font-mono font-black text-sky-900">1</div>
+                            </div>
+                        `,
+                        terminalText: `> Khởi tạo i = 1`
+                    },
+                    {
+                        activeNodeId: "node-2",
+                        activePathId: "path-1",
+                        activeLineNum: 4,
+                        explanation: "BƯỚC 2: KIỂM TRA ĐIỀU KIỆN (i <= 3): Hiện tại i = 1 <= 3 là TRUE (Đúng) -> Tiếp tục vào thân vòng lặp.",
+                        memoryHtml: `
+                            <div class="w-full p-2.5 rounded-lg border-2 border-amber-500 bg-amber-50 text-center shadow-sm">
+                                <div class="text-xs text-amber-800 font-mono font-bold">Kiểm tra: 1 <= 3 ?</div>
+                                <div class="text-base font-mono font-extrabold text-emerald-700">TRUE (Hợp lệ)</div>
+                            </div>
+                        `,
+                        terminalText: `> 1 <= 3: TRUE`
+                    },
+                    {
+                        activeNodeId: "node-3",
+                        activePathId: "path-true",
+                        activeLineNum: 5,
+                        explanation: "THÂN VÒNG LẶP: Thực thi in dòng chữ 'Lặp: 1' ra màn hình Console.",
+                        memoryHtml: `
+                            <div class="w-full p-2.5 rounded-lg border-2 border-purple-500 bg-purple-50 text-center">
+                                <div class="text-xs text-purple-800 font-mono font-bold">Đang in giá trị i = 1</div>
+                            </div>
+                        `,
+                        terminalText: `Lặp: 1`
+                    },
+                    {
+                        activeNodeId: "node-4",
+                        activePathId: "path-inc",
+                        activeLineNum: 4,
+                        explanation: "BƯỚC 3: BƯỚC NHẢY (i++): Biến i được tăng thêm 1 đơn vị: i trở thành 2. Sau đó mũi tên quay lại kiểm tra điều kiện.",
+                        memoryHtml: `
+                            <div class="w-full p-2.5 rounded-lg border-2 border-emerald-500 bg-emerald-50 text-center">
+                                <div class="text-xs text-emerald-800 font-mono font-bold">i tăng từ 1 -> 2</div>
+                                <div class="text-xl font-mono font-black text-emerald-900">i = 2</div>
+                            </div>
+                        `,
+                        terminalText: `Lặp: 1\n> i++ (i thành 2)`
+                    },
+                    {
+                        activeNodeId: "node-3",
+                        activePathId: "path-loopback",
+                        activeLineNum: 5,
+                        explanation: "LẦN LẶP 2 & 3: Tương tự, i = 2 <= 3 in 'Lặp: 2'; rồi i = 3 <= 3 in 'Lặp: 3'.",
+                        memoryHtml: `
+                            <div class="w-full p-2.5 rounded-lg border-2 border-amber-500 bg-amber-50 text-center">
+                                <div class="text-xs text-amber-800 font-mono font-bold">Tiến trình các vòng lặp</div>
+                                <div class="text-xs font-mono text-slate-800 font-bold mt-1">Đã in lặp 2 và 3</div>
+                            </div>
+                        `,
+                        terminalText: `Lặp: 1\nLặp: 2\nLặp: 3`
+                    },
+                    {
+                        activeNodeId: "node-5",
+                        activePathId: "path-false",
+                        activeLineNum: 7,
+                        explanation: "KẾT THÚC: Khi i tăng lên 4, điều kiện 4 <= 3 là FALSE (Sai). Vòng lặp thoát ngay và in câu kết thúc.",
+                        memoryHtml: `
+                            <div class="w-full p-2.5 rounded-lg border-2 border-rose-500 bg-rose-50 text-center">
+                                <div class="text-xs text-rose-800 font-mono font-bold">i = 4 (4 <= 3 là Sai)</div>
+                                <div class="text-xs font-extrabold text-rose-700 mt-0.5">Vòng lặp đã dừng!</div>
+                            </div>
+                        `,
+                        terminalText: `Lặp: 1\nLặp: 2\nLặp: 3\nKết thúc lặp!\nProcess finished with exit code 0`
+                    }
+                ]
+            },
+
+            // ================= LESSON 5 =================
+            {
+                id: 4,
+                badge: "Bài Học 05 • Lặp Theo Điều Kiện Logic",
+                title: "Vòng Lặp While & Nguy Cơ Lặp Vô Tận",
+                fileName: "WhileLoopDemo.java",
+                codeLines: [
+                    { line: 1, text: 'public class WhileLoopDemo {' },
+                    { line: 2, text: '    public static void main(String[] args) {' },
+                    { line: 3, text: '        int energy = 3;             // 1. Năng lượng khởi đầu' },
+                    { line: 4, text: '        while (energy > 0) {        // 2. Kiểm tra điều kiện' },
+                    { line: 5, text: '            System.out.println("Bắn laser!"); // Thân while' },
+                    { line: 6, text: '            energy--;               // 3. Tiêu hao năng lượng' },
+                    { line: 7, text: '        }' },
+                    { line: 8, text: '        System.out.println("Hết năng lượng!");' },
+                    { line: 9, text: '    }' },
+                    { line: 10, text: '}' }
+                ],
+                flowchartSvg: `
+                    <svg viewBox="0 0 480 560" class="w-full h-full max-h-[490px] select-none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <marker id="arrow5" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                <path d="M 0 1 L 10 5 L 0 9 z" fill="#475569" />
+                            </marker>
+                        </defs>
+
+                        <!-- Paths -->
+                        <line id="path-0" x1="220" y1="42" x2="220" y2="82" stroke="#475569" stroke-width="3" marker-end="url(#arrow5)" class="flow-path"/>
+                        <line id="path-1" x1="220" y1="142" x2="220" y2="182" stroke="#475569" stroke-width="3" marker-end="url(#arrow5)" class="flow-path"/>
+
+                        <!-- True branch down to action -->
+                        <line id="path-true" x1="220" y1="262" x2="220" y2="304" stroke="#16A34A" stroke-width="3.5" marker-end="url(#arrow5)" class="flow-path"/>
+                        
+                        <!-- Body to energy decrement -->
+                        <line id="path-dec" x1="220" y1="364" x2="220" y2="404" stroke="#475569" stroke-width="3" marker-end="url(#arrow5)" class="flow-path"/>
+
+                        <!-- Loop Back up to While Condition -->
+                        <path id="path-loopback" d="M 100 432 L 35 432 L 35 222 L 132 222" fill="none" stroke="#D97706" stroke-width="3.5" marker-end="url(#arrow5)" class="flow-path"/>
+
+                        <!-- False branch to End -->
+                        <path id="path-false" d="M 308 222 L 410 222 L 410 496 L 315 496" fill="none" stroke="#DC2626" stroke-width="3.5" marker-end="url(#arrow5)" class="flow-path"/>
+
+                        <!-- Nodes -->
+                        <!-- Node 0: Start -->
+                        <g id="node-0" class="fc-node">
+                            <rect x="130" y="6" width="180" height="36" rx="18" fill="#DCFCE7" stroke="#16A34A" stroke-width="2.5"/>
+                            <text x="220" y="30" fill="#14532D" font-size="15" font-family="Inter" font-weight="800" text-anchor="middle">BẮT ĐẦU</text>
+                        </g>
+
+                        <!-- Node 1: Init energy = 3 -->
+                        <g id="node-1" class="fc-node">
+                            <rect x="100" y="82" width="240" height="60" rx="10" fill="#E0F2FE" stroke="#0284C7" stroke-width="2.5"/>
+                            <text x="220" y="108" fill="#0369A1" font-size="16" font-family="Fira Code" font-weight="700" text-anchor="middle">int energy = 3;</text>
+                            <text x="220" y="130" fill="#075985" font-size="13" font-family="Inter" font-weight="600" text-anchor="middle">Khởi tạo điều kiện ban đầu</text>
+                        </g>
+
+                        <!-- Node 2: While Condition Diamond -->
+                        <g id="node-2" class="fc-node">
+                            <polygon points="220,182 308,222 220,262 132,222" fill="#FEF3C7" stroke="#D97706" stroke-width="3"/>
+                            <text x="220" y="218" fill="#92400E" font-size="16" font-family="Fira Code" font-weight="800" text-anchor="middle">energy > 0 ?</text>
+                            <text x="220" y="238" fill="#B45309" font-size="12" font-family="Inter" font-weight="700" text-anchor="middle">Kiểm tra năng lượng</text>
+
+                            <!-- Branch Badges -->
+                            <rect x="230" y="270" width="75" height="24" rx="5" fill="#DCFCE7" stroke="#16A34A" stroke-width="1.5"/>
+                            <text x="267" y="286" fill="#14532D" font-size="11" font-family="Inter" font-weight="800" text-anchor="middle">ĐÚNG (Còn)</text>
+
+                            <rect x="325" y="195" width="85" height="24" rx="5" fill="#FEE2E2" stroke="#DC2626" stroke-width="1.5"/>
+                            <text x="367" y="211" fill="#991B1B" font-size="11" font-family="Inter" font-weight="800" text-anchor="middle">SAI (Thoát)</text>
+                        </g>
+
+                        <!-- Node 3: Laser firing output -->
+                        <g id="node-3" class="fc-node">
+                            <polygon points="120,304 320,304 300,364 100,364" fill="#F3E8FF" stroke="#9333EA" stroke-width="2.5"/>
+                            <text x="210" y="330" fill="#6B21A8" font-size="15" font-family="Fira Code" font-weight="700" text-anchor="middle">In: "Bắn laser!"</text>
+                            <text x="210" y="351" fill="#7E22CE" font-size="13" font-family="Inter" font-weight="600" text-anchor="middle">Thực thi hành động lặp</text>
+                        </g>
+
+                        <!-- Node 4: Decrement energy-- -->
+                        <g id="node-4" class="fc-node">
+                            <rect x="100" y="404" width="240" height="56" rx="10" fill="#FEE2E2" stroke="#DC2626" stroke-width="2.5"/>
+                            <text x="220" y="428" fill="#991B1B" font-size="16" font-family="Fira Code" font-weight="700" text-anchor="middle">energy--;</text>
+                            <text x="220" y="449" fill="#7F1D1D" font-size="13" font-family="Inter" font-weight="600" text-anchor="middle">Giảm năng lượng tránh lặp vô tận</text>
+                        </g>
+
+                        <!-- Node 5: End -->
+                        <g id="node-5" class="fc-node">
+                            <rect x="125" y="478" width="190" height="36" rx="18" fill="#FFE4E6" stroke="#E11D48" stroke-width="2.5"/>
+                            <text x="220" y="502" fill="#881337" font-size="15" font-family="Inter" font-weight="800" text-anchor="middle">KẾT THÚC (THOÁT)</text>
+                        </g>
+                    </svg>
+                `,
+                steps: [
+                    {
+                        activeNodeId: "node-0",
+                        activePathId: null,
+                        activeLineNum: 3,
+                        explanation: "BẮT ĐẦU: Khởi động vòng lặp while. Khác với for, while chỉ kiểm tra một biểu thức điều kiện duy nhất trước khi làm.",
+                        memoryHtml: `<span class="text-xs text-slate-500 font-medium">Chưa cấp phát energy</span>`,
+                        terminalText: `$ Ready`
+                    },
+                    {
+                        activeNodeId: "node-1",
+                        activePathId: "path-0",
+                        activeLineNum: 3,
+                        explanation: "KHỞI TẠO BIẾN (int energy = 3): Thiết lập thanh năng lượng của nhân vật có 3 đơn vị.",
+                        memoryHtml: `
+                            <div class="w-full p-2.5 rounded-lg border-2 border-sky-500 bg-sky-50 text-center">
+                                <div class="text-xs text-sky-800 font-mono font-bold">int energy</div>
+                                <div class="text-xl font-mono font-black text-sky-900">3 (Đầy)</div>
+                            </div>
+                        `,
+                        terminalText: `> Năng lượng ban đầu: 3`
+                    },
+                    {
+                        activeNodeId: "node-2",
+                        activePathId: "path-1",
+                        activeLineNum: 4,
+                        explanation: "KIỂM TRA ĐIỀU KIỆN (energy > 0): Kiểm tra 3 > 0 là TRUE. Nhân vật vẫn còn năng lượng nên được phép bắn.",
+                        memoryHtml: `
+                            <div class="w-full p-2.5 rounded-lg border-2 border-amber-500 bg-amber-50 text-center shadow-sm">
+                                <div class="text-xs text-amber-800 font-mono font-bold">energy > 0 ? (3 > 0)</div>
+                                <div class="text-base font-mono font-extrabold text-emerald-700">TRUE (Cho phép)</div>
+                            </div>
+                        `,
+                        terminalText: `> energy > 0: TRUE`
+                    },
+                    {
+                        activeNodeId: "node-3",
+                        activePathId: "path-true",
+                        activeLineNum: 5,
+                        explanation: "BẮN LASER: Thực thi khối lệnh trong while, in thông báo khai hỏa ra màn hình.",
+                        memoryHtml: `
+                            <div class="w-full p-2.5 rounded-lg border-2 border-purple-500 bg-purple-50 text-center">
+                                <div class="text-xs font-mono text-purple-900 font-bold">Đang bắn tia laser...</div>
+                            </div>
+                        `,
+                        terminalText: `Bắn laser!`
+                    },
+                    {
+                        activeNodeId: "node-4",
+                        activePathId: "path-dec",
+                        activeLineNum: 6,
+                        explanation: "TIÊU HAO (energy--): LỆNH SỐNG CÒN! Giảm năng lượng đi 1 (còn 2). Nếu quên dòng này, energy mãi mãi bằng 3 và chương trình sẽ bị treo (LẶP VÔ TẬN)!",
+                        memoryHtml: `
+                            <div class="w-full p-2.5 rounded-lg border-2 border-red-500 bg-red-50 text-center">
+                                <div class="text-xs text-red-800 font-mono font-bold">energy-- (Giảm 1)</div>
+                                <div class="text-xl font-mono font-black text-red-700">energy = 2</div>
+                            </div>
+                        `,
+                        terminalText: `Bắn laser!\n> energy giảm còn 2`
+                    },
+                    {
+                        activeNodeId: "node-3",
+                        activePathId: "path-loopback",
+                        activeLineNum: 5,
+                        explanation: "CÁC VÒNG TIẾP THEO: Bắn tiếp khi energy = 2 và energy = 1. Mỗi lần bắn đều giảm energy-- cho tới khi về 0.",
+                        memoryHtml: `
+                            <div class="w-full p-2.5 rounded-lg border-2 border-amber-500 bg-amber-50 text-center">
+                                <div class="text-xs text-amber-800 font-mono font-bold">Tiến trình xả đạn</div>
+                                <div class="text-xs font-mono text-slate-800 font-bold mt-1">Đã bắn 3 phát laser</div>
+                            </div>
+                        `,
+                        terminalText: `Bắn laser!\nBắn laser!\nBắn laser!`
+                    },
+                    {
+                        activeNodeId: "node-5",
+                        activePathId: "path-false",
+                        activeLineNum: 8,
+                        explanation: "THOÁT VÒNG LẶP: energy đã về 0, điều kiện 0 > 0 trở thành FALSE. Vòng lặp dừng lại an toàn và in 'Hết năng lượng!'.",
+                        memoryHtml: `
+                            <div class="w-full p-2.5 rounded-lg border-2 border-rose-500 bg-rose-50 text-center">
+                                <div class="text-xs text-rose-800 font-mono font-bold">energy = 0</div>
+                                <div class="text-xs font-extrabold text-rose-700 mt-0.5">Bình cạn, an toàn dừng máy</div>
+                            </div>
+                        `,
+                        terminalText: `Bắn laser!\nBắn laser!\nBắn laser!\nHết năng lượng!\nProcess finished with exit code 0`
+                    }
+                ]
+            }
+        ];
+
+        let currentLessonIndex = 0;
+        let currentStepIndex = 0;
+
+        // DOM elements
+        const lessonSelect = document.getElementById('lesson-select');
+        const slideBadge = document.getElementById('slide-badge');
+        const slideTitle = document.getElementById('slide-title');
+        const fileNameLabel = document.getElementById('file-name-label');
+        const codeContainer = document.getElementById('code-container');
+        const memoryWatcher = document.getElementById('memory-watcher');
+        const terminalContent = document.getElementById('terminal-content');
+        const flowchartContainer = document.getElementById('flowchart-container');
+        const stepExplanationText = document.getElementById('step-explanation-text');
+        const stepIndicator = document.getElementById('step-indicator');
+        const stepDotsContainer = document.getElementById('step-dots-container');
+        const currentSlideIndexElem = document.getElementById('current-slide-index');
+        const totalSlidesCountElem = document.getElementById('total-slides-count');
+        const interactionHint = document.getElementById('interaction-hint');
+
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+        const btnReset = document.getElementById('btn-reset');
+        const presentationStage = document.getElementById('presentation-stage');
+
+        totalSlidesCountElem.textContent = lessons.length;
+
+        function renderCode(lines) {
+            codeContainer.innerHTML = lines.map(item => `
+                <div class="code-row flex items-start px-2 py-1 rounded font-mono" id="code-line-${item.line}">
+                    <span class="line-num w-7 text-slate-400 text-right pr-3 select-none text-xs">${item.line}</span>
+                    <span class="text-slate-700 font-medium whitespace-pre">${escapeHtml(item.text)}</span>
+                </div>
+            `).join('');
+        }
+
+        function escapeHtml(str) {
+            return str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function loadLesson(index, stepIdx = 0) {
+            currentLessonIndex = index;
+            const lesson = lessons[currentLessonIndex];
+
+            lessonSelect.value = currentLessonIndex;
+            slideBadge.textContent = lesson.badge;
+            slideTitle.textContent = lesson.title;
+            fileNameLabel.textContent = lesson.fileName;
+            currentSlideIndexElem.textContent = currentLessonIndex + 1;
+
+            flowchartContainer.innerHTML = lesson.flowchartSvg;
+            renderCode(lesson.codeLines);
+            renderDots(lesson.steps.length);
+            applyStep(stepIdx);
+        }
+
+        function renderDots(total) {
+            stepDotsContainer.innerHTML = '';
+            for (let i = 0; i < total; i++) {
+                const dot = document.createElement('div');
+                dot.id = `nav-dot-${i}`;
+                dot.className = `w-2 h-1.5 rounded-full transition-all duration-300 ${i === 0 ? 'bg-orange-600 w-5' : 'bg-slate-300'}`;
+                stepDotsContainer.appendChild(dot);
+            }
+        }
+
+        function applyStep(stepIdx) {
+            const lesson = lessons[currentLessonIndex];
+            const maxSteps = lesson.steps.length;
+
+            currentStepIndex = Math.max(0, Math.min(stepIdx, maxSteps - 1));
+            const step = lesson.steps[currentStepIndex];
+
+            stepIndicator.textContent = `Bước: ${currentStepIndex + 1} / ${maxSteps}`;
+            stepExplanationText.textContent = step.explanation;
+
+            // Update mini progress dots
+            for (let i = 0; i < maxSteps; i++) {
+                const dot = document.getElementById(`nav-dot-${i}`);
+                if (dot) {
+                    if (i === currentStepIndex) {
+                        dot.className = 'w-5 h-1.5 rounded-full bg-orange-600 transition-all duration-300';
+                    } else if (i < currentStepIndex) {
+                        dot.className = 'w-2 h-1.5 rounded-full bg-slate-400 transition-all duration-300';
+                    } else {
+                        dot.className = 'w-2 h-1.5 rounded-full bg-slate-200 transition-all duration-300';
+                    }
+                }
+            }
+
+            // Highlight Java Code line
+            document.querySelectorAll('.code-row').forEach(row => row.classList.remove('active-line'));
+            if (step.activeLineNum) {
+                const activeRow = document.getElementById(`code-line-${step.activeLineNum}`);
+                if (activeRow) {
+                    activeRow.classList.add('active-line');
+                    activeRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            }
+
+            // Sync Flowchart Nodes & Paths
+            document.querySelectorAll('.fc-node').forEach(node => {
+                node.classList.remove('node-active', 'glow-pulse');
+            });
+            document.querySelectorAll('.flow-path').forEach(path => {
+                path.classList.remove('path-active');
+                path.setAttribute('stroke', '#475569');
+            });
+
+            // Mark previous nodes as visited
+            for (let i = 0; i < currentStepIndex; i++) {
+                const pastNodeId = lesson.steps[i].activeNodeId;
+                const pastNode = document.getElementById(pastNodeId);
+                if (pastNode) {
+                    pastNode.classList.add('node-visited');
+                }
+            }
+
+            // Highlight current active node
+            if (step.activeNodeId) {
+                const targetNode = document.getElementById(step.activeNodeId);
+                if (targetNode) {
+                    targetNode.classList.remove('node-visited');
+                    targetNode.classList.add('node-active', 'glow-pulse');
+                }
+            }
+
+            // Highlight current active path with orange stroke
+            if (step.activePathId) {
+                const targetPath = document.getElementById(step.activePathId);
+                if (targetPath) {
+                    targetPath.classList.add('path-active');
+                    targetPath.setAttribute('stroke', '#EA580C');
+                }
+            }
+
+            // Update RAM Memory Inspector
+            memoryWatcher.innerHTML = step.memoryHtml;
+
+            // Update Virtual Terminal
+            terminalContent.innerHTML = step.terminalText.replace(/\n/g, '<br>');
+
+            // Interactive hint
+            if (currentStepIndex === maxSteps - 1) {
+                interactionHint.textContent = (currentLessonIndex < lessons.length - 1) 
+                    ? "Hoàn thành bài! Nhấp chuột để chuyển sang bài tiếp theo" 
+                    : "Đã hoàn thành toàn bộ khóa học! Bấm R để xem lại.";
+            } else {
+                interactionHint.textContent = "Nhấp chuột bất kỳ hoặc nhấn Space để tiếp tục";
+            }
+        }
+
+        // STEP ACTIONS
+        function nextStep() {
+            const lesson = lessons[currentLessonIndex];
+            if (currentStepIndex < lesson.steps.length - 1) {
+                applyStep(currentStepIndex + 1);
+            } else {
+                if (currentLessonIndex < lessons.length - 1) {
+                    loadLesson(currentLessonIndex + 1, 0);
+                }
+            }
+        }
+
+        function prevStep() {
+            if (currentStepIndex > 0) {
+                applyStep(currentStepIndex - 1);
+            } else {
+                if (currentLessonIndex > 0) {
+                    const prevLesson = lessons[currentLessonIndex - 1];
+                    loadLesson(currentLessonIndex - 1, prevLesson.steps.length - 1);
+                }
+            }
+        }
+
+        function resetCurrentLesson() {
+            loadLesson(currentLessonIndex, 0);
+        }
+
+        // Mouse click on main canvas to advance
+        presentationStage.addEventListener('click', (e) => {
+            if (e.target.closest('button') || e.target.closest('select') || e.target.closest('a')) {
+                return;
+            }
+            nextStep();
+        });
+
+        // Controls binding
+        btnNext.addEventListener('click', (e) => {
+            e.stopPropagation();
+            nextStep();
+        });
+
+        btnPrev.addEventListener('click', (e) => {
+            e.stopPropagation();
+            prevStep();
+        });
+
+        btnReset.addEventListener('click', (e) => {
+            e.stopPropagation();
+            resetCurrentLesson();
+        });
+
+        lessonSelect.addEventListener('change', (e) => {
+            loadLesson(parseInt(e.target.value), 0);
+        });
+
+        // Keyboard navigation
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' || e.key === 'ArrowRight' || e.key === 'Enter') {
+                e.preventDefault();
+                nextStep();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                prevStep();
+            } else if (e.key === 'KeyR' || e.key === 'r') {
+                resetCurrentLesson();
+            }
+        });
+
+        window.onload = () => {
+            loadLesson(0, 0);
+        };
+    </script>
+</body>
+</html>
