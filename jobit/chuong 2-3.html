@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài Giảng Lập Trình Hướng Đối Tượng Java - Chương 2 & 3</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #030712;
+            color: #f9fafb;
+        }
+        
+        code, pre {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .slide-pane {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.25s ease-in-out;
+        }
+
+        .slide-pane.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Hiệu ứng chuyển động mô phỏng tham chiếu */
+        .pulse-pointer {
+            animation: pointerPulse 1.8s infinite ease-in-out;
+        }
+        @keyframes pointerPulse {
+            0%, 100% { transform: translateX(0); opacity: 0.6; }
+            50% { transform: translateX(10px); opacity: 1; }
+        }
+
+        .signal-wave {
+            animation: waveFlow 2s infinite linear;
+        }
+        @keyframes waveFlow {
+            0% { stroke-dashoffset: 20; }
+            100% { stroke-dashoffset: 0; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between select-none bg-[#030712]">
+
+    <!-- THANH TIÊU ĐỀ TRÊN CÙNG -->
+    <header class="bg-gray-900/95 border-b border-gray-800 px-8 py-4 flex justify-between items-center sticky top-0 z-50 backdrop-blur">
+        <div class="flex items-center gap-4">
+            <span class="bg-amber-500 text-gray-950 font-black text-sm px-3.5 py-1.5 rounded-lg tracking-wider">JAVA OOP</span>
+            <h1 class="text-xl md:text-2xl font-black text-white" id="headerTitle">Chương 2: Khái Niệm Hướng Đối Tượng</h1>
+        </div>
+        <div class="flex items-center gap-4">
+            <select id="slideSelect" onchange="goToSlide(parseInt(this.value))" class="bg-gray-800 border border-gray-700 text-gray-100 text-base font-bold rounded-xl px-4 py-2 focus:outline-none focus:border-amber-500 cursor-pointer">
+                <!-- Tự động sinh mục lục -->
+            </select>
+            <span class="text-base font-mono font-black bg-gray-800 text-amber-400 px-4 py-2 rounded-xl border border-gray-700" id="slideNumber">
+                1 / 18
+            </span>
+        </div>
+    </header>
+
+    <!-- KHUNG TRÌNH CHIẾU CHÍNH (LAYOUT ĐÔI 50/50) -->
+    <main class="flex-1 max-w-[1700px] w-full mx-auto p-4 md:p-8 flex flex-col justify-center">
+
+        <!-- ==================== SLIDE 1: MỞ ĐẦU ==================== -->
+        <section class="slide-pane active" data-title="Tổng Quan Khóa Học">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <!-- Bên Trái: Chữ to rõ -->
+                <div class="lg:col-span-7 space-y-6">
+                    <span class="inline-block px-4 py-1.5 bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded-full text-base font-bold uppercase tracking-widest">
+                        Chuyên đề học phần cốt lõi
+                    </span>
+                    <h2 class="text-4xl md:text-6xl font-black text-white leading-tight">
+                        LẬP TRÌNH <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500">HƯỚNG ĐỐI TƯỢNG</span>
+                    </h2>
+                    <p class="text-xl md:text-2xl text-gray-300 font-medium leading-relaxed">
+                        Chuyển đổi hoàn toàn tư duy từ <strong>Lập trình thủ tục</strong> (C/Pascal) sang <strong>Lập trình hướng đối tượng (OOP)</strong> mô hình hóa thực tế với ngôn ngữ Java.
+                    </p>
+                    <div class="grid grid-cols-2 gap-4 pt-2">
+                        <div class="p-5 bg-gray-950 rounded-2xl border border-amber-500/40">
+                            <span class="text-amber-400 font-black text-xl block mb-1">Chương 2</span>
+                            <span class="text-base text-gray-300 font-semibold">Khái niệm & Tư duy thiết kế OOP</span>
+                        </div>
+                        <div class="p-5 bg-gray-950 rounded-2xl border border-orange-500/40">
+                            <span class="text-orange-400 font-black text-xl block mb-1">Chương 3</span>
+                            <span class="text-base text-gray-300 font-semibold">Lớp, Đối tượng & Cơ chế bộ nhớ Java</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bên Phải: Hình mô phỏng trực quan -->
+                <div class="lg:col-span-5 flex justify-center items-center h-full">
+                    <div class="w-full bg-gray-950 border-2 border-gray-800 rounded-3xl p-8 text-center space-y-6 shadow-2xl">
+                        <div class="relative w-40 h-40 mx-auto flex items-center justify-center">
+                            <div class="absolute inset-0 rounded-full border-4 border-dashed border-amber-500/40 animate-spin" style="animation-duration: 16s;"></div>
+                            <div class="w-32 h-32 rounded-full bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center shadow-lg shadow-orange-500/20">
+                                <i class="fa-brands fa-java text-gray-950 text-6xl"></i>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <span class="text-2xl font-black text-white block">Mô Hình Thực Thể Thực Tế</span>
+                            <p class="text-base text-gray-400 font-medium">Bản thiết kế (Class) ➔ Hiện vật cụ thể (Object)</p>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 pt-2 text-xs font-mono text-gray-400">
+                            <div class="p-2 bg-gray-900 rounded-lg border border-gray-800">Đóng gói</div>
+                            <div class="p-2 bg-gray-900 rounded-lg border border-gray-800">Trừu tượng</div>
+                            <div class="p-2 bg-gray-900 rounded-lg border border-gray-800">Kế thừa</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 2: 2.1 LỊCH SỬ NGÔN NGỮ ==================== -->
+        <section class="slide-pane" data-title="2.1 Lịch sử ngôn ngữ lập trình">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <!-- Bên Trái: Chữ to rõ -->
+                <div class="lg:col-span-6 space-y-6">
+                    <div class="border-b border-gray-800 pb-3">
+                        <span class="text-sm font-bold text-amber-500 font-mono uppercase tracking-wider">Mục 2.1</span>
+                        <h3 class="text-3xl md:text-4xl font-extrabold text-white">Lịch Sử Các Thế Hệ Ngôn Ngữ</h3>
+                    </div>
+                    <p class="text-lg md:text-xl text-gray-300 leading-relaxed">
+                        Con người đã tiến hóa cách điều khiển máy tính qua 4 thế hệ lớn:
+                    </p>
+                    <ul class="space-y-4 text-base md:text-lg text-gray-200">
+                        <li class="flex items-start gap-3">
+                            <span class="bg-gray-800 text-gray-400 font-bold px-3 py-1 rounded-lg text-sm font-mono">1GL</span>
+                            <span><strong>Mã máy (Machine Code):</strong> Nhị phân 0 và 1, thao tác trực tiếp trên phần cứng.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="bg-gray-800 text-amber-400 font-bold px-3 py-1 rounded-lg text-sm font-mono">2GL</span>
+                            <span><strong>Hợp ngữ (Assembly):</strong> Dùng các lệnh viết tắt tiếng Anh (MOV, ADD).</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="bg-blue-950 text-blue-400 border border-blue-700 font-bold px-3 py-1 rounded-lg text-sm font-mono">3GL</span>
+                            <span><strong>Ngôn ngữ thủ tục (C, Pascal):</strong> Gom lệnh thành các hàm (Function) xử lý dữ liệu.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="bg-emerald-950 text-emerald-300 border border-emerald-500 font-bold px-3 py-1 rounded-lg text-sm font-mono">OOP</span>
+                            <span><strong>Hướng đối tượng (Java, C++):</strong> Mô phỏng thế giới thực, gắn liền dữ liệu với hành vi.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Bên Phải: Hình mô phỏng trực quan -->
+                <div class="lg:col-span-6 flex justify-center items-center">
+                    <div class="w-full bg-gray-950 border border-gray-800 rounded-3xl p-6 space-y-4">
+                        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest block text-center">Sơ Đồ Tiến Hóa Trừu Tượng Hóa</span>
+                        
+                        <!-- Block 1GL -->
+                        <div class="p-3.5 bg-gray-900 rounded-xl border border-gray-800 flex items-center justify-between">
+                            <span class="text-sm font-mono text-gray-400">1GL (Mã máy)</span>
+                            <span class="text-xs font-mono text-green-400 bg-black px-3 py-1.5 rounded">01001000 01101001</span>
+                        </div>
+                        <div class="text-center text-gray-600 text-sm">↓ Rời xa máy móc, tiến gần con người ↓</div>
+                        
+                        <!-- Block 2GL -->
+                        <div class="p-3.5 bg-gray-900 rounded-xl border border-gray-800 flex items-center justify-between">
+                            <span class="text-sm font-mono text-amber-400">2GL (Hợp ngữ)</span>
+                            <span class="text-xs font-mono text-amber-300 bg-black px-3 py-1.5 rounded">MOV AX, 1; ADD AX, BX</span>
+                        </div>
+                        <div class="text-center text-gray-600 text-sm">↓ Chia bài toán thành các hàm ↓</div>
+
+                        <!-- Block 3GL -->
+                        <div class="p-3.5 bg-blue-950/40 rounded-xl border border-blue-800 flex items-center justify-between">
+                            <span class="text-sm font-mono text-blue-400">3GL (Thủ tục)</span>
+                            <span class="text-xs font-mono text-blue-300 bg-black px-3 py-1.5 rounded">tinhLuong(nhanVien);</span>
+                        </div>
+                        <div class="text-center text-emerald-500 font-bold text-sm">↓ Đỉnh cao: Đối tượng tự quản lý mình ↓</div>
+
+                        <!-- Block OOP -->
+                        <div class="p-4 bg-emerald-950/60 rounded-xl border-2 border-emerald-500 flex items-center justify-between shadow-lg shadow-emerald-500/10">
+                            <span class="text-base font-bold text-emerald-300">OOP (Java)</span>
+                            <span class="text-sm font-mono font-bold text-emerald-200 bg-black px-3 py-1.5 rounded">nhanVien.tinhLuong();</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 3: 2.2 POP VS OOP ==================== -->
+        <section class="slide-pane" data-title="2.2 So sánh Thủ tục vs OOP">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <!-- Bên Trái: Chữ to rõ -->
+                <div class="lg:col-span-6 space-y-6">
+                    <div class="border-b border-gray-800 pb-3">
+                        <span class="text-sm font-bold text-amber-500 font-mono uppercase tracking-wider">Mục 2.2</span>
+                        <h3 class="text-3xl md:text-4xl font-extrabold text-white">Thủ Tục (POP) vs Hướng Đối Tượng (OOP)</h3>
+                    </div>
+                    <div class="space-y-4 text-base md:text-lg text-gray-200">
+                        <div class="p-4 bg-gray-950 rounded-2xl border border-rose-900/50 space-y-1">
+                            <strong class="text-rose-400 block text-lg">Lập trình thủ tục (C/Pascal):</strong>
+                            <p class="text-gray-300 text-base">Trọng tâm là <strong>Hàm (Động từ)</strong>. Dữ liệu bị thả nổi tự do giữa các hàm. Nếu một hàm vô tình sửa sai dữ liệu chung, toàn bộ chương trình sẽ bị lỗi.</p>
+                        </div>
+                        <div class="p-4 bg-gray-950 rounded-2xl border border-emerald-900/50 space-y-1">
+                            <strong class="text-emerald-400 block text-lg">Lập trình hướng đối tượng (Java):</strong>
+                            <p class="text-gray-300 text-base">Trọng tâm là <strong>Đối tượng (Danh từ)</strong>. Dữ liệu được bảo vệ nghiêm ngặt bên trong. Muốn sửa dữ liệu bắt buộc phải gọi phương thức của đối tượng đó.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bên Phải: Hình mô phỏng trực quan -->
+                <div class="lg:col-span-6 flex justify-center items-center">
+                    <div class="w-full bg-gray-950 border border-gray-800 rounded-3xl p-6 space-y-6">
+                        <!-- POP Visual -->
+                        <div class="p-4 bg-gray-900 rounded-2xl border border-rose-900/60 text-center space-y-2">
+                            <span class="text-xs font-bold text-rose-400 uppercase tracking-widest">Mô hình Thủ tục: Dữ liệu thả nổi</span>
+                            <div class="py-2 px-4 bg-rose-950/60 border border-rose-700 text-rose-200 font-mono text-sm rounded-lg inline-block">
+                                Dữ liệu chung: soDuTaiKhoan
+                            </div>
+                            <div class="grid grid-cols-3 gap-2 pt-1 text-xs font-mono text-gray-400">
+                                <div class="bg-gray-950 p-2 rounded border border-gray-800">hamA() sửa</div>
+                                <div class="bg-gray-950 p-2 rounded border border-gray-800">hamB() sửa</div>
+                                <div class="bg-gray-950 p-2 rounded border border-gray-800">hamC() sửa</div>
+                            </div>
+                        </div>
+
+                        <!-- OOP Visual -->
+                        <div class="p-4 bg-gray-900 rounded-2xl border border-emerald-900/60 text-center space-y-3">
+                            <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest">Mô hình OOP: Đóng gói an toàn</span>
+                            <div class="p-4 bg-emerald-950/40 border-2 border-emerald-500 rounded-xl max-w-sm mx-auto space-y-2">
+                                <div class="text-sm font-bold text-emerald-300">Đối tượng: TaiKhoan</div>
+                                <div class="p-2 bg-gray-950 rounded text-xs font-mono text-gray-300 border border-gray-800">
+                                    🔒 private double soDu;
+                                </div>
+                                <div class="p-2 bg-emerald-900/50 rounded text-xs font-mono text-emerald-300 font-bold">
+                                    ⚙️ public void rutTien(amount)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 4: 2.3 & 2.4 TRỤ CỘT OOP ==================== -->
+        <section class="slide-pane" data-title="2.3 & 2.4 Khái niệm cốt lõi OOP">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <!-- Bên Trái: Chữ to rõ -->
+                <div class="lg:col-span-6 space-y-5">
+                    <div class="border-b border-gray-800 pb-3">
+                        <span class="text-sm font-bold text-amber-500 font-mono uppercase tracking-wider">Mục 2.3 & 2.4</span>
+                        <h3 class="text-3xl md:text-4xl font-extrabold text-white">4 Trụ Cột Nền Tảng Của OOP</h3>
+                    </div>
+                    <ul class="space-y-3 text-base md:text-lg text-gray-200">
+                        <li class="p-3 bg-gray-950 rounded-xl border border-blue-500/40">
+                            <strong class="text-blue-400">1. Trừu tượng hóa (Abstraction):</strong> Ẩn giấu các chi tiết vận hành phức tạp, chỉ hiển thị giao diện cần thiết cho người dùng.
+                        </li>
+                        <li class="p-3 bg-gray-950 rounded-xl border border-emerald-500/40">
+                            <strong class="text-emerald-400">2. Đóng gói (Encapsulation):</strong> Gom dữ liệu và hàm vào 1 lớp, khóa biến bằng <code>private</code> để bảo vệ tính toàn vẹn.
+                        </li>
+                        <li class="p-3 bg-gray-950 rounded-xl border border-amber-500/40">
+                            <strong class="text-amber-400">3. Kế thừa (Inheritance):</strong> Lớp con sử dụng lại toàn bộ thuộc tính, phương thức của lớp cha mà không cần viết lại.
+                        </li>
+                        <li class="p-3 bg-gray-950 rounded-xl border border-purple-500/40">
+                            <strong class="text-purple-400">4. Đa hình (Polymorphism):</strong> Cùng một lời gọi hàm nhưng các đối tượng con khác nhau phản hồi theo cách khác nhau.
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Bên Phải: Hình mô phỏng trực quan -->
+                <div class="lg:col-span-6 flex justify-center items-center">
+                    <div class="w-full grid grid-cols-2 gap-4">
+                        <div class="bg-gray-950 p-6 rounded-2xl border border-blue-500/40 text-center space-y-2">
+                            <i class="fa-solid fa-layer-group text-3xl text-blue-400"></i>
+                            <span class="font-bold text-base text-gray-200 block">Trừu Tượng Hóa</span>
+                            <span class="text-xs text-gray-400">Lái ô tô chỉ cần đạp ga/vô-lăng, không cần can thiệp hộp số.</span>
+                        </div>
+                        <div class="bg-gray-950 p-6 rounded-2xl border border-emerald-500/40 text-center space-y-2">
+                            <i class="fa-solid fa-lock text-3xl text-emerald-400"></i>
+                            <span class="font-bold text-base text-gray-200 block">Đóng Gói</span>
+                            <span class="text-xs text-gray-400">Két sắt bảo vệ tiền, muốn rút phải qua cửa kiểm tra mã PIN.</span>
+                        </div>
+                        <div class="bg-gray-950 p-6 rounded-2xl border border-amber-500/40 text-center space-y-2">
+                            <i class="fa-solid fa-sitemap text-3xl text-amber-400"></i>
+                            <span class="font-bold text-base text-gray-200 block">Kế Thừa</span>
+                            <span class="text-xs text-gray-400">Lớp Nguoi ➔ SinhVien (kế thừa HoTen, NgaySinh).</span>
+                        </div>
+                        <div class="bg-gray-950 p-6 rounded-2xl border border-purple-500/40 text-center space-y-2">
+                            <i class="fa-solid fa-shapes text-3xl text-purple-400"></i>
+                            <span class="font-bold text-base text-gray-200 block">Đa Hình</span>
+                            <span class="text-xs text-gray-400">Lệnh tiengKeu(): Mèo kêu Meo Meo, Chó sủa Gâu Gâu.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 5: 3.1 & 3.2 LỚP VÀ ĐỐI TƯỢNG ==================== -->
+        <section class="slide-pane" data-title="3.1 & 3.2 Lớp và Đối tượng">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <!-- Bên Trái: Chữ to rõ & Code -->
+                <div class="lg:col-span-6 space-y-5">
+                    <div class="border-b border-gray-800 pb-3">
+                        <span class="text-sm font-bold text-amber-500 font-mono uppercase tracking-wider">Mục 3.1 & 3.2</span>
+                        <h3 class="text-3xl md:text-4xl font-extrabold text-white">Lớp (Class) & Đối Tượng (Object)</h3>
+                    </div>
+                    <p class="text-lg text-gray-300 leading-relaxed">
+                        • <strong>Lớp (Class):</strong> Bản thiết kế định nghĩa các thuộc tính và phương thức.<br>
+                        • <strong>Đối tượng (Object):</strong> Hiện thân cụ thể được tạo ra trên bộ nhớ Heap bằng từ khóa <code>new</code>.
+                    </p>
+                    <pre class="bg-gray-950 p-5 rounded-2xl border border-gray-800 text-sm md:text-base text-gray-200 leading-relaxed overflow-x-auto font-mono">
+<span class="text-purple-400">public class</span> <span class="text-amber-300 font-bold">Main</span> {
+    <span class="text-purple-400">public static void</span> <span class="text-blue-400">main</span>(String[] args) {
+        <span class="text-gray-500">// Tạo đối tượng từ Class SinhVien</span>
+        SinhVien sv1 = <span class="text-purple-400">new</span> SinhVien();
+        sv1.ten = <span class="text-amber-200">"Hoàng"</span>;
+        sv1.hocBai();
+    }
+}</pre>
+                </div>
+
+                <!-- Bên Phải: Hình mô phỏng trực quan -->
+                <div class="lg:col-span-6 flex justify-center items-center">
+                    <div class="w-full bg-gray-950 border border-gray-800 rounded-3xl p-6 text-center space-y-6">
+                        <div class="flex justify-around items-center">
+                            <!-- Class blueprint -->
+                            <div class="p-5 bg-gray-900 border-2 border-dashed border-blue-400 rounded-2xl w-44 space-y-2">
+                                <span class="text-xs uppercase font-bold text-blue-400">Bản Vẽ (Class)</span>
+                                <div class="text-base font-black text-white">SinhVien</div>
+                                <div class="text-xs text-gray-400 text-left font-mono">
+                                    - String ten<br>
+                                    - double gpa<br>
+                                    + hocBai()
+                                </div>
+                            </div>
+
+                            <div class="text-3xl text-amber-400 pulse-pointer">
+                                ➔ ➔
+                            </div>
+
+                            <!-- Real Object -->
+                            <div class="p-5 bg-emerald-950/50 border-2 border-emerald-500 rounded-2xl w-48 space-y-2 shadow-xl shadow-emerald-500/10">
+                                <span class="text-xs uppercase font-bold text-emerald-400">Đối Tượng Thật (Object)</span>
+                                <div class="text-lg font-black text-emerald-300">sv1</div>
+                                <div class="text-xs text-gray-200 text-left font-mono bg-black p-2 rounded">
+                                    ten = "Hoàng"<br>
+                                    gpa = 8.5
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-400">Từ 1 bản vẽ <code>Class</code> duy nhất, ta có thể khởi tạo hàng ngàn <code>Object</code> độc lập trong bộ nhớ.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 6: 3.3 & 3.9 BỘ NHỚ STACK & HEAP ==================== -->
+        <section class="slide-pane" data-title="3.3 & 3.9 Stack & Heap trong Java">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <!-- Bên Trái: Chữ to rõ & Code -->
+                <div class="lg:col-span-6 space-y-5">
+                    <div class="border-b border-gray-800 pb-3">
+                        <span class="text-sm font-bold text-amber-500 font-mono uppercase tracking-wider">Mục 3.3 & 3.9</span>
+                        <h3 class="text-3xl md:text-4xl font-extrabold text-white">Bản Chất Đối Tượng & Tham Chiếu</h3>
+                    </div>
+                    <p class="text-lg text-gray-300 leading-relaxed">
+                        Biến đối tượng trên <strong>Stack</strong> thực chất chỉ chứa <strong>địa chỉ vùng nhớ</strong> (tham chiếu), trỏ đến dữ liệu thực sự nằm trên vùng nhớ <strong>Heap</strong>.
+                    </p>
+                    <pre class="bg-gray-950 p-5 rounded-2xl border border-gray-800 text-sm md:text-base text-gray-200 leading-relaxed font-mono">
+SinhVien a = <span class="text-purple-400">new</span> SinhVien(<span class="text-amber-200">"Bình"</span>);
+SinhVien b = a; <span class="text-gray-500">// Copy địa chỉ vùng nhớ!</span>
+
+b.ten = <span class="text-amber-200">"Dũng"</span>;
+System.out.println(a.ten); <span class="text-emerald-400 font-bold">// Kết quả: "Dũng"</span></pre>
+                    <p class="text-base text-amber-300 bg-amber-950/20 p-3 rounded-xl border border-amber-500/30">
+                        Vì <code>a</code> và <code>b</code> cùng trỏ chung một địa chỉ ô nhớ trên Heap, sửa qua <code>b</code> thì <code>a</code> cũng đổi!
+                    </p>
+                </div>
+
+                <!-- Bên Phải: Hình mô phỏng trực quan Stack / Heap -->
+                <div class="lg:col-span-6 flex justify-center items-center">
+                    <div class="w-full bg-gray-950 border border-gray-800 rounded-3xl p-6 space-y-4">
+                        <div class="flex justify-between text-xs font-bold text-gray-400 uppercase tracking-widest border-b border-gray-800 pb-2">
+                            <span>STACK (Biến cục bộ)</span>
+                            <span>HEAP (Đối tượng được cấp phát)</span>
+                        </div>
+                        <div class="flex justify-between items-center gap-4 py-4">
+                            <!-- Stack Column -->
+                            <div class="w-1/3 space-y-3">
+                                <div class="p-3 bg-blue-950/60 border border-blue-500 rounded-xl text-center">
+                                    <div class="font-bold text-blue-300 text-sm">Biến a</div>
+                                    <div class="text-xs font-mono text-gray-400 mt-1">0xFA12</div>
+                                </div>
+                                <div class="p-3 bg-blue-950/60 border border-blue-500 rounded-xl text-center">
+                                    <div class="font-bold text-blue-300 text-sm">Biến b</div>
+                                    <div class="text-xs font-mono text-gray-400 mt-1">0xFA12</div>
+                                </div>
+                            </div>
+
+                            <!-- Dây trỏ tham chiếu -->
+                            <div class="text-3xl text-amber-400 pulse-pointer">
+                                ➔ ➔
+                            </div>
+
+                            <!-- Heap Column -->
+                            <div class="w-1/2 p-6 bg-emerald-950/40 border-2 border-emerald-500 rounded-2xl text-center space-y-3 shadow-lg shadow-emerald-500/10">
+                                <span class="text-xs bg-emerald-900 text-emerald-300 font-mono px-3 py-1 rounded-full">Ô nhớ 0xFA12</span>
+                                <div class="font-black text-emerald-400 text-xl">SinhVien Instance</div>
+                                <div class="text-sm font-mono text-gray-200 bg-gray-900 p-2.5 rounded-lg border border-gray-800">
+                                    ten = "Dũng"
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 7: 3.4 OVERLOADING ==================== -->
+        <section class="slide-pane" data-title="3.4 Overloading">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <!-- Bên Trái: Chữ to rõ & Code -->
+                <div class="lg:col-span-6 space-y-5">
+                    <div class="border-b border-gray-800 pb-3">
+                        <span class="text-sm font-bold text-amber-500 font-mono uppercase tracking-wider">Mục 3.4</span>
+                        <h3 class="text-3xl md:text-4xl font-extrabold text-white">Nạp Chồng (Overloading)</h3>
+                    </div>
+                    <p class="text-lg text-gray-300 leading-relaxed">
+                        Các phương thức trong cùng 1 lớp có <strong>cùng tên</strong> nhưng khác nhau về <strong>danh sách tham số</strong> (khác số lượng hoặc khác kiểu dữ liệu).
+                    </p>
+                    <pre class="bg-gray-950 p-5 rounded-2xl border border-gray-800 text-sm md:text-base text-gray-200 leading-relaxed font-mono">
+<span class="text-purple-400">public class</span> <span class="text-amber-300 font-bold">MayTinh</span> {
+    <span class="text-cyan-400">int</span> <span class="text-blue-400 font-bold">cong</span>(<span class="text-cyan-400">int</span> a, <span class="text-cyan-400">int</span> b) { 
+        <span class="text-purple-400">return</span> a + b; 
+    }
+
+    <span class="text-cyan-400">int</span> <span class="text-blue-400 font-bold">cong</span>(<span class="text-cyan-400">int</span> a, <span class="text-cyan-400">int</span> b, <span class="text-cyan-400">int</span> c) { 
+        <span class="text-purple-400">return</span> a + b + c; 
+    }
+}</pre>
+                </div>
+
+                <!-- Bên Phải: Hình mô phỏng trực quan -->
+                <div class="lg:col-span-6 flex justify-center items-center">
+                    <div class="w-full bg-gray-950 border border-gray-800 rounded-3xl p-6 text-center space-y-6">
+                        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest block">Trình Biên Dịch Tự Điều Hướng (Compiler Dispatch)</span>
+                        <div class="p-4 bg-gray-900 border border-amber-500/50 rounded-2xl text-amber-300 font-mono text-base font-bold">
+                            Lời gọi: mayTinh.cong(5, 10, 20);
+                        </div>
+                        <div class="flex justify-center text-xl text-amber-400">↓ Đối chiếu danh sách tham số ↓</div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="p-4 bg-gray-900 rounded-xl border border-gray-800 opacity-40 text-xs font-mono">
+                                cong(int, int)<br>
+                                <span class="text-rose-400">❌ Không khớp (thiếu tham số)</span>
+                            </div>
+                            <div class="p-4 bg-emerald-950/60 rounded-xl border-2 border-emerald-500 text-xs font-mono font-bold text-emerald-300">
+                                cong(int, int, int)<br>
+                                <span class="text-emerald-400">✅ Khớp 3 số nguyên!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 8: 3.5 CONSTRUCTOR ==================== -->
+        <section class="slide-pane" data-title="3.5 Constructor">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <!-- Bên Trái: Chữ to rõ & Code -->
+                <div class="lg:col-span-6 space-y-5">
+                    <div class="border-b border-gray-800 pb-3">
+                        <span class="text-sm font-bold text-amber-500 font-mono uppercase tracking-wider">Mục 3.5</span>
+                        <h3 class="text-3xl md:text-4xl font-extrabold text-white">Hàm Khởi Tạo (Constructor)</h3>
+                    </div>
+                    <ul class="space-y-3 text-base md:text-lg text-gray-300 leading-relaxed">
+                        <li>• Tên phương thức phải <strong>trùng 100% với tên Class</strong>.</li>
+                        <li>• <strong>Không có kiểu trả về</strong> (kể cả <code>void</code>).</li>
+                        <li>• Tự động thực thi ngay lập tức khi đối tượng được sinh ra bằng từ khóa <code>new</code>.</li>
+                    </ul>
+                    <pre class="bg-gray-950 p-5 rounded-2xl border border-gray-800 text-sm md:text-base text-gray-200 leading-relaxed font-mono">
+<span class="text-purple-400">public class</span> <span class="text-amber-300 font-bold">Hero</span> {
+    String ten;
+    <span class="text-cyan-400">int</span> mau;
+
+    <span class="text-purple-400">public</span> <span class="text-emerald-400 font-bold">Hero</span>(String t) {
+        <span class="text-purple-400">this</span>.ten = t;
+        <span class="text-purple-400">this</span>.mau = <span class="text-amber-400">100</span>; <span class="text-gray-500">// Mặc định khởi tạo</span>
+    }
+}</pre>
+                </div>
+
+                <!-- Bên Phải: Hình mô phỏng trực quan -->
+                <div class="lg:col-span-6 flex justify-center items-center">
+                    <div class="w-full bg-gray-950 border border-gray-800 rounded-3xl p-6 text-center space-y-5">
+                        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest block">Quy Trình Khởi Sinh Đối Tượng</span>
+                        <div class="p-4 bg-gray-900 border border-gray-800 rounded-xl font-mono text-sm text-gray-300">
+                            1. Lệnh gọi: <span class="text-purple-400 font-bold">new</span> Hero("Yasuo");
+                        </div>
+                        <div class="text-xl text-amber-400">↓ Cấp phát vùng nhớ & Kích hoạt Constructor ↓</div>
+                        <div class="p-5 bg-emerald-950/60 border-2 border-emerald-500 rounded-2xl text-center space-y-2">
+                            <span class="text-xs text-emerald-400 font-bold uppercase">Đối tượng hình thành với dữ liệu sẵn sàng</span>
+                            <div class="font-mono text-sm text-gray-100 bg-black p-3 rounded-lg">
+                                ten: "Yasuo" | mau: 100
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 9: 3.6 INTERFACE VS IMPLEMENTATION ==================== -->
+        <section class="slide-pane" data-title="3.6 Interface vs Implementation">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <!-- Bên Trái: Chữ to rõ & Code -->
+                <div class="lg:col-span-6 space-y-5">
+                    <div class="border-b border-gray-800 pb-3">
+                        <span class="text-sm font-bold text-amber-500 font-mono uppercase tracking-wider">Mục 3.6</span>
+                        <h3 class="text-3xl md:text-4xl font-extrabold text-white">Interface & Implementation</h3>
+                    </div>
+                    <p class="text-lg text-gray-300 leading-relaxed">
+                        • <strong>Interface (Giao diện chuẩn):</strong> Bản hợp đồng quy định hệ thống làm được gì (chỉ có tên phương thức, không có mã thực thi).<br>
+                        • <strong>Implementation:</strong> Các lớp cụ thể viết mã hiện thực hóa hợp đồng đó.
+                    </p>
+                    <pre class="bg-gray-950 p-5 rounded-2xl border border-gray-800 text-sm text-gray-200 leading-relaxed font-mono">
+<span class="text-purple-400">interface</span> <span class="text-amber-300 font-bold">CongTypeC</span> {
+    <span class="text-purple-400">void</span> <span class="text-blue-400 font-bold">napDien</span>();
+}
+
+<span class="text-purple-400">class</span> <span class="text-amber-300 font-bold">SacNhanh</span> <span class="text-purple-400">implements</span> CongTypeC {
+    <span class="text-purple-400">public void</span> <span class="text-blue-400 font-bold">napDien</span>() { ... }
+}</pre>
+                </div>
+
+                <!-- Bên Phải: Hình mô phỏng trực quan cắm sạc -->
+                <div class="lg:col-span-6 flex justify-center items-center">
+                    <div class="w-full bg-gray-950 border border-gray-800 rounded-3xl p-6 text-center space-y-5">
+                        <div class="p-4 bg-purple-950/40 border-2 border-dashed border-purple-400 rounded-2xl space-y-1">
+                            <span class="text-xs uppercase font-bold text-purple-300">Chuẩn Giao Tiếp Chung (Interface)</span>
+                            <div class="text-xl font-black text-white">🔌 Chuẩn Type-C: napDien()</div>
+                        </div>
+
+                        <div class="text-xl text-purple-400">↑ Đều cắm vừa theo chuẩn chung ↑</div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="p-4 bg-gray-900 border border-gray-800 rounded-xl text-xs font-mono">
+                                <strong>Củ sạc Samsung</strong><br>
+                                <span class="text-emerald-400">Cài đặt: Sạc 45W</span>
+                            </div>
+                            <div class="p-4 bg-gray-900 border border-gray-800 rounded-xl text-xs font-mono">
+                                <strong>Củ sạc Apple</strong><br>
+                                <span class="text-emerald-400">Cài đặt: Sạc 20W</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 10: 3.7 ĐÓNG GÓI & CHE GIẤU DỮ LIỆU ==================== -->
+        <section class="slide-pane" data-title="3.7 Đóng gói dữ liệu">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <!-- Bên Trái: Chữ to rõ & Code -->
+                <div class="lg:col-span-6 space-y-5">
+                    <div class="border-b border-gray-800 pb-3">
+                        <span class="text-sm font-bold text-amber-500 font-mono uppercase tracking-wider">Mục 3.7</span>
+                        <h3 class="text-3xl md:text-4xl font-extrabold text-white">Đóng Gói (Encapsulation)</h3>
+                    </div>
+                    <p class="text-lg text-gray-300 leading-relaxed">
+                        Che giấu thông tin nhạy cảm bằng từ khóa <code>private</code>. Mọi truy xuất đều phải thông qua các cổng kiểm soát công khai <strong>Getter</strong> và <strong>Setter</strong>.
+                    </p>
+                    <pre class="bg-gray-950 p-5 rounded-2xl border border-gray-800 text-sm text-gray-200 leading-relaxed font-mono">
+<span class="text-purple-400">public class</span> <span class="text-amber-300 font-bold">NganHang</span> {
+    <span class="text-rose-400 font-bold">private double</span> soDu; <span class="text-gray-500">// Khóa dữ liệu</span>
+
+    <span class="text-purple-400">public void</span> <span class="text-blue-400 font-bold">napTien</span>(<span class="text-cyan-400">double</span> tien) {
+        <span class="text-purple-400">if</span> (tien > <span class="text-amber-400">0</span>) <span class="text-purple-400">this</span>.soDu += tien;
+    }
+}</pre>
+                </div>
+
+                <!-- Bên Phải: Hình mô phỏng trực quan Két Sắt -->
+                <div class="lg:col-span-6 flex justify-center items-center">
+                    <div class="w-full bg-gray-950 border border-gray-800 rounded-3xl p-6 text-center space-y-4">
+                        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest block">Mô Hình Bảo Vệ Két Sắt</span>
+                        <div class="p-6 bg-gray-900 border-2 border-emerald-500 rounded-2xl max-w-sm mx-auto space-y-3">
+                            <div class="p-3 bg-rose-950/50 border border-rose-600 rounded-lg text-rose-300 font-mono text-sm font-bold">
+                                🔒 private double soDu;
+                            </div>
+                            <div class="text-xs text-gray-400">Bên ngoài không thể gọi tk.soDu = -9999;</div>
+                            <div class="pt-2 border-t border-gray-800 flex justify-around text-xs font-mono">
+                                <span class="text-emerald-400 bg-black p-2 rounded">public getSoDu()</span>
+                                <span class="text-emerald-400 bg-black p-2 rounded">public napTien()</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 11: 3.8 KIỂU CƠ BẢN VS ĐỐI TƯỢNG ==================== -->
+        <section class="slide-pane" data-title="3.8 Kiểu cơ bản vs Đối tượng">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <!-- Bên Trái: Chữ to rõ -->
+                <div class="lg:col-span-6 space-y-5">
+                    <div class="border-b border-gray-800 pb-3">
+                        <span class="text-sm font-bold text-amber-500 font-mono uppercase tracking-wider">Mục 3.8</span>
+                        <h3 class="text-3xl md:text-4xl font-extrabold text-white">Kiểu Cơ Bản vs Kiểu Đối Tượng</h3>
+                    </div>
+                    <ul class="space-y-4 text-base md:text-lg text-gray-200">
+                        <li class="p-4 bg-gray-950 rounded-2xl border border-cyan-500/40">
+                            <strong class="text-cyan-400 block text-lg">Kiểu cơ bản (Primitive):</strong>
+                            int, double, boolean, char... Lưu trực tiếp giá trị số trên bộ nhớ <strong>Stack</strong>, không thể mang giá trị <code>null</code>.
+                        </li>
+                        <li class="p-4 bg-gray-950 rounded-2xl border border-amber-500/40">
+                            <strong class="text-amber-400 block text-lg">Kiểu đối tượng (Reference):</strong>
+                            String, SinhVien, Array... Lưu địa chỉ trên <strong>Stack</strong> trỏ sang <strong>Heap</strong>, có thể chứa <code>null</code>.
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Bên Phải: Hình mô phỏng trực quan -->
+                <div class="lg:col-span-6 flex justify-center items-center">
+                    <div class="w-full grid grid-cols-2 gap-4">
+                        <div class="p-5 bg-gray-950 border border-cyan-500/50 rounded-2xl text-center space-y-3">
+                            <span class="text-xs uppercase font-bold text-cyan-400">Kiểu Cơ Bản</span>
+                            <div class="p-3 bg-black rounded font-mono text-sm text-cyan-300">int age = 20;</div>
+                            <p class="text-xs text-gray-400">Giá trị 20 nằm trực tiếp tại ô nhớ của biến trên Stack.</p>
+                        </div>
+
+                        <div class="p-5 bg-gray-950 border border-amber-500/50 rounded-2xl text-center space-y-3">
+                            <span class="text-xs uppercase font-bold text-amber-400">Kiểu Đối Tượng</span>
+                            <div class="p-3 bg-black rounded font-mono text-sm text-amber-300">String s = "Java";</div>
+                            <p class="text-xs text-gray-400">Biến s chỉ chứa địa chỉ, trỏ tới chuỗi "Java" nằm trên Heap.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 12: 3.10 == VS .EQUALS ==================== -->
+        <section class="slide-pane" data-title="3.10 So sánh == vs .equals">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <!-- Bên Trái: Chữ to rõ & Code -->
+                <div class="lg:col-span-6 space-y-5">
+                    <div class="border-b border-gray-800 pb-3">
+                        <span class="text-sm font-bold text-amber-500 font-mono uppercase tracking-wider">Mục 3.10</span>
+                        <h3 class="text-3xl md:text-4xl font-extrabold text-white">So Sánh: `==` vs `.equals()`</h3>
+                    </div>
+                    <p class="text-lg text-gray-300 leading-relaxed">
+                        • <strong>Toán tử `==`:</strong> So sánh 2 địa chỉ vùng nhớ.<br>
+                        • <strong>Phương thức `.equals()`:</strong> So sánh nội dung ký tự thực tế bên trong.
+                    </p>
+                    <pre class="bg-gray-950 p-5 rounded-2xl border border-gray-800 text-sm md:text-base text-gray-200 leading-relaxed font-mono">
+String s1 = <span class="text-purple-400">new</span> String(<span class="text-amber-200">"TEST"</span>);
+String s2 = <span class="text-purple-400">new</span> String(<span class="text-amber-200">"TEST"</span>);
+
+System.out.println(s1 == s2);      <span class="text-rose-400 font-bold">// false ❌ (Khác ô nhớ)</span>
+System.out.println(s1.equals(s2)); <span class="text-emerald-400 font-bold">// true  ✅ (Cùng nội dung)</span></pre>
+                </div>
+
+                <!-- Bên Phải: Hình mô phỏng trực quan -->
+                <div class="lg:col-span-6 flex justify-center items-center">
+                    <div class="w-full bg-gray-950 border border-gray-800 rounded-3xl p-6 text-center space-y-4">
+                        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest block">Minh Họa Vùng Nhớ Heap</span>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="p-4 bg-gray-900 border border-gray-700 rounded-xl space-y-1">
+                                <span class="text-xs text-gray-400 font-mono">Địa chỉ: 0x111</span>
+                                <div class="text-lg font-black text-amber-300 font-mono">"TEST"</div>
+                            </div>
+                            <div class="p-4 bg-gray-900 border border-gray-700 rounded-xl space-y-1">
+                                <span class="text-xs text-gray-400 font-mono">Địa chỉ: 0x222</span>
+                                <div class="text-lg font-black text-amber-300 font-mono">"TEST"</div>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-gray-900 rounded-xl text-xs text-gray-300">
+                            0x111 == 0x222 là <strong class="text-rose-400">Sai</strong>, nhưng nội dung đều là chữ "TEST" nên .equals() trả về <strong class="text-emerald-400">Đúng</strong>.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 13: 3.11 TRUYỀN THAM SỐ ==================== -->
+        <section class="slide-pane" data-title="3.11 Truyền tham số">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <!-- Bên Trái: Chữ to rõ & Code -->
+                <div class="lg:col-span-6 space-y-5">
+                    <div class="border-b border-gray-800 pb-3">
+                        <span class="text-sm font-bold text-amber-500 font-mono uppercase tracking-wider">Mục 3.11</span>
+                        <h3 class="text-3xl md:text-4xl font-extrabold text-white">Truyền Tham Số (Pass-by-Value)</h3>
+                    </div>
+                    <p class="text-lg text-gray-300 leading-relaxed">
+                        Java <strong>chỉ có duy nhất cơ chế Pass-by-Value</strong> (truyền bản sao giá trị). Với đối tượng, bản sao được truyền đi chính là <strong>bản sao địa chỉ vùng nhớ</strong>.
+                    </p>
+                    <pre class="bg-gray-950 p-5 rounded-2xl border border-gray-800 text-sm md:text-base text-gray-200 leading-relaxed font-mono">
+<span class="text-purple-400">void</span> <span class="text-blue-400 font-bold">tangMau</span>(Player p) { 
+    p.hp += <span class="text-amber-400">50</span>; 
+}
+
+Player hero = <span class="text-purple-400">new</span> Player(<span class="text-amber-400">100</span>);
+tangMau(hero); 
+<span class="text-emerald-400 font-bold">// hero.hp trở thành 150!</span></pre>
+                </div>
+
+                <!-- Bên Phải: Hình mô phỏng trực quan -->
+                <div class="lg:col-span-6 flex justify-center items-center">
+                    <div class="w-full bg-gray-950 border border-gray-800 rounded-3xl p-6 text-center space-y-4">
+                        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest block">Bản Sao Địa Chỉ Trỏ Cùng Ô Nhớ</span>
+                        <div class="flex justify-around items-center">
+                            <div class="p-3 bg-blue-950 rounded-xl border border-blue-500 text-xs font-mono">hero: 0x9A</div>
+                            <div class="text-amber-400 text-2xl">➔</div>
+                            <div class="p-5 bg-emerald-950 border-2 border-emerald-500 rounded-2xl text-sm font-mono text-emerald-300">
+                                Object Player<br>
+                                hp: 100 ➔ 150
+                            </div>
+                            <div class="text-amber-400 text-2xl">⬅</div>
+                            <div class="p-3 bg-blue-950 rounded-xl border border-blue-500 text-xs font-mono">tham số p: 0x9A</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 14: 3.12 THAM CHIẾU THIS ==================== -->
+        <section class="slide-pane" data-title="3.12 Tham chiếu this">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <!-- Bên Trái: Chữ to rõ & Code -->
+                <div class="lg:col-span-6 space-y-5">
+                    <div class="border-b border-gray-800 pb-3">
+                        <span class="text-sm font-bold text-amber-500 font-mono uppercase tracking-wider">Mục 3.12</span>
+                        <h3 class="text-3xl md:text-4xl font-extrabold text-white">Từ Khóa `this` Trong Java</h3>
+                    </div>
+                    <p class="text-lg text-gray-300 leading-relaxed">
+                        Từ khóa <code>this</code> đại diện cho <strong>chính đối tượng hiện tại</strong> đang thực thi code, giúp phân biệt rõ giữa <em>thuộc tính của lớp</em> và <em>tham số truyền vào</em> khi chúng trùng tên.
+                    </p>
+                    <pre class="bg-gray-950 p-5 rounded-2xl border border-gray-800 text-sm md:text-base text-gray-200 leading-relaxed font-mono">
+<span class="text-purple-400">public class</span> <span class="text-amber-300 font-bold">SinhVien</span> {
+    String hoTen;
+
+    <span class="text-purple-400">public</span> <span class="text-emerald-400 font-bold">SinhVien</span>(String hoTen) {
+        <span class="text-purple-400 font-bold">this</span>.hoTen = hoTen; 
+        <span class="text-gray-500">// this.hoTen: Thuộc tính lớp</span>
+        <span class="text-gray-500">// hoTen: Tham số truyền vào</span>
+    }
+}</pre>
+                </div>
+
+                <!-- Bên Phải: Hình mô phỏng trực quan -->
+                <div class="lg:col-span-6 flex justify-center items-center">
+                    <div class="w-full bg-gray-950 border border-gray-800 rounded-3xl p-6 text-center space-y-5">
+                        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest block">Khử Sự Nhập Nhằng Biến</span>
+                        <div class="p-4 bg-gray-900 rounded-2xl border border-amber-500/50 space-y-3 text-left">
+                            <div class="flex items-center gap-2 text-sm font-mono text-amber-300">
+                                <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                                <span>this.hoTen ➔ Thuộc tính của Object trong Heap</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm font-mono text-cyan-300">
+                                <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
+                                <span>hoTen ➔ Tham số tạm thời trên Stack</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 15: 3.13 STATIC, PACKAGE, CLI ==================== -->
+        <section class="slide-pane" data-title="3.13 static, package, args">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <!-- Bên Trái: Chữ to rõ -->
+                <div class="lg:col-span-6 space-y-5">
+                    <div class="border-b border-gray-800 pb-3">
+                        <span class="text-sm font-bold text-amber-500 font-mono uppercase tracking-wider">Mục 3.13</span>
+                        <h3 class="text-3xl md:text-4xl font-extrabold text-white">Thành Viên `static` & `package`</h3>
+                    </div>
+                    <ul class="space-y-4 text-base md:text-lg text-gray-200">
+                        <li class="p-4 bg-gray-950 rounded-2xl border border-amber-500/40">
+                            <strong class="text-amber-400 block text-lg">Từ khóa `static`:</strong>
+                            Biến hoặc hàm thuộc về <strong>toàn bộ Class</strong>, dùng chung cho mọi đối tượng, gọi trực tiếp mà không cần lệnh <code>new</code>.
+                        </li>
+                        <li class="p-4 bg-gray-950 rounded-2xl border border-blue-500/40">
+                            <strong class="text-blue-400 block text-lg">Gói `package`:</strong>
+                            Cơ chế thư mục phân cấp mã nguồn, ngăn ngừa xung đột tên file giữa các nhóm lập trình.
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Bên Phải: Hình mô phỏng trực quan -->
+                <div class="lg:col-span-6 flex justify-center items-center">
+                    <div class="w-full bg-gray-950 border border-gray-800 rounded-3xl p-6 text-center space-y-4">
+                        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest block">Biến static Dùng Chung</span>
+                        <div class="p-4 bg-amber-950/40 border-2 border-amber-500 rounded-2xl">
+                            <span class="text-xs text-amber-400 uppercase font-mono font-bold">Vùng Nhớ Class Static</span>
+                            <div class="text-xl font-mono font-bold text-white mt-1">static int onlineCount = 100;</div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 text-xs font-mono text-gray-400">
+                            <div class="p-3 bg-gray-900 rounded-xl border border-gray-800">User 1 truy cập</div>
+                            <div class="p-3 bg-gray-900 rounded-xl border border-gray-800">User 2 truy cập</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 16: 3.14 QUAN HỆ COMPOSITION ==================== -->
+        <section class="slide-pane" data-title="3.14 Quan hệ Composition">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <!-- Bên Trái: Chữ to rõ & Code -->
+                <div class="lg:col-span-6 space-y-5">
+                    <div class="border-b border-gray-800 pb-3">
+                        <span class="text-sm font-bold text-amber-500 font-mono uppercase tracking-wider">Mục 3.14</span>
+                        <h3 class="text-3xl md:text-4xl font-extrabold text-white">Quan Hệ Thành Phần (Composition)</h3>
+                    </div>
+                    <p class="text-lg text-gray-300 leading-relaxed">
+                        Quan hệ <strong>"Has-A" (Sở hữu)</strong> có tính sống còn: Đối tượng lớn được hợp thành từ các đối tượng thành phần nhỏ. Khi đối tượng cha bị hủy, các thành phần con cũng mất theo.
+                    </p>
+                    <pre class="bg-gray-950 p-5 rounded-2xl border border-gray-800 text-sm md:text-base text-gray-200 leading-relaxed font-mono">
+<span class="text-purple-400">public class</span> <span class="text-amber-300 font-bold">Smartphone</span> {
+    <span class="text-purple-400">private</span> Pin battery; <span class="text-gray-500">// Has-A</span>
+
+    <span class="text-purple-400">public</span> <span class="text-emerald-400 font-bold">Smartphone</span>() {
+        <span class="text-purple-400">this</span>.battery = <span class="text-purple-400">new</span> Pin();
+    }
+}</pre>
+                </div>
+
+                <!-- Bên Phải: Hình mô phỏng trực quan Smartphone -->
+                <div class="lg:col-span-6 flex justify-center items-center">
+                    <div class="w-full bg-gray-950 border border-gray-800 rounded-3xl p-6 text-center space-y-4">
+                        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest block">Thực Thể Phức Hợp</span>
+                        <div class="p-6 bg-gray-900 border-2 border-amber-500 rounded-2xl max-w-sm mx-auto space-y-3">
+                            <span class="text-lg font-black text-amber-400 block">📱 Smartphone</span>
+                            <div class="grid grid-cols-2 gap-2 text-xs font-mono">
+                                <div class="p-2.5 bg-black rounded border border-gray-800 text-gray-200">🔋 Pin (Battery)</div>
+                                <div class="p-2.5 bg-black rounded border border-gray-800 text-gray-200">🖥️ Màn Hình</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 17: TỔNG KẾT TOÀN DIỆN ==================== -->
+        <section class="slide-pane" data-title="Tổng kết kiến thức">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <!-- Bên Trái: Ghi nhớ cốt lõi -->
+                <div class="lg:col-span-7 space-y-5">
+                    <div class="border-b border-gray-800 pb-3">
+                        <h3 class="text-3xl md:text-5xl font-black text-white">Ghi Nhớ Cốt Lõi</h3>
+                    </div>
+                    <div class="space-y-4 text-base md:text-lg text-gray-200">
+                        <div class="p-4 bg-gray-950 rounded-2xl border border-amber-500/40 space-y-1">
+                            <strong class="text-amber-400 text-lg block">Chương 2: Tư duy</strong>
+                            <p class="text-gray-300">4 trụ cột: <strong>Đóng gói</strong> (bảo vệ), <strong>Trừu tượng</strong> (ẩn chi tiết), <strong>Kế thừa</strong> (tái sử dụng), <strong>Đa hình</strong> (linh hoạt).</p>
+                        </div>
+                        <div class="p-4 bg-gray-950 rounded-2xl border border-emerald-500/40 space-y-1">
+                            <strong class="text-emerald-400 text-lg block">Chương 3: Kỹ thuật Java</strong>
+                            <p class="text-gray-300">Biến đối tượng chỉ chứa tham chiếu; so sánh nội dung dùng <code>.equals()</code>; luôn truyền tham số theo cơ chế <code>Pass-by-Value</code>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bên Phải: Hình huy hiệu & Nút điều hướng -->
+                <div class="lg:col-span-5 flex justify-center items-center">
+                    <div class="w-full bg-gray-950 border border-gray-800 rounded-3xl p-8 text-center space-y-6">
+                        <div class="w-20 h-20 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-4xl mx-auto shadow-lg shadow-emerald-500/10">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                        <div class="text-2xl font-black text-white">Hoàn Thành Chương 2 & 3</div>
+                        <a href="index.html" class="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-gray-950 px-8 py-3.5 rounded-xl text-base font-extrabold shadow-xl transition transform hover:scale-105">
+                            <i class="fa-solid fa-house"></i> Về Trang Chủ Khóa Học
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- THANH ĐIỀU HƯỚNG DƯỚI CÙNG -->
+    <footer class="bg-gray-900/95 border-t border-gray-800 px-8 py-4 sticky bottom-0 z-50">
+        <!-- Thanh tiến trình -->
+        <div class="w-full bg-gray-800 h-2.5 rounded-full overflow-hidden mb-3.5">
+            <div id="progressBar" class="bg-gradient-to-r from-amber-500 to-orange-500 h-full w-0 transition-all duration-300"></div>
+        </div>
+
+        <div class="flex justify-between items-center max-w-[1700px] mx-auto">
+            <button id="prevBtn" onclick="prevSlide()" class="bg-gray-800 hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed text-gray-200 text-base font-bold px-6 py-2.5 rounded-xl transition flex items-center gap-2">
+                <i class="fa-solid fa-chevron-left"></i> Slide Trước
+            </button>
+            <span class="text-sm font-semibold text-gray-500 hidden md:inline">
+                Sử dụng phím mũi tên <strong>←</strong> hoặc <strong>→</strong> trên bàn phím để chuyển slide
+            </span>
+            <button id="nextBtn" onclick="nextSlide()" class="bg-amber-500 hover:bg-amber-400 disabled:opacity-30 disabled:cursor-not-allowed text-gray-950 text-base font-black px-7 py-2.5 rounded-xl transition flex items-center gap-2 shadow-lg">
+                Slide Tiếp <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
+    </footer>
+
+    <!-- SCRIPT ĐIỀU KHIỂN SLIDE -->
+    <script>
+        const slides = document.querySelectorAll('.slide-pane');
+        const select = document.getElementById('slideSelect');
+        const slideNumber = document.getElementById('slideNumber');
+        const headerTitle = document.getElementById('headerTitle');
+        const progressBar = document.getElementById('progressBar');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        let currentSlide = 0;
+
+        // Sinh mục lục trong dropdown
+        slides.forEach((slide, idx) => {
+            const opt = document.createElement('option');
+            opt.value = idx;
+            opt.innerText = `${idx + 1}. ${slide.getAttribute('data-title')}`;
+            select.appendChild(opt);
+        });
+
+        function updateSlideUI() {
+            slides.forEach((s, idx) => {
+                s.classList.toggle('active', idx === currentSlide);
+            });
+
+            const activeSlide = slides[currentSlide];
+            const title = activeSlide.getAttribute('data-title');
+
+            headerTitle.innerText = title;
+            slideNumber.innerText = `${currentSlide + 1} / ${slides.length}`;
+            select.value = currentSlide;
+
+            const percent = ((currentSlide + 1) / slides.length) * 100;
+            progressBar.style.width = `${percent}%`;
+
+            prevBtn.disabled = (currentSlide === 0);
+            nextBtn.disabled = (currentSlide === slides.length - 1);
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                updateSlideUI();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlideUI();
+            }
+        }
+
+        function goToSlide(idx) {
+            if (idx >= 0 && idx < slides.length) {
+                currentSlide = idx;
+                updateSlideUI();
+            }
+        }
+
+        // Bắt sự kiện phím mũi tên chuyển slide
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                prevSlide();
+            }
+        });
+
+        updateSlideUI();
+    </script>
+</body>
+</html>
