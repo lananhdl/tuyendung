@@ -69,6 +69,7 @@
         <button id="tabBtnExams" onclick="switchMainTab('exams')">📝 Bài Kiểm Tra</button>
         <button id="tabBtnResults" onclick="switchMainTab('results')">📊 Điểm Của Tôi</button>
         <button type="button" class="btn-purple" onclick="openTreasureHunt()">⚔️ Java Treasure Hunt</button>
+        <button type="button" class="btn-purple" onclick="openCompiler()">💻 Kiểm tra 1 tiết lần 1</button>
         <button id="tabBtnAdmin" class="btn-warning hidden" onclick="switchMainTab('admin')">⚙️ Quản Trị Giáo Viên</button>
     </div>
 
@@ -268,7 +269,7 @@
     </div>
 
     <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxMqXLWKc47PAe1Xtn2LBwN_X49lRjticVpzLQy3wAj2o3NstKu6IOmqSM0djboTNai1Q/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzzYQfnvWl4dH2ggLcfgd5UYUFskGd4dWGY0wr4rcuqsEHz8GlL7NNJg4cEqvVv77FQtA/exec';
 
         let currentUser = null;
         let examsList = [];
@@ -1060,7 +1061,10 @@
                     cont.innerHTML = '<span style="color:red">Lỗi tải dữ liệu bảng điểm: ' + err.message + '</span>';
                 });
         }
-
+function openCompiler() {
+    if (!currentUser) return alert('Vui lòng đăng nhập trước!');
+    window.location.href = 'compiler.html';
+}
         // Mở Modal chấm bài an toàn bằng Index
         function openGradeModalByIndex(index) {
             const row = teacherResultsList[index];

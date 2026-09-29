@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài Tập Tổng Hợp Java (Scanner, If, For, While)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <!-- CodeMirror Editor (Tô màu cú pháp & số dòng chuyên nghiệp) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/clike/clike.min.js"></script>
+    <style>
+        .no-copy {
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+        }
+
+        body { 
+            background-color: #0b1120; 
+            color: #f8fafc; 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
+        }
+
+        .tab-btn.active {
+            background-color: #1e293b;
+            border-bottom: 3px solid #f59e0b;
+            color: #fbbf24;
+            font-weight: bold;
+        }
+
+        .CodeMirror {
+            height: 320px;
+            border-radius: 0.5rem;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 13.5px;
+        }
+
+        @media print {
+            body { display: none !important; }
+        }
+    </style>
+</head>
+<body class="min-h-screen py-6 px-4 no-copy">
+
+    <!-- LỚP PHỦ BẢO MẬT (CHỈ HIỆN KHI RỜI CỬA SỔ / CHỤP ẢNH) -->
+    <div id="securityOverlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background-color:black; color:#ef4444; z-index:999999; flex-direction:column; justify-content:center; align-items:center; font-size:22px; font-weight:bold; text-align:center;">
+        ⚠️ CẢNH BÁO AN TOÀN BẢO MẬT BÀI THI<br>
+        <span style="font-size:16px; color:#94a3b8; margin-top:10px;">
+            Màn hình bị ẩn do phát hiện chụp màn hình hoặc rời khỏi trang web làm bài.
+        </span>
+    </div>
+
+    <div class="max-w-6xl mx-auto">
+        <!-- Header & Đồng Hồ Đếm Ngược -->
+        <div class="flex flex-wrap justify-between items-center mb-5 bg-slate-900/90 p-4 rounded-xl border border-slate-800 shadow-md gap-3">
+            <a href="index.html" class="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-lg text-sm transition border border-slate-700">
+                ⬅️ Quay Về Trang Chủ Khóa Học
+            </a>
+
+            <!-- Đồng hồ thời gian làm bài -->
+            <div class="flex items-center gap-3">
+                <div class="bg-amber-950/60 border border-amber-500/50 px-4 py-1.5 rounded-lg flex items-center gap-2">
+                    <span class="text-xs uppercase font-bold text-amber-400">⏳ Thời gian còn lại:</span>
+                    <span id="countdownTimer" class="font-mono text-lg font-extrabold text-amber-300">45:00</span>
+                </div>
+                <div id="userBadge" class="text-sm font-semibold text-emerald-400">Đang tải...</div>
+            </div>
+        </div>
+
+        <!-- KHU VỰC DÀNH CHO GIÁO VIÊN: ĐIỀU CHỈNH THỜI GIAN LÀM BÀI -->
+        <div id="teacherDurationBox" class="hidden bg-slate-800 p-4 rounded-xl border border-amber-500/60 mb-5 shadow-lg flex flex-wrap justify-between items-center gap-3">
+            <div class="text-xs text-amber-300">
+                ⚙️ <strong>Quyền Giáo Viên:</strong> Chỉnh sửa tổng thời lượng làm bài cho sinh viên (phút):
+            </div>
+            <div class="flex items-center gap-2">
+                <input type="number" id="inputCustomDuration" min="1" max="180" value="45" class="w-20 px-2 py-1 bg-slate-950 border border-slate-600 rounded text-amber-300 font-bold text-sm text-center">
+                <button onclick="updateExamDurationByTeacher()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-1 rounded text-xs transition">
+                    Cập Nhật Thời Gian
+                </button>
+            </div>
+        </div>
+
+        <!-- Bảng Tổng Quan Điểm Số 3 Câu -->
+        <div class="bg-slate-900/80 p-5 rounded-xl border border-slate-800 mb-5 shadow-lg">
+            <div class="flex flex-wrap justify-between items-center gap-2 mb-2">
+                <span class="text-xs font-semibold px-3 py-1 bg-amber-900/60 text-amber-300 rounded-full border border-amber-700">Bài Thực Hành Tổng Hợp Java</span>
+                <span class="text-sm text-slate-300">Tổng điểm tích lũy: <strong id="totalScoreText" class="text-2xl text-emerald-400 font-extrabold">0.0</strong> / 10.0</span>
+            </div>
+            <p class="text-xs text-slate-400">
+                Viết code trực tiếp vào ô soạn thảo bên dưới, bấm <strong>Nạp & Chạy Thử</strong> để tương tác console, và bấm <strong>Chấm Điểm</strong> lại nhiều lần trước khi nộp.
+            </p>
+        </div>
+
+        <!-- SELECTION CHỌN CÂU HỎI (TABS) -->
+        <div class="flex flex-wrap gap-2 border-b border-slate-800 mb-5 text-sm font-medium">
+            <button id="tabBtn1" class="tab-btn active px-4 py-2.5 rounded-t-lg bg-slate-900 text-slate-300 transition cursor-pointer" onclick="switchQuestion(1)">
+                Bài 1: Scanner & If-Else (<span id="scoreBadge1" class="text-amber-400 font-bold">0</span>/3.5đ)
+            </button>
+            <button id="tabBtn2" class="tab-btn px-4 py-2.5 rounded-t-lg bg-slate-900 text-slate-300 transition cursor-pointer" onclick="switchQuestion(2)">
+                Bài 2: Scanner & Vòng lặp For (<span id="scoreBadge2" class="text-amber-400 font-bold">0</span>/3.5đ)
+            </button>
+            <button id="tabBtn3" class="tab-btn px-4 py-2.5 rounded-t-lg bg-slate-900 text-slate-300 transition cursor-pointer" onclick="switchQuestion(3)">
+                Bài 3: Scanner & Vòng lặp While (<span id="scoreBadge3" class="text-amber-400 font-bold">0</span>/3.0đ)
+            </button>
+        </div>
+
+        <!-- KHUNG MÔ TẢ ĐỀ BÀI THEO SELECTION -->
+        <div class="bg-slate-900 p-5 rounded-xl border border-slate-800 mb-5 shadow-lg">
+            <div class="flex justify-between items-center mb-2">
+                <h2 id="qTitle" class="text-lg font-bold text-amber-400">Đang tải đề bài...</h2>
+                <span id="qMaxPoints" class="text-xs font-bold px-2.5 py-1 bg-blue-900/60 text-blue-300 rounded border border-blue-700"></span>
+            </div>
+            <p id="qDesc" class="text-sm text-slate-300 mb-3"></p>
+            <div id="qRequirements" class="bg-slate-950 p-3 rounded-lg text-xs font-mono text-slate-400 border border-slate-800"></div>
+        </div>
+
+        <!-- 1. KHU VỰC SOẠN THẢO MÃ NGUỒN CHÍNH (NẰM TRỰC TIẾP TRÊN TRANG, TỰ LƯU 100%) -->
+        <div class="bg-slate-900 p-5 rounded-xl border border-slate-800 mb-5 shadow-lg space-y-3">
+            <div class="flex flex-wrap justify-between items-center gap-2">
+                <label class="block text-xs font-bold text-slate-200">
+                    💻 Trình soạn thảo mã nguồn cho <span id="currentQNameLabel" class="text-amber-400">Bài 1</span>:
+                </label>
+                <div class="flex items-center gap-3">
+                    <span id="syncStatusBadge" class="text-xs text-emerald-400 font-semibold">● Đang tự động lưu bài</span>
+                    <button type="button" onclick="resetDefaultStarterCode()" class="text-xs text-slate-400 hover:text-amber-300">
+                        🔄 Khôi phục khung code ban đầu
+                    </button>
+                </div>
+            </div>
+
+            <!-- Editor CodeMirror -->
+            <textarea id="sourceCodeInput"></textarea>
+
+            <!-- Thanh chức năng Nạp vào OneCompiler & Chấm điểm -->
+            <div class="flex flex-wrap justify-between items-center gap-3 pt-3 border-t border-slate-800">
+                <button type="button" onclick="runCodeInOneCompiler()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold px-5 py-2.5 rounded-lg text-xs transition shadow-md flex items-center gap-2 cursor-pointer">
+                    ▶️ Nạp Vào OneCompiler & Chạy Thử Nghiệm Console
+                </button>
+
+                <div class="flex items-center gap-3">
+                    <button type="button" onclick="evaluateCurrentTask()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-5 py-2.5 rounded-lg text-xs transition shadow-md flex items-center gap-2 cursor-pointer">
+                        🔍 Chấm Điểm Thử Câu Này (Có Thể Chấm Lại)
+                    </button>
+                    <div id="currentScoreVerdict" class="font-bold text-amber-400 text-sm">
+                        Điểm câu này: 0.0 đ
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chi tiết thẩm định -->
+            <div id="evaluationDetails" class="hidden text-xs font-mono p-3 bg-slate-950 rounded-lg border border-slate-800 space-y-1">
+                <div id="ruleStructure"></div>
+                <div id="ruleLogic"></div>
+            </div>
+        </div>
+
+        <!-- 2. KHUNG TRÌNH BIÊN DỊCH ONECOMPILER (NHẬN CODE TRỰC TIẾP VÀ CHẠY CONSOLE) -->
+        <div id="compilerContainer" class="bg-slate-900 p-4 rounded-xl border border-slate-800 shadow-lg mb-5">
+            <div class="flex justify-between items-center mb-3">
+                <div class="flex items-center gap-2">
+                    <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="text-sm font-bold text-slate-200">Màn Hình Chạy Thử & Tương Tác Console (OneCompiler)</span>
+                </div>
+                <span class="text-xs text-slate-400">Console tương tác thời gian thực</span>
+            </div>
+
+            <iframe 
+                id="ocFrame"
+                src="https://onecompiler.com/embed/java?listenToEvents=true&hideTitle=true&theme=dark" 
+                width="100%" 
+                height="450px" 
+                frameborder="0" 
+                class="rounded-lg border border-slate-800">
+            </iframe>
+        </div>
+
+        <!-- 3. KHUNG NỘP BÀI VÀ XEM ĐÁP ÁN SAU KHI NỘP -->
+        <div class="bg-slate-900 p-5 rounded-xl border border-slate-800 shadow-lg text-center space-y-3 mb-6">
+            <h3 class="text-base font-bold text-slate-200">Nộp Toàn Bộ 3 Câu Cho Giáo Viên Chấm</h3>
+            <p class="text-xs text-slate-400 max-w-xl mx-auto">
+                Hệ thống sẽ lưu trọn vẹn <strong>Mã nguồn thực tế bạn viết</strong> và <strong>Kết quả chấm chi tiết</strong> của cả 3 câu vào Google Sheets.
+            </p>
+            <button type="button" id="btnSubmitAll" onclick="submitAllToGoogleSheets()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold px-8 py-3 rounded-xl text-base shadow-lg transition cursor-pointer">
+                🏆 Nộp Toàn Bộ Điểm (<span id="btnSubmitScore">0.0</span>/10) Vào Hệ Thống
+            </button>
+
+            <!-- KHU VỰC ĐÁP ÁN MẪU (CHỈ HIỂN THỊ SAU KHI ĐÃ NỘP BÀI THÀNH CÔNG) -->
+            <div id="solutionBoxAfterSubmit" class="hidden mt-6 text-left border-t border-slate-800 pt-5 space-y-4">
+                <div class="flex items-center gap-2 text-amber-400 font-bold text-sm">
+                    <span>💡 ĐÁP ÁN MẪU & LỜI GIẢI THAM KHẢO (Đã mở sau khi bạn hoàn thành nộp bài):</span>
+                </div>
+                
+                <div class="space-y-3">
+                    <div class="bg-slate-950 p-4 rounded-lg border border-slate-800">
+                        <strong class="text-xs text-amber-300 block mb-1">Đáp án mẫu Bài 1 (Scanner & If-Else):</strong>
+                        <pre class="text-xs text-slate-300 font-mono">
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int score = scanner.nextInt();
+        if (score >= 5) {
+            System.out.println("DAT");
+        } else {
+            System.out.println("KHONG DAT");
+        }
+    }
+}</pre>
+                    </div>
+
+                    <div class="bg-slate-950 p-4 rounded-lg border border-slate-800">
+                        <strong class="text-xs text-amber-300 block mb-1">Đáp án mẫu Bài 2 (Scanner & For Loop):</strong>
+                        <pre class="text-xs text-slate-300 font-mono">
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        int sum = 0;
+        for (int i = 1; i <= n; i++) {
+            sum += i;
+        }
+        System.out.println(sum);
+    }
+}</pre>
+                    </div>
+
+                    <div class="bg-slate-950 p-4 rounded-lg border border-slate-800">
+                        <strong class="text-xs text-amber-300 block mb-1">Đáp án mẫu Bài 3 (Scanner & While Loop):</strong>
+                        <pre class="text-xs text-slate-300 font-mono">
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int energy = 0;
+        while (energy < 100) {
+            int buff = scanner.nextInt();
+            energy += buff;
+        }
+        System.out.println("HOAN THANH: " + energy);
+    }
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzzYQfnvWl4dH2ggLcfgd5UYUFskGd4dWGY0wr4rcuqsEHz8GlL7NNJg4cEqvVv77FQtA/exec';
+
+        let currentUser = null;
+        let examDurationMinutes = 45;
+        let remainingSeconds = 45 * 60;
+        let timerInterval = null;
+        let isHoveringIframe = false;
+        let codeMirrorEditor = null;
+
+        // Lưu trữ bài làm thực tế của sinh viên cho 3 câu
+        let studentAnswersState = {
+            1: { score: 0.0, maxScore: 3.5, code: "", console: "", feedback: "Chưa chấm" },
+            2: { score: 0.0, maxScore: 3.5, code: "", console: "", feedback: "Chưa chấm" },
+            3: { score: 0.0, maxScore: 3.0, code: "", console: "", feedback: "Chưa chấm" }
+        };
+
+        let currentQId = 1;
+        let liveConsoleOutput = "";
+
+        // 1. BẢO MẬT & CHỐNG CHỤP MÀN HÌNH (VẪN CHO PHÉP THAO TÁC TRÊN IFRAME)
+        (function initSecurity() {
+            const overlay = document.getElementById('securityOverlay');
+            const ocFrame = document.getElementById('ocFrame');
+
+            if (ocFrame) {
+                ocFrame.addEventListener('mouseenter', () => { isHoveringIframe = true; });
+                ocFrame.addEventListener('mouseleave', () => { isHoveringIframe = false; });
+            }
+
+            document.addEventListener('contextmenu', e => e.preventDefault());
+
+            document.addEventListener('keydown', function(e) {
+                const isInput = (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA' || document.activeElement.closest('.CodeMirror')));
+
+                if (e.key === 'PrintScreen' || e.keyCode === 44) {
+                    e.preventDefault();
+                    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText('');
+                    if (overlay) {
+                        overlay.style.display = 'flex';
+                        setTimeout(() => { overlay.style.display = 'none'; }, 3000);
+                    }
+                    return false;
+                }
+
+                if ((e.ctrlKey || e.metaKey) && ['u', 's', 'p'].includes(e.key.toLowerCase())) {
+                    e.preventDefault();
+                    return false;
+                }
+
+                if (e.key === 'F12' || ((e.ctrlKey || e.metaKey) && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase()))) {
+                    e.preventDefault();
+                    if (overlay) {
+                        overlay.style.display = 'flex';
+                        setTimeout(() => { overlay.style.display = 'none'; }, 2000);
+                    }
+                    return false;
+                }
+            });
+
+            window.addEventListener('blur', () => {
+                if (isHoveringIframe || document.activeElement === ocFrame) return;
+                if (overlay) overlay.style.display = 'flex';
+            });
+
+            window.addEventListener('focus', () => {
+                if (overlay) overlay.style.display = 'none';
+            });
+        })();
+
+        // 2. CẤU HÌNH ĐỀ BÀI VÀ KHUNG GỢI Ý MỞ ĐẦU
+        const QUESTIONS_CONFIG = {
+            1: {
+                name: "Bài 1",
+                title: "Bài 1: Phân Loại Điểm Số (Scanner & If - Else)",
+                maxScore: 3.5,
+                desc: "Nhập điểm số (0 - 10) từ bàn phím. Nếu điểm >= 5 thì in ra 'DAT', ngược lại in ra 'KHONG DAT'.",
+                requirements: "Yêu cầu: Khai báo Scanner đọc số và có câu lệnh điều kiện 'if' (hoặc 'if - else').",
+                starterCode: `import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        // Viết code bài 1 tại đây:\n        \n    }\n}`
+            },
+            2: {
+                name: "Bài 2",
+                title: "Bài 2: Tính Tổng Dãy Số Đến N (Scanner & Vòng Lặp For)",
+                maxScore: 3.5,
+                desc: "Nhập số nguyên dương N từ bàn phím. Sử dụng vòng lặp for để tính tổng S = 1 + 2 + ... + N và in kết quả S ra màn hình.",
+                requirements: "Yêu cầu: Dùng Scanner nhập N và sử dụng vòng lặp 'for' với phép cộng dồn biến tổng.",
+                starterCode: `import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        // Viết code bài 2 tại đây:\n        \n    }\n}`
+            },
+            3: {
+                name: "Bài 3",
+                title: "Bài 3: Tích Lũy Thể Lực (Scanner & Vòng Lặp While)",
+                maxScore: 3.0,
+                desc: "Khởi tạo energy = 0. Sử dụng vòng lặp while lặp lại việc nhập thể lực cộng thêm từ bàn phím cho đến khi energy >= 100 thì dừng và in ra 'HOAN THANH: ' kèm số energy.",
+                requirements: "Yêu cầu: Dùng Scanner và cấu trúc vòng lặp 'while' (hoặc 'do - while') có kiểm tra điều kiện ngưỡng 100.",
+                starterCode: `import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        // Viết code bài 3 tại đây:\n        \n    }\n}`
+            }
+        };
+
+        // 3. KHỞI TẠO VÀ KIỂM TRA ĐĂNG NHẬP
+        window.addEventListener('DOMContentLoaded', () => {
+            try {
+                const raw = sessionStorage.getItem('currentUser');
+                if (raw) currentUser = JSON.parse(raw);
+            } catch(e) {}
+
+            if (!currentUser || !currentUser.username) {
+                alert("Vui lòng đăng nhập tại trang chính trước khi làm bài tập thực hành!");
+                window.location.href = 'index.html';
+                return;
+            }
+
+            document.getElementById('userBadge').innerText = `👤 ${currentUser.fullname} (${currentUser.role === 'teacher' ? 'GV' : 'SV'})`;
+
+            if (currentUser.role === 'teacher') {
+                document.getElementById('teacherDurationBox').classList.remove('hidden');
+            }
+
+            // Khởi tạo CodeMirror Editor
+            codeMirrorEditor = CodeMirror.fromTextArea(document.getElementById('sourceCodeInput'), {
+                lineNumbers: true,
+                mode: "text/x-java",
+                theme: "dracula",
+                indentUnit: 4,
+                lineWrapping: true
+            });
+
+            // Tự động lưu vào bộ nhớ mỗi khi sinh viên gõ
+            codeMirrorEditor.on('change', () => {
+                const val = codeMirrorEditor.getValue();
+                studentAnswersState[currentQId].code = val;
+                document.getElementById('syncStatusBadge').innerText = "● Đã lưu thay đổi";
+                setTimeout(() => {
+                    document.getElementById('syncStatusBadge').innerText = "● Đang tự động lưu bài";
+                }, 1000);
+            });
+
+            loadExamDuration();
+            switchQuestion(1);
+        });
+
+        // 4. TẢI THỜI GIAN LÀM BÀI TỪ CODE.GS
+        function loadExamDuration() {
+            fetch(`${SCRIPT_URL}?action=getExams&role=${currentUser.role}`)
+                .then(r => r.json())
+                .then(exams => {
+                    const labExam = exams.find(x => x.id === 'java_tong_hop_scanner_if_loop');
+                    if (labExam && labExam.duration) {
+                        examDurationMinutes = Number(labExam.duration);
+                        document.getElementById('inputCustomDuration').value = examDurationMinutes;
+                    }
+                    startCountdown(examDurationMinutes);
+                })
+                .catch(() => {
+                    startCountdown(45);
+                });
+        }
+
+        function startCountdown(minutes) {
+            clearInterval(timerInterval);
+            remainingSeconds = minutes * 60;
+            updateTimerDisplay();
+
+            timerInterval = setInterval(() => {
+                remainingSeconds--;
+                updateTimerDisplay();
+                if (remainingSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Đã hết thời gian làm bài! Hệ thống tự động nộp bài làm của bạn.");
+                    submitAllToGoogleSheets();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(remainingSeconds / 60);
+            const secs = remainingSeconds % 60;
+            document.getElementById('countdownTimer').innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function updateExamDurationByTeacher() {
+            const newDur = parseInt(document.getElementById('inputCustomDuration').value, 10);
+            if (isNaN(newDur) || newDur <= 0) return alert("Vui lòng nhập số phút hợp lệ!");
+
+            fetch(`${SCRIPT_URL}?action=updateExamDuration&role=teacher&examId=java_tong_hop_scanner_if_loop&duration=${newDur}`)
+                .then(r => r.json())
+                .then(res => {
+                    alert(res.message);
+                    examDurationMinutes = newDur;
+                    startCountdown(newDur);
+                })
+                .catch(err => alert("Lỗi cập nhật thời gian: " + err.message));
+        }
+
+        // 5. CHUYỂN TABS CÂU HỎI
+        function switchQuestion(qId) {
+            if (codeMirrorEditor && studentAnswersState[currentQId]) {
+                studentAnswersState[currentQId].code = codeMirrorEditor.getValue();
+            }
+
+            currentQId = qId;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`tabBtn${qId}`).classList.add('active');
+
+            const q = QUESTIONS_CONFIG[qId];
+            document.getElementById('qTitle').innerText = q.title;
+            document.getElementById('qMaxPoints').innerText = `Tối đa: ${q.maxScore} điểm`;
+            document.getElementById('qDesc').innerText = q.desc;
+            document.getElementById('qRequirements').innerText = q.requirements;
+            document.getElementById('currentQNameLabel').innerText = q.name;
+
+            const st = studentAnswersState[qId];
+            const currentCode = st.code || q.starterCode;
+            st.code = currentCode;
+
+            if (codeMirrorEditor) {
+                codeMirrorEditor.setValue(currentCode);
+            }
+
+            document.getElementById('currentScoreVerdict').innerText = `Điểm câu này: ${st.score.toFixed(1)} / ${q.maxScore} đ`;
+            document.getElementById('evaluationDetails').classList.add('hidden');
+        }
+
+        function resetDefaultStarterCode() {
+            if (confirm("Khôi phục khung code ban đầu cho câu này?")) {
+                const starter = QUESTIONS_CONFIG[currentQId].starterCode;
+                codeMirrorEditor.setValue(starter);
+                studentAnswersState[currentQId].code = starter;
+            }
+        }
+
+        // 6. NẠP CODE VÀO ONECOMPILER ĐỂ CHẠY THỬ VỚI CONSOLE
+        function runCodeInOneCompiler() {
+            const code = codeMirrorEditor.getValue();
+            studentAnswersState[currentQId].code = code;
+
+            const ocFrame = document.getElementById('ocFrame');
+            if (ocFrame && ocFrame.contentWindow) {
+                // Đưa mã nguồn từ trang chính vào khung Main.java của OneCompiler
+                ocFrame.contentWindow.postMessage({
+                    eventType: 'populateCode',
+                    language: 'java',
+                    files: [{ name: 'Main.java', content: code }]
+                }, '*');
+
+                // Tự động kích hoạt nút Run trên OneCompiler
+                setTimeout(() => {
+                    ocFrame.contentWindow.postMessage({ eventType: 'triggerRun' }, '*');
+                }, 400);
+
+                // Cuộn xuống khu vực console
+                document.getElementById('compilerContainer').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // LẮNG NGHE KẾT QUẢ IN RA TỪ CONSOLE ONECOMPILER
+        window.addEventListener('message', function(e) {
+            if (!e.data) return;
+            let dataObj = e.data;
+            if (typeof dataObj === 'string') {
+                try { dataObj = JSON.parse(dataObj); } catch(err) { return; }
+            }
+            const res = dataObj.result || dataObj;
+            const stdout = (res.output || res.stdout || '').trim();
+            const stderr = (res.exception || res.stderr || '').trim();
+
+            if (stdout || stderr) {
+                liveConsoleOutput = stdout || ("Lỗi: " + stderr);
+                studentAnswersState[currentQId].console = liveConsoleOutput;
+            }
+        });
+
+        // 7. THẨM ĐỊNH CẤU TRÚC VÀ TÍNH ĐIỂM (CHO PHÉP CHẤM LẠI NHIỀU LẦN)
+        function evaluateCurrentTask() {
+            const code = codeMirrorEditor.getValue().trim();
+            const q = QUESTIONS_CONFIG[currentQId];
+            const st = studentAnswersState[currentQId];
+
+            if (!code || code === q.starterCode.trim()) {
+                st.score = 0.0;
+                st.feedback = "Chưa làm bài.";
+                document.getElementById('currentScoreVerdict').innerHTML = `<span class="text-rose-400 font-bold">Điểm câu này: 0.0 / ${q.maxScore} đ</span>`;
+                updateTotalScoreUI();
+                return;
+            }
+
+            const cleanCode = code.replace(/\s+/g, ' ');
+            st.code = code;
+            st.console = liveConsoleOutput;
+
+            let earnedScore = 0.0;
+            let structurePassed = false;
+            let logicPassed = false;
+            let structureMsg = "";
+            let logicMsg = "";
+
+            // --- BÀI 1: Scanner + If-Else ---
+            if (currentQId === 1) {
+                const hasScanner = /Scanner\s+[a-zA-Z0-9_]+\s*=\s*new\s+Scanner/i.test(cleanCode);
+                const hasRead = /\.nextInt\s*\(\)|\.nextLine\s*\(\)|\.next\s*\(\)/i.test(cleanCode);
+                const hasIf = /\bif\s*\(/i.test(cleanCode);
+
+                if (hasScanner && hasRead && hasIf) {
+                    structurePassed = true;
+                    structureMsg = "✅ Đạt cấu trúc: Có khai báo Scanner đọc số và câu lệnh điều kiện 'if'.";
+                } else {
+                    structureMsg = "❌ Cấu trúc chưa đạt: Cần dùng Scanner đọc dữ liệu và có câu lệnh 'if'.";
+                }
+
+                const hasDat = /"DAT"/i.test(cleanCode);
+                const hasKhongDat = /"KHONG DAT"/i.test(cleanCode);
+                if (hasDat && hasKhongDat) {
+                    logicPassed = true;
+                    logicMsg = "✅ Đạt logic: Có phân loại in cả 'DAT' và 'KHONG DAT'.";
+                } else {
+                    logicMsg = "⚠️ Logic chưa đủ: Phải có cả 2 trường hợp 'DAT' và 'KHONG DAT'.";
+                }
+
+                if (structurePassed && logicPassed) earnedScore = 3.5;
+                else if (structurePassed) earnedScore = 2.0;
+                else earnedScore = cleanCode.includes("DAT") ? 0.5 : 0.0;
+            }
+
+            // --- BÀI 2: Scanner + For Loop ---
+            else if (currentQId === 2) {
+                const hasScanner = /Scanner\s+[a-zA-Z0-9_]+\s*=\s*new\s+Scanner/i.test(cleanCode);
+                const hasFor = /\bfor\s*\([^;]+;[^;]+;[^)]+\)/i.test(cleanCode);
+                const hasAccumulator = /\+=|\=\s*[a-zA-Z0-9_]+\s*\+/i.test(cleanCode);
+
+                if (hasScanner && hasFor) {
+                    structurePassed = true;
+                    structureMsg = "✅ Đạt cấu trúc: Có Scanner và sử dụng vòng lặp 'for' tăng dần.";
+                } else {
+                    structureMsg = "❌ Cấu trúc chưa đạt: Bắt buộc dùng vòng lặp 'for' duyệt từ 1 đến N.";
+                }
+
+                if (hasAccumulator) {
+                    logicPassed = true;
+                    logicMsg = "✅ Đạt thuật toán: Có biến tích lũy cộng dồn tổng dãy số.";
+                } else {
+                    logicMsg = "⚠️ Thiếu biểu thức cộng dồn tổng trong vòng lặp.";
+                }
+
+                if (structurePassed && logicPassed) earnedScore = 3.5;
+                else if (structurePassed) earnedScore = 2.0;
+                else earnedScore = 0.5;
+            }
+
+            // --- BÀI 3: Scanner + While Loop ---
+            else if (currentQId === 3) {
+                const hasScanner = /Scanner\s+[a-zA-Z0-9_]+\s*=\s*new\s+Scanner/i.test(cleanCode);
+                const hasWhile = /\bwhile\s*\([^)]+\)/i.test(cleanCode) || /\bdo\s*\{/i.test(cleanCode);
+                const hasCondition = /100/.test(cleanCode);
+                const hasAccumulator = /\+=|\=\s*[a-zA-Z0-9_]+\s*\+/i.test(cleanCode);
+
+                if (hasScanner && hasWhile) {
+                    structurePassed = true;
+                    structureMsg = "✅ Đạt cấu trúc: Có Scanner và sử dụng vòng lặp 'while' tương tác.";
+                } else {
+                    structureMsg = "❌ Không phát hiện vòng lặp 'while': Bắt buộc dùng while lặp để cộng dồn năng lượng!";
+                }
+
+                if (hasCondition && hasAccumulator) {
+                    logicPassed = true;
+                    logicMsg = "✅ Đạt logic tích lũy: Có điều kiện kiểm tra ngưỡng 100 và cộng dồn năng lượng.";
+                } else {
+                    logicMsg = "⚠️ Kiểm tra lại điều kiện dừng ngưỡng 100 hoặc câu lệnh cộng dồn.";
+                }
+
+                if (structurePassed && logicPassed) {
+                    earnedScore = 3.0;
+                } else if (structurePassed) {
+                    earnedScore = 1.5;
+                } else {
+                    earnedScore = cleanCode.includes("HOAN THANH") ? 0.5 : 0.0;
+                }
+            }
+
+            st.score = earnedScore;
+            st.feedback = `${structureMsg} | ${logicMsg}`;
+
+            document.getElementById('evaluationDetails').classList.remove('hidden');
+            document.getElementById('ruleStructure').innerText = structureMsg;
+            document.getElementById('ruleStructure').className = structurePassed ? "text-emerald-400 font-semibold" : "text-rose-400 font-semibold";
+            document.getElementById('ruleLogic').innerText = logicMsg;
+            document.getElementById('ruleLogic').className = logicPassed ? "text-emerald-400 font-semibold" : "text-amber-400 font-semibold";
+
+            document.getElementById('currentScoreVerdict').innerHTML = `<span class="${earnedScore === q.maxScore ? 'text-emerald-400' : 'text-amber-400'} font-bold">Điểm câu này: ${earnedScore.toFixed(1)} / ${q.maxScore} đ</span>`;
+
+            updateTotalScoreUI();
+
+            if (earnedScore === q.maxScore) {
+                confetti({ particleCount: 70, spread: 60, origin: { y: 0.8 } });
+            }
+        }
+
+        function updateTotalScoreUI() {
+            const total = studentAnswersState[1].score + studentAnswersState[2].score + studentAnswersState[3].score;
+            document.getElementById('totalScoreText').innerText = total.toFixed(1);
+            document.getElementById('btnSubmitScore').innerText = total.toFixed(1);
+
+            document.getElementById('scoreBadge1').innerText = studentAnswersState[1].score.toFixed(1);
+            document.getElementById('scoreBadge2').innerText = studentAnswersState[2].score.toFixed(1);
+            document.getElementById('scoreBadge3').innerText = studentAnswersState[3].score.toFixed(1);
+        }
+
+        // 8. NỘP BÀI VÀ MỞ ĐÁP ÁN SAU KHI NỘP THÀNH CÔNG
+        function submitAllToGoogleSheets() {
+            studentAnswersState[currentQId].code = codeMirrorEditor.getValue();
+            const totalScore = studentAnswersState[1].score + studentAnswersState[2].score + studentAnswersState[3].score;
+
+            const btnSubmit = document.getElementById('btnSubmitAll');
+            btnSubmit.disabled = true;
+            btnSubmit.innerText = "⏳ Đang gửi bài làm về Google Sheets...";
+
+            const detailedSubmission = {
+                bai1_scanner_if: {
+                    diem: studentAnswersState[1].score,
+                    max: 3.5,
+                    nhan_xet: studentAnswersState[1].feedback,
+                    ma_nguon: studentAnswersState[1].code || "(Chưa có code)",
+                    console_chay: studentAnswersState[1].console || "Không có"
+                },
+                bai2_scanner_for: {
+                    diem: studentAnswersState[2].score,
+                    max: 3.5,
+                    nhan_xet: studentAnswersState[2].feedback,
+                    ma_nguon: studentAnswersState[2].code || "(Chưa có code)",
+                    console_chay: studentAnswersState[2].console || "Không có"
+                },
+                bai3_scanner_while: {
+                    diem: studentAnswersState[3].score,
+                    max: 3.0,
+                    nhan_xet: studentAnswersState[3].feedback,
+                    ma_nguon: studentAnswersState[3].code || "(Chưa có code)",
+                    console_chay: studentAnswersState[3].console || "Không có"
+                }
+            };
+
+            const params = new URLSearchParams({
+                action: 'submitExam',
+                examId: 'java_tong_hop_scanner_if_loop',
+                examType: 'code_lab',
+                category: 'homework',
+                username: currentUser.username,
+                fullname: currentUser.fullname,
+                role: currentUser.role,
+                score: totalScore.toFixed(1),
+                maxScore: 10,
+                answersJson: JSON.stringify(detailedSubmission)
+            });
+
+            fetch(`${SCRIPT_URL}?${params.toString()}`)
+                .then(r => r.json())
+                .then(res => {
+                    alert(`Chúc mừng ${currentUser.fullname}! Đã nộp thành công ${totalScore.toFixed(1)}/10 điểm vào hệ thống.`);
+                    btnSubmit.innerText = `✅ Đã Lưu ${totalScore.toFixed(1)}/10 Điểm Thành Công!`;
+                    confetti({ particleCount: 200, spread: 90, origin: { y: 0.6 } });
+
+                    // Mở khung đáp án mẫu sau khi nộp
+                    document.getElementById('solutionBoxAfterSubmit').classList.remove('hidden');
+                    document.getElementById('solutionBoxAfterSubmit').scrollIntoView({ behavior: 'smooth' });
+                })
+                .catch(err => {
+                    alert("Lỗi lưu điểm: " + err.message);
+                    btnSubmit.disabled = false;
+                    btnSubmit.innerText = "💾 Thử Gửi Lại";
+                });
+        }
+    </script>
+</body>
+</html>
