@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Java – Chương 7 &amp; 8 | Bài học</title><style>
+:root{--bg:#0b1020;--panel:#121a2e;--text:#edf2ff;--muted:#a8b4d0;--line:#2a3856;--accent:#69e0c2;--blue:#82aaff}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:20px}body{margin:0;background:radial-gradient(circle at 80% 0%,#182747 0,#0b1020 38%);color:var(--text);font:16px/1.65 system-ui,sans-serif}.app{display:grid;grid-template-columns:285px minmax(0,1fr);min-height:100vh}aside{position:sticky;top:0;height:100vh;overflow:auto;padding:22px 15px;background:#0b1223;border-right:1px solid var(--line)}.brand{font-weight:900;font-size:20px;margin:0 8px}.sub{font-size:12px;color:var(--muted);margin:3px 8px 18px}nav{display:grid;gap:5px}nav a{color:#c8d4ee;text-decoration:none;font-size:13px;line-height:1.4;padding:9px 10px;border-radius:9px;border:1px solid transparent}nav a:hover,nav a.active{background:#192744;border-color:#334768;color:var(--accent)}main{padding:28px clamp(18px,4vw,56px) 80px;max-width:1250px;width:100%;min-width:0}.hero{padding:30px;border:1px solid #334668;background:linear-gradient(135deg,#172847,#10182b);border-radius:20px;margin-bottom:22px}.hero h1{font-size:clamp(28px,4vw,42px);line-height:1.15;margin:12px 0}.hero p{color:#c5d2ec}.pill{display:inline-block;background:#173f43;color:var(--accent);border:1px solid #28635f;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:800}.progress-wrap{height:5px;background:#25314a;border-radius:10px;overflow:hidden;margin-top:18px}#progress{height:100%;width:0;background:var(--accent)}.lesson{background:#121a2ee8;border:1px solid var(--line);border-radius:18px;padding:26px;margin:22px 0;box-shadow:0 12px 32px #0002}.eyebrow{font-size:11px;color:var(--accent);font-weight:800;letter-spacing:.12em}h2{font-size:clamp(23px,3vw,31px);line-height:1.25;margin:6px 0 18px}h3{font-size:18px;margin:22px 0 10px;color:#d9e5ff}.story,.concept,.takeaway,.teacher-note{padding:15px 17px;border-radius:12px;margin:14px 0}.story{background:#152b3b;border:1px solid #28515c}.concept{background:#171f35;border-left:4px solid var(--blue)}.takeaway{background:#17332f;border:1px solid #285d50;color:#d8fff2}.teacher-note{background:#302a1a;border:1px solid #66552b;color:#ffe7a1}.ide{background:#080d17;border:1px solid #303b52;border-radius:12px;overflow:hidden;margin:14px 0 20px}.idebar{height:40px;display:flex;align-items:center;gap:12px;padding:0 13px;background:#141c2b;border-bottom:1px solid #2a354b;color:#b6c5df;font-size:12px}.dots{display:flex;gap:5px}.dots i{width:8px;height:8px;border-radius:50%;background:#65738c}.filename{background:#0b1220;padding:9px 14px;border-top:2px solid var(--accent);align-self:stretch;display:flex;align-items:center}.status{margin-left:auto;color:#7f90af}pre{margin:0;padding:18px 20px;overflow:auto;color:#d7e2f4;font:14px/1.7 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre;tab-size:4}ol{padding-left:24px;color:#c8d5ee}li{padding:3px 0}.guide{color:var(--muted);font-size:14px}.footer{text-align:center;color:var(--muted);font-size:13px;margin:35px}@media(max-width:850px){.app{grid-template-columns:1fr}aside{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:14px}nav{display:flex;overflow:auto}nav a{white-space:nowrap}main{padding:16px}.lesson{padding:18px}.hero{padding:22px}}
+/* Syntax colors and interaction */ .kw{color:#c792ea;font-weight:600}.type{color:#82aaff}.str{color:#c3e88d}.num{color:#f78c6c}.comment{color:#718096;font-style:italic}.anno{color:#ffcb6b}.question{margin:16px 0;border:1px solid #3a4b6b;border-radius:12px;background:#111b2e;overflow:hidden}.question summary{cursor:pointer;padding:12px 15px;color:#91e8d5;font-weight:800;list-style:none}.question summary::-webkit-details-marker{display:none}.question summary:before{content:"▸";display:inline-block;margin-right:10px;transition:transform .2s}.question[open] summary:before{transform:rotate(90deg)}.answer{padding:0 16px 14px;color:#d5e1f7}.scriptbox{background:#242038;border:1px solid #51436f;border-radius:12px;padding:16px 18px;margin:14px 0;color:#e5dcff}.scriptbox h3{margin-top:0;color:#d5b8ff}.scriptbox p{margin:8px 0}.assignment{background:#152b3b;border:1px solid #376071;border-radius:14px;padding:18px;margin:14px 0}.solution details{border:1px solid #3a4b6b;border-radius:12px;background:#0d1526;margin:12px 0;overflow:hidden}.solution summary{cursor:pointer;padding:13px 16px;color:#69e0c2;font-weight:800;list-style:none}.solution summary::-webkit-details-marker{display:none}.solution summary:before{content:"▸";display:inline-block;margin-right:10px}.solution details[open] summary:before{transform:rotate(90deg)}.solution .answer{padding:0 16px 16px}.leadline{font-size:18px;font-weight:850;color:#76f0d1;background:#15342f;border-left:4px solid #69e0c2;padding:13px 16px;border-radius:9px;margin:15px 0}.ide pre{color:#d6deeb}.ide code{font:inherit}.question strong{color:#fff}</style></head><body><div class="app"><aside><div class="brand">JAVA LAB</div><div class="sub">Chương 7–8 · Học qua ví dụ</div><nav><a href="#start">Bắt đầu &amp; mục tiêu</a><a href="#review">Ôn tập bài trước</a><a href="#vehicle-homework">Bài tập cũ: Quản lý phương tiện</a><a href="#71">7.1 Lớp tổng quát (Generic Class)</a><a href="#72">7.2 Phương thức tổng quát (Generic Method)</a><a href="#73">7.3 Kiểu con và wildcard</a><a href="#74">7.4 Ràng buộc tham số kiểu</a><a href="#75">7.5 Generic và thừa kế</a><a href="#81">8.1 String, StringBuffer, Math, Array</a><a href="#82">8.2 List, Set, Map</a><a href="#classwork">Bài tập tại lớp</a><a href="#homework">Bài tập về nhà</a><a href="#summary">Tổng kết nhanh</a></nav></aside><main><header class="hero"><span class="pill">JAVA · GENERICS &amp; COLLECTIONS</span><h1>Chương 7. Lập trình tổng quát<br/>Chương 8. Các cấu trúc dữ liệu</h1><p>Đi từ tình huống gần gũi đến khái niệm, đọc code như trong IDE, rồi tự thực hành.</p><div class="progress-wrap"><div id="progress"></div></div></header><section class="lesson" id="start"><div class="eyebrow">JAVA LAB · BÀI HỌC</div><h2>Bắt đầu &amp; mục tiêu</h2><div class="story"><b>Tình huống</b><p>Tưởng tượng bạn có một chiếc hộp đựng tên, điểm hoặc mã sinh viên. Có thể tạo một chiếc hộp dùng cho nhiều kiểu dữ liệu không?</p></div><div class="concept"><h3>Khái niệm:</h3><p>Mục tiêu: hiểu Generic Class/Method, wildcard, ràng buộc kiểu; sử dụng String, StringBuffer, Math, mảng, List, Set và Map.</p></div><h3>Ví dụ Java</h3><details class="question"><summary>Câu hỏi: Nếu cần lưu tên và điểm trong cùng một “khuôn” mà không viết hai lớp gần giống nhau, điều gì cần linh hoạt?</summary><div class="answer">Gợi ý: Ta cần cho phép kiểu dữ liệu được chọn khi sử dụng lớp hoặc phương thức.</div></details><div class="ide"><div class="idebar"><span class="dots"><i></i><i></i><i></i></span><span class="filename">Main.java</span><span class="status">Java</span></div><pre><code><span class="comment">// Ý tưởng: cùng một lớp, nhiều kiểu dữ liệu</span>
+<span class="type">Hop</span>&lt;<span class="type">String</span>&gt; ten = <span class="kw">new</span> <span class="type">Hop</span>&lt;&gt;();
+ten.set(<span class="str">"Lan"</span>);
+<span class="type">System</span>.out.println(ten.get());</code></pre></div><p class="leadline">Generic giúp tái sử dụng code mà vẫn kiểm soát kiểu.</p></section><section class="lesson" id="review"><div class="eyebrow">JAVA LAB · BÀI HỌC</div><h2>Ôn tập bài trước: thừa kế, đa hình, ngoại lệ</h2><div class="story"><b>Tình huống</b><p>Ở chương trước, XeMay và OTo cùng kế thừa PhuongTien nhưng có thể chạy theo cách riêng. Khi dữ liệu không hợp lệ, chương trình có thể xử lý ngoại lệ.</p></div><div class="concept"><h3>Khái niệm:</h3><p> extends tạo quan hệ kế thừa; @Override ghi đè phương thức; abstract mô tả lớp/phương thức chưa hoàn thiện; interface quy định hành vi; try/catch xử lý ngoại lệ.</p></div><h3>Ví dụ Java</h3><details class="question"><summary>Câu hỏi: Trong ví dụ, vì sao XeMay phải viết lại phương thức chay()?</summary><div class="answer">Gợi ý: Vì PhuongTien khai báo chay() trừu tượng; mỗi lớp con phải cung cấp cách chạy cụ thể.</div></details><div class="ide"><div class="idebar"><span class="dots"><i></i><i></i><i></i></span><span class="filename">Main.java</span><span class="status">Java</span></div><pre><code><span class="kw">abstract</span> <span class="kw">class</span> <span class="type">PhuongTien</span> {
+    <span class="kw">abstract</span> <span class="kw">void</span> chay();
+}
+<span class="kw">class</span> <span class="type">XeMay</span> <span class="kw">extends</span> <span class="type">PhuongTien</span> {
+    <span class="anno">@Override</span>
+<span class="kw">void</span> chay() {
+        <span class="type">System</span>.out.println(<span class="str">"Xe may dang chay"</span>);
+    }
+}</code></pre></div><p class="leadline">Ôn lại extends, override, abstract, interface và try/catch trước khi học tiếp.</p></section><section class="lesson" id="vehicle-homework"><div class="eyebrow">BÀI TẬP ÔN TẬP</div><h2>Bài tập về nhà trước: Quản lý phương tiện</h2><p>Đề bài đầy đủ được giữ lại bên dưới. Nhấn vào mũi tên để mở đề hoặc xem lời giải.</p><div class="assignment"><details><summary>Xem đề bài: Quản lý phương tiện</summary><div class="answer"><h3>BÀI TẬP VỀ NHÀ: QUẢN LÝ PHƯƠNG TIỆN</h3><p>Viết chương trình Java quản lý các loại phương tiện giao thông.</p><h3>Yêu cầu</h3><p>1. Tạo lớp `PhuongTien` gồm thuộc tính `ten` và phương thức `hienThiTen()`.</p><p>2. Tạo hai lớp `XeMay` và `OTo` kế thừa từ `PhuongTien`.</p><p>3. Tạo phương thức `chay()` trong `PhuongTien`, ghi đè trong `XeMay` và `OTo` để hiển thị thông báo khác nhau.</p><p>4. Chuyển `PhuongTien` thành lớp trừu tượng (`abstract class`) và khai báo `chay()` là phương thức trừu tượng (`abstract method`).</p><p>5. Tạo giao diện (`interface`) `CoTheBamCoi` gồm `bamCoi()`. Cho `OTo` cài đặt giao diện này.</p><p>6. Tạo `kiemTraTocDo(int tocDo)`. Nếu `tocDo &lt; 0`, ném `IllegalArgumentException` và xử lý bằng `try/catch`.</p><p>7. Trong `main()`, tạo ít nhất một `XeMay`, một `OTo` và gọi các phương thức để kiểm tra.</p><p>**Yêu cầu nộp bài:** Chương trình biên dịch, chạy được và thể hiện thừa kế → ghi đè → lớp trừu tượng → interface → ngoại lệ và `try/catch`.</p></div></details></div><div class="solution"><details><summary>Mở lời giải tham khảo (Java)</summary><div class="answer"><p>Đây là một lời giải mẫu. Có thể đặt mỗi lớp trong một file riêng hoặc để chung trong Main.java khi các lớp không khai báo public.</p><div class="ide"><div class="idebar"><span class="dots"><i></i><i></i><i></i></span><span class="filename">Main.java</span><span class="status">Java</span></div><pre><code><span class="kw">interface</span> <span class="type">CoTheBamCoi</span> {
+    <span class="kw">void</span> bamCoi();
+}
+
+<span class="kw">abstract</span> <span class="kw">class</span> <span class="type">PhuongTien</span> {
+    <span class="type">String</span> ten;
+
+    <span class="kw">void</span> hienThiTen() {
+        <span class="type">System</span>.out.println(<span class="str">"Ten: "</span> + ten);
+    }
+
+    <span class="kw">abstract</span> <span class="kw">void</span> chay();
+
+    <span class="kw">void</span> kiemTraTocDo(<span class="kw">int</span> tocDo) {
+        <span class="kw">if</span> (tocDo &lt; <span class="num">0</span>) {
+            <span class="kw">throw</span> <span class="kw">new</span> <span class="type">IllegalArgumentException</span>(<span class="str">"Toc do khong duoc am"</span>);
+        }
+        <span class="type">System</span>.out.println(<span class="str">"Toc do hop le: "</span> + tocDo);
+    }
+}
+
+<span class="kw">class</span> <span class="type">XeMay</span> <span class="kw">extends</span> <span class="type">PhuongTien</span> {
+    <span class="anno">@Override</span>
+<span class="kw">void</span> chay() {
+        <span class="type">System</span>.out.println(<span class="str">"Xe may dang chay"</span>);
+    }
+}
+
+<span class="kw">class</span> <span class="type">OTo</span> <span class="kw">extends</span> <span class="type">PhuongTien</span> <span class="kw">implements</span> <span class="type">CoTheBamCoi</span> {
+    <span class="anno">@Override</span>
+<span class="kw">void</span> chay() {
+        <span class="type">System</span>.out.println(<span class="str">"O to dang chay"</span>);
+    }
+
+    <span class="anno">@Override</span>
+<span class="kw">public</span> <span class="kw">void</span> bamCoi() {
+        <span class="type">System</span>.out.println(<span class="str">"O to bam coi: bip bip"</span>);
+    }
+}
+
+<span class="kw">public</span> <span class="kw">class</span> <span class="type">Main</span> {
+    <span class="kw">public</span> <span class="kw">static</span> <span class="kw">void</span> main(<span class="type">String</span>[] args) {
+        <span class="type">XeMay</span> xeMay = <span class="kw">new</span> <span class="type">XeMay</span>();
+        xeMay.ten = <span class="str">"Honda"</span>;
+        xeMay.hienThiTen();
+        xeMay.chay();
+
+        <span class="type">OTo</span> oTo = <span class="kw">new</span> <span class="type">OTo</span>();
+        oTo.ten = <span class="str">"Toyota"</span>;
+        oTo.hienThiTen();
+        oTo.chay();
+        oTo.bamCoi();
+
+        <span class="kw">try</span> {
+            xeMay.kiemTraTocDo(-<span class="num">10</span>);
+        } <span class="kw">catch</span> (<span class="type">IllegalArgumentException</span> e) {
+            <span class="type">System</span>.out.println(<span class="str">"Loi: toc do khong hop le"</span>);
+        }
+
+        oTo.kiemTraTocDo(<span class="num">50</span>);
+    }
+}</code></pre></div><div class="concept"><h3>Cách đọc lời giải</h3><p>PhuongTien là lớp trừu tượng nên không tạo trực tiếp đối tượng PhuongTien. XeMay và OTo kế thừa, mỗi lớp tự định nghĩa chay(). OTo cài đặt CoTheBamCoi. Khi tốc độ âm, throw ném IllegalArgumentException và catch xử lý lỗi.</p></div></div></details></div><details class="question"><summary>Câu hỏi: Vì sao không thể viết new PhuongTien()?</summary><div class="answer">Vì PhuongTien là abstract class. Lớp trừu tượng có thể chứa phương thức chưa có phần triển khai và không thể được khởi tạo trực tiếp.</div></details></section><section class="lesson" id="71"><div class="eyebrow">JAVA LAB · BÀI HỌC</div><h2>7.1. Lớp tổng quát (Generic Class)</h2><div class="story"><b>Tình huống</b><p>Một chiếc hộp có thể đựng bút, tên hoặc điểm số. Thay vì viết HopChuoi, HopSo, HopDiem riêng, ta tạo một khuôn Hop&lt;T&gt;.</p></div><div class="concept"><h3>Khái niệm:</h3><p>Lớp tổng quát là lớp khai báo tham số kiểu như T. Kiểu cụ thể được xác định khi tạo đối tượng, ví dụ Hop&lt;String&gt; hoặc Hop&lt;Integer&gt;.</p></div><h3>Ví dụ Java</h3><details class="question"><summary>Câu hỏi: Nếu có hộp đựng tên và hộp đựng điểm, có nhất thiết phải viết hai lớp hộp riêng không?</summary><div class="answer">Gợi ý: Không. Có thể viết Hop&lt;T&gt;, rồi dùng Hop&lt;String&gt; cho tên và Hop&lt;Integer&gt; cho điểm. T là tên tham số kiểu do người lập trình đặt; khi viết Hop&lt;String&gt;, Java hiểu chỗ T là String trong khai báo generic đó.</div></details><div class="ide"><div class="idebar"><span class="dots"><i></i><i></i><i></i></span><span class="filename">Main.java</span><span class="status">Java</span></div><pre><code><span class="kw">class</span> <span class="type">Hop</span>&lt;T&gt; {
+    <span class="kw">private</span> T giaTri;
+    <span class="kw">public</span> <span class="kw">void</span> set(T giaTri) {
+        <span class="kw">this</span>.giaTri = giaTri;
+    }
+    <span class="kw">public</span> T get() {
+        <span class="kw">return</span> giaTri;
+    }
+}
+<span class="kw">public</span> <span class="kw">class</span> <span class="type">Main</span> {
+    <span class="kw">public</span> <span class="kw">static</span> <span class="kw">void</span> main(<span class="type">String</span>[] args) {
+        <span class="type">Hop</span>&lt;<span class="type">String</span>&gt; h1 = <span class="kw">new</span> <span class="type">Hop</span>&lt;&gt;();
+        h1.set(<span class="str">"Lan"</span>);
+        <span class="type">System</span>.out.println(h1.get());
+        <span class="type">Hop</span>&lt;<span class="type">Integer</span>&gt; h2 = <span class="kw">new</span> <span class="type">Hop</span>&lt;&gt;();
+        h2.set(<span class="num">9</span>);
+        <span class="type">System</span>.out.println(h2.get());
+    }
+}</code></pre></div><p class="leadline">Không phải ép kiểu thủ công khi lấy dữ liệu; gán sai kiểu sẽ bị báo lỗi khi biên dịch.</p></section><section class="lesson" id="72"><div class="eyebrow">JAVA LAB · BÀI HỌC</div><h2>7.2. Phương thức tổng quát (Generic Method)</h2><div class="story"><b>Tình huống</b><p>Bạn muốn in tên, số lượng hoặc điểm mà không cần viết nhiều phương thức giống nhau.</p></div><div class="concept"><h3>Khái niệm:</h3><p>Phương thức tổng quát tự khai báo tham số kiểu, thường có cú pháp &lt;T&gt; kiểuTraVe tenHam(T thamSo). Lớp chứa nó không nhất thiết phải là lớp tổng quát.</p></div><h3>Ví dụ Java</h3><details class="question"><summary>Câu hỏi: Nếu chỉ muốn in tên, số lượng và điểm, có cần viết ba hàm in gần giống nhau không?</summary><div class="answer">Gợi ý: Không. Một phương thức tổng quát có thể nhận các kiểu khác nhau, miễn thao tác bên trong phù hợp với kiểu đó.</div></details><div class="ide"><div class="idebar"><span class="dots"><i></i><i></i><i></i></span><span class="filename">Main.java</span><span class="status">Java</span></div><pre><code><span class="kw">class</span> <span class="type">TienIch</span> {
+    <span class="kw">public</span> <span class="kw">static</span> &lt;T&gt; <span class="kw">void</span> inGiaTri(T x) {
+        <span class="type">System</span>.out.println(<span class="str">"Gia tri: "</span> + x);
+    }
+    <span class="kw">public</span> <span class="kw">static</span> &lt;T&gt; T traVe(T x) {
+        <span class="kw">return</span> x;
+    }
+}
+<span class="kw">public</span> <span class="kw">class</span> <span class="type">Main</span> {
+    <span class="kw">public</span> <span class="kw">static</span> <span class="kw">void</span> main(<span class="type">String</span>[] args) {
+        <span class="type">TienIch</span>.inGiaTri(<span class="str">"Xin chao"</span>);
+        <span class="type">TienIch</span>.inGiaTri(<span class="num">2026</span>);
+        <span class="kw">double</span> diem = <span class="type">TienIch</span>.traVe(<span class="num">8.5</span>);
+        <span class="type">System</span>.out.println(diem);
+    }
+}</code></pre></div><p class="leadline">Dùng Generic Method khi một thao tác cần linh hoạt với nhiều kiểu.</p></section><section class="lesson" id="73"><div class="eyebrow">JAVA LAB · BÀI HỌC</div><h2>7.3. Kiểu con và ký tự đại diện (Wildcard)</h2><div class="story"><b>Tình huống</b><p>Một hàm tính tổng cần đọc danh sách số nguyên hoặc số thực. Java không tự xem List&lt;Integer&gt; là List&lt;Number&gt;.</p></div><div class="concept"><h3>Khái niệm:</h3><p>Wildcard ? biểu thị kiểu chưa biết. ? extends Number nhận danh sách Number hoặc lớp con, phù hợp khi đọc số. ? super Integer phù hợp khi cần thêm Integer vào nơi chứa Integer hoặc kiểu cha của nó.</p></div><h3>Ví dụ Java</h3><details class="question"><summary>Câu hỏi: Một hàm tính tổng có thể nhận cả danh sách số nguyên và số thập phân không?</summary><div class="answer">Gợi ý: Có. List&lt;? extends Number&gt; cho phép đọc các phần tử thuộc Number hoặc lớp con của Number.</div></details><div class="ide"><div class="idebar"><span class="dots"><i></i><i></i><i></i></span><span class="filename">Main.java</span><span class="status">Java</span></div><pre><code><span class="kw">import</span> java.util.*;
+<span class="kw">public</span> <span class="kw">class</span> <span class="type">Main</span> {
+    <span class="kw">static</span> <span class="kw">double</span> tong(<span class="type">List</span>&lt;? <span class="kw">extends</span> <span class="type">Number</span>&gt; ds) {
+        <span class="kw">double</span> kq = <span class="num">0</span>;
+        <span class="kw">for</span> (<span class="type">Number</span> n : ds) {
+            kq += n.doubleValue();
+        }
+        <span class="kw">return</span> kq;
+    }
+    <span class="kw">public</span> <span class="kw">static</span> <span class="kw">void</span> main(<span class="type">String</span>[] args) {
+        <span class="type">List</span>&lt;<span class="type">Integer</span>&gt; a = <span class="type">Arrays</span>.asList(<span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>);
+        <span class="type">List</span>&lt;<span class="type">Double</span>&gt; b = <span class="type">Arrays</span>.asList(<span class="num">1.5</span>, <span class="num">2.5</span>);
+        <span class="type">System</span>.out.println(tong(a));
+        <span class="type">System</span>.out.println(tong(b));
+    }
+}</code></pre></div><p class="leadline">Chỉ cần nắm: extends cho nguồn cung cấp dữ liệu; super cho nơi tiếp nhận dữ liệu.</p></section><section class="lesson" id="74"><div class="eyebrow">JAVA LAB · BÀI HỌC</div><h2>7.4. Hạn chế và ràng buộc tham số kiểu (Bounds)</h2><div class="story"><b>Tình huống</b><p>Hàm tính toán chỉ dành cho số. Nếu cho phép truyền chuỗi, các phép toán số sẽ không hợp lệ.</p></div><div class="concept"><h3>Khái niệm:</h3><p>Ràng buộc kiểu giới hạn những kiểu có thể thay cho T. T extends Number cho phép Number và lớp con như Integer, Double; vì vậy có thể gọi phương thức của Number.</p></div><h3>Ví dụ Java</h3><details class="question"><summary>Câu hỏi: Nếu lớp chỉ có thể nhân đôi số, có nên cho phép truyền một tên như "Lan" không?</summary><div class="answer">Gợi ý: Không. T extends Number giới hạn kiểu được dùng vào Number và các lớp con như Integer, Double.</div></details><div class="ide"><div class="idebar"><span class="dots"><i></i><i></i><i></i></span><span class="filename">Main.java</span><span class="status">Java</span></div><pre><code><span class="kw">class</span> <span class="type">BoSo</span>&lt;T <span class="kw">extends</span> <span class="type">Number</span>&gt; {
+    <span class="kw">private</span> T so;
+    <span class="kw">public</span> <span class="type">BoSo</span>(T so) { <span class="kw">this</span>.so = so; }
+    <span class="kw">public</span> <span class="kw">double</span> gapDoi() {
+        <span class="kw">return</span> so.doubleValue() * <span class="num">2</span>;
+    }
+}
+<span class="kw">public</span> <span class="kw">class</span> <span class="type">Main</span> {
+    <span class="kw">public</span> <span class="kw">static</span> <span class="kw">void</span> main(<span class="type">String</span>[] args) {
+        <span class="type">BoSo</span>&lt;<span class="type">Integer</span>&gt; a = <span class="kw">new</span> <span class="type">BoSo</span>&lt;&gt;(<span class="num">7</span>);
+        <span class="type">BoSo</span>&lt;<span class="type">Double</span>&gt; b = <span class="kw">new</span> <span class="type">BoSo</span>&lt;&gt;(<span class="num">2.5</span>);
+        <span class="type">System</span>.out.println(a.gapDoi());
+        <span class="type">System</span>.out.println(b.gapDoi());
+        <span class="comment">// BoSo&lt;String&gt; c = new BoSo&lt;&gt;("bay"); // Lỗi biên dịch</span>
+    }
+}</code></pre></div><p class="leadline">Ràng buộc kiểu giúp phát hiện dữ liệu không phù hợp trước khi chạy.</p></section><section class="lesson" id="75"><div class="eyebrow">JAVA LAB · BÀI HỌC</div><h2>7.5. Quan hệ giữa lớp tổng quát và thừa kế</h2><div class="story"><b>Tình huống</b><p>Một chiếc hộp có thể được mở rộng thành hộp chỉ chứa số nguyên. Lớp con có thể cố định kiểu hoặc tiếp tục giữ tham số kiểu.</p></div><div class="concept"><h3>Khái niệm:</h3><p>Lớp generic vẫn có thể được kế thừa. HopSo extends Hop&lt;Integer&gt; cố định T là Integer. Lưu ý: Hop&lt;Integer&gt; không phải kiểu con của Hop&lt;Number&gt;.</p></div><h3>Ví dụ Java</h3><details class="question"><summary>Câu hỏi: Một lớp hộp chuyên chứa số nguyên có thể dùng lại mã của lớp Hop&lt;T&gt; không?</summary><div class="answer">Gợi ý: Có. HopSo có thể kế thừa Hop&lt;Integer&gt;, nên dùng lại set() và get() với kiểu Integer.</div></details><div class="ide"><div class="idebar"><span class="dots"><i></i><i></i><i></i></span><span class="filename">Main.java</span><span class="status">Java</span></div><pre><code><span class="kw">class</span> <span class="type">Hop</span>&lt;T&gt; {
+    <span class="kw">protected</span> T giaTri;
+    <span class="kw">public</span> <span class="kw">void</span> set(T x) { giaTri = x; }
+    <span class="kw">public</span> T get() { <span class="kw">return</span> giaTri; }
+}
+<span class="kw">class</span> <span class="type">HopSo</span> <span class="kw">extends</span> <span class="type">Hop</span>&lt;<span class="type">Integer</span>&gt; {
+    <span class="kw">public</span> <span class="kw">int</span> binhPhuong() {
+        <span class="kw">return</span> giaTri * giaTri;
+    }
+}
+<span class="kw">public</span> <span class="kw">class</span> <span class="type">Main</span> {
+    <span class="kw">public</span> <span class="kw">static</span> <span class="kw">void</span> main(<span class="type">String</span>[] args) {
+        <span class="type">HopSo</span> h = <span class="kw">new</span> <span class="type">HopSo</span>();
+        h.set(<span class="num">6</span>);
+        <span class="type">System</span>.out.println(h.get());
+        <span class="type">System</span>.out.println(h.binhPhuong());
+    }
+}</code></pre></div><p class="leadline">Kế thừa tái sử dụng hành vi; Generic kiểm soát kiểu dữ liệu.</p></section><section class="lesson" id="81"><div class="eyebrow">JAVA LAB · BÀI HỌC</div><h2>8.1. String, StringBuffer, Math và mảng (Array)</h2><div class="story"><b>Tình huống</b><p>Ứng dụng lớp học cần ghép họ tên, sửa thông báo, tính căn bậc hai và lưu điểm của cả lớp. Java có sẵn công cụ cho các việc đó.</p></div><div class="concept"><h3>Khái niệm:</h3><p>String là chuỗi bất biến; StringBuffer có thể thay đổi nội dung; Math cung cấp hàm toán học; mảng (Array) lưu số lượng phần tử cố định cùng kiểu. Integer, Double là lớp bao (Wrapper Class) cho int, double. Array không phải wrapper class.</p></div><h3>Ví dụ Java</h3><details class="question"><summary>Câu hỏi: Nếu cần lưu ba điểm cố định, nên dùng mảng hay List? Nếu cần nối chuỗi nhiều lần thì sao?</summary><div class="answer">Gợi ý: Mảng phù hợp khi số phần tử cố định; StringBuffer phù hợp khi cần sửa/nối nội dung chuỗi nhiều lần.</div></details><div class="ide"><div class="idebar"><span class="dots"><i></i><i></i><i></i></span><span class="filename">Main.java</span><span class="status">Java</span></div><pre><code><span class="kw">public</span> <span class="kw">class</span> <span class="type">Main</span> {
+    <span class="kw">public</span> <span class="kw">static</span> <span class="kw">void</span> main(<span class="type">String</span>[] args) {
+        <span class="type">String</span> ten = <span class="str">"Lan"</span>;
+        ten = ten + <span class="str">" Nguyen"</span>;
+        <span class="type">System</span>.out.println(ten);
+        <span class="type">StringBuffer</span> tb = <span class="kw">new</span> <span class="type">StringBuffer</span>(<span class="str">"Xin"</span>);
+        tb.append(<span class="str">" chao lop"</span>);
+        <span class="type">System</span>.out.println(tb);
+        <span class="type">System</span>.out.println(<span class="type">Math</span>.max(<span class="num">7</span>, <span class="num">9</span>));
+        <span class="type">System</span>.out.println(<span class="type">Math</span>.sqrt(<span class="num">81</span>));
+        <span class="kw">int</span>[] diem = {<span class="num">8</span>, <span class="num">9</span>, <span class="num">10</span>};
+        <span class="type">System</span>.out.println(diem[<span class="num">0</span>]);
+        <span class="type">System</span>.out.println(diem.length);
+        <span class="type">Integer</span> soDiem = <span class="num">10</span>;
+        <span class="type">Double</span> heSo = <span class="num">1.5</span>;
+        <span class="type">System</span>.out.println(soDiem + heSo);
+    }
+}</code></pre></div><p class="leadline">String cho văn bản thông thường; StringBuffer cho chỉnh sửa nhiều lần; mảng phù hợp khi kích thước cố định.</p></section><section class="lesson" id="82"><div class="eyebrow">JAVA LAB · BÀI HỌC</div><h2>8.2. Container tổng quát: List, Set và Map</h2><div class="story"><b>Tình huống</b><p>Danh sách điểm có thể có giá trị trùng; mã sinh viên cần duy nhất; bảng tra cứu cần nối mã với tên.</p></div><div class="concept"><h3>Khái niệm:</h3><p>List giữ thứ tự và cho phép trùng. Set không giữ phần tử trùng. Map lưu cặp khóa–giá trị. Các kiểu như List&lt;String&gt; dùng Generic để xác định kiểu phần tử.</p></div><h3>Ví dụ Java</h3><details class="question"><summary>Câu hỏi: Danh sách lớp có thể có tên trùng, nhưng mã sinh viên phải duy nhất. Nên dùng cấu trúc nào?</summary><div class="answer">Gợi ý: Dùng List cho danh sách có thứ tự và có thể trùng; Set cho phần tử không trùng; Map khi cần tra giá trị bằng khóa.</div></details><div class="ide"><div class="idebar"><span class="dots"><i></i><i></i><i></i></span><span class="filename">Main.java</span><span class="status">Java</span></div><pre><code><span class="kw">import</span> java.util.*;
+<span class="kw">public</span> <span class="kw">class</span> <span class="type">Main</span> {
+    <span class="kw">public</span> <span class="kw">static</span> <span class="kw">void</span> main(<span class="type">String</span>[] args) {
+        <span class="type">List</span>&lt;<span class="type">String</span>&gt; ten = <span class="kw">new</span> <span class="type">ArrayList</span>&lt;&gt;();
+        ten.add(<span class="str">"An"</span>); ten.add(<span class="str">"Binh"</span>); ten.add(<span class="str">"An"</span>);
+        <span class="type">System</span>.out.println(ten);
+        <span class="type">Set</span>&lt;<span class="type">String</span>&gt; ma = <span class="kw">new</span> <span class="type">HashSet</span>&lt;&gt;();
+        ma.add(<span class="str">"SV01"</span>); ma.add(<span class="str">"SV02"</span>); ma.add(<span class="str">"SV01"</span>);
+        <span class="type">System</span>.out.println(ma);
+        <span class="type">Map</span>&lt;<span class="type">String</span>, <span class="type">String</span>&gt; danhBa = <span class="kw">new</span> <span class="type">HashMap</span>&lt;&gt;();
+        danhBa.put(<span class="str">"SV01"</span>, <span class="str">"An"</span>);
+        danhBa.put(<span class="str">"SV02"</span>, <span class="str">"Binh"</span>);
+        <span class="type">System</span>.out.println(danhBa.get(<span class="str">"SV01"</span>));
+    }
+}</code></pre></div><p class="leadline">List = danh sách có thứ tự; Set = phần tử duy nhất; Map = tra cứu bằng khóa.</p></section><section class="lesson" id="classwork"><div class="eyebrow">JAVA LAB · BÀI HỌC</div><h2>Bài tập tại lớp: Sổ điểm mini</h2><div class="story"><b>Tình huống</b><p>Tạo chương trình lưu điểm, mã sinh viên và tra cứu tên.</p></div><div class="concept"><h3>Khái niệm:</h3><p>Yêu cầu: tạo List&lt;Double&gt; chứa 4 điểm; Set&lt;String&gt; chứa mã sinh viên không trùng; Map&lt;String,String&gt; ánh xạ mã sang tên. In kết quả và giải thích vì sao chọn từng cấu trúc.</p></div><h3>Ví dụ Java</h3><details class="question"><summary>Câu hỏi: Vì sao mã SV trùng vẫn xuất hiện trong List nhưng không tạo phần tử thứ hai trong Set?</summary><div class="answer">Gợi ý: List cho phép phần tử trùng; Set chỉ lưu các phần tử duy nhất theo quy tắc equals/hashCode của kiểu phần tử.</div></details><div class="ide"><div class="idebar"><span class="dots"><i></i><i></i><i></i></span><span class="filename">Main.java</span><span class="status">Java</span></div><pre><code><span class="kw">import</span> java.util.*;
+<span class="kw">public</span> <span class="kw">class</span> <span class="type">Main</span> {
+    <span class="kw">public</span> <span class="kw">static</span> <span class="kw">void</span> main(<span class="type">String</span>[] args) {
+        <span class="type">List</span>&lt;<span class="type">Double</span>&gt; diem = <span class="kw">new</span> <span class="type">ArrayList</span>&lt;&gt;();
+        diem.add(<span class="num">8.0</span>); diem.add(<span class="num">7.5</span>); diem.add(<span class="num">9.0</span>);
+        <span class="type">Set</span>&lt;<span class="type">String</span>&gt; ma = <span class="kw">new</span> <span class="type">HashSet</span>&lt;&gt;();
+        ma.add(<span class="str">"SV10"</span>); ma.add(<span class="str">"SV11"</span>); ma.add(<span class="str">"SV10"</span>);
+        <span class="type">Map</span>&lt;<span class="type">String</span>, <span class="type">String</span>&gt; ten = <span class="kw">new</span> <span class="type">HashMap</span>&lt;&gt;();
+        ten.put(<span class="str">"SV10"</span>, <span class="str">"Mai"</span>);
+        ten.put(<span class="str">"SV11"</span>, <span class="str">"Nam"</span>);
+        <span class="type">System</span>.out.println(diem);
+        <span class="type">System</span>.out.println(ma);
+        <span class="type">System</span>.out.println(ten.get(<span class="str">"SV10"</span>));
+    }
+}</code></pre></div><p class="leadline">Chọn cấu trúc theo yêu cầu dữ liệu, không chỉ theo thói quen.</p></section><section class="lesson" id="homework"><div class="eyebrow">JAVA LAB · BÀI HỌC</div><h2>Bài tập về nhà: Quản lý kho sách</h2><div class="story"><b>Tình huống</b><p>Thư viện cần lưu tên sách, mã sách duy nhất và tra cứu tên sách theo mã.</p></div><div class="concept"><h3>Khái niệm:</h3><p>Yêu cầu: tạo Hop&lt;T&gt; có set/get; viết Generic Method inGiaTri(T x); tạo List&lt;String&gt; có ít nhất 5 tên sách, trong đó có tên trùng; tạo Set&lt;String&gt; mã sách; tạo Map&lt;String,String&gt; tra mã ra tên; dùng StringBuffer tạo thông báo và Math.max() so sánh hai số.</p></div><h3>Ví dụ Java</h3><details class="question"><summary>Câu hỏi: Khi tra mã sách để lấy tên sách, cấu trúc nào phù hợp nhất?</summary><div class="answer">Gợi ý: Map, vì nó lưu cặp khóa–giá trị và cho phép tra tên bằng mã sách.</div></details><div class="ide"><div class="idebar"><span class="dots"><i></i><i></i><i></i></span><span class="filename">Main.java</span><span class="status">Java</span></div><pre><code><span class="comment">// Gợi ý khởi đầu</span>
+<span class="type">List</span>&lt;<span class="type">String</span>&gt; sach = <span class="kw">new</span> <span class="type">ArrayList</span>&lt;&gt;();
+sach.add(<span class="str">"Lap trinh Java"</span>);
+sach.add(<span class="str">"Co so du lieu"</span>);
+<span class="type">Set</span>&lt;<span class="type">String</span>&gt; maSach = <span class="kw">new</span> <span class="type">HashSet</span>&lt;&gt;();
+maSach.add(<span class="str">"B001"</span>);
+maSach.add(<span class="str">"B001"</span>); <span class="comment">// Không thêm mã trùng</span>
+<span class="type">Map</span>&lt;<span class="type">String</span>, <span class="type">String</span>&gt; traCuu = <span class="kw">new</span> <span class="type">HashMap</span>&lt;&gt;();
+traCuu.put(<span class="str">"B001"</span>, <span class="str">"Lap trinh Java"</span>);
+<span class="type">System</span>.out.println(traCuu.get(<span class="str">"B001"</span>));</code></pre></div><p class="leadline">Bài làm phải chạy được và giải thích được lựa chọn cấu trúc dữ liệu.</p></section><section class="lesson" id="summary"><div class="eyebrow">JAVA LAB · BÀI HỌC</div><h2>Tổng kết nhanh</h2><div class="story"><b>Tình huống</b><p>Nếu cần một khuôn dùng nhiều kiểu, đọc danh sách số, hay loại mã trùng, hãy chọn đúng công cụ.</p></div><div class="concept"><h3>Khái niệm:</h3><p>Generic Class: lớp có tham số kiểu. Generic Method: phương thức có tham số kiểu. Wildcard: ?, ? extends, ? super. Bounds: giới hạn kiểu. String bất biến; StringBuffer thay đổi được; Math là tiện ích toán học; mảng có kích thước cố định; List cho phép trùng; Set không trùng; Map lưu cặp khóa–giá trị.</p></div><h3>Ví dụ Java</h3><details class="question"><summary>Câu hỏi: Hãy chọn nhanh: dữ liệu có thứ tự và cho phép trùng; dữ liệu không trùng; tra cứu theo khóa.</summary><div class="answer">Gợi ý: Lần lượt là List, Set và Map.</div></details><div class="ide"><div class="idebar"><span class="dots"><i></i><i></i><i></i></span><span class="filename">Main.java</span><span class="status">Java</span></div><pre><code><span class="type">List</span>&lt;<span class="type">String</span>&gt; ten = <span class="kw">new</span> <span class="type">ArrayList</span>&lt;&gt;();
+<span class="type">Set</span>&lt;<span class="type">String</span>&gt; ma = <span class="kw">new</span> <span class="type">HashSet</span>&lt;&gt;();
+<span class="type">Map</span>&lt;<span class="type">String</span>, <span class="type">String</span>&gt; traCuu = <span class="kw">new</span> <span class="type">HashMap</span>&lt;&gt;();</code></pre></div><p class="leadline">Viết code tốt là chọn đúng công cụ cho dữ liệu và yêu cầu bài toán.</p></section><div class="footer">Java Lab · Đọc code, dự đoán, chạy thử và tự sửa.</div></main></div><script>const links=[...document.querySelectorAll('nav a')],sections=[...document.querySelectorAll('section.lesson')],bar=document.getElementById('progress');function update(){let max=document.documentElement.scrollHeight-innerHeight;bar.style.width=(max>0?scrollY/max*100:0)+'%';let cur=sections[0]?.id;for(const s of sections)if(s.getBoundingClientRect().top<innerHeight*.45)cur=s.id;links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));}addEventListener('scroll',update,{passive:true});update();</script></body></html>

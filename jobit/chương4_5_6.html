@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Java • Chương 4–6</title><style>
+:root{--bg:#0b0f14;--side:#11161d;--panel:#151b23;--line:#2a3441;--text:#e8edf3;--muted:#9aa7b5;--blue:#61afef;--green:#98c379;--yellow:#e5c07b;--red:#e06c75;--purple:#c678dd}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif;line-height:1.55}
+.app{display:grid;grid-template-columns:285px 1fr;min-height:100vh}nav{background:var(--side);border-right:1px solid var(--line);padding:18px;position:sticky;top:0;height:100vh;overflow:auto}
+nav h1{font-size:18px;margin:0 0 8px;color:#fff}.hint{font-size:12px;color:var(--muted);margin-bottom:15px}
+nav button{width:100%;display:block;text-align:left;background:transparent;color:#cdd6df;border:1px solid transparent;border-radius:7px;padding:9px 10px;margin:3px 0;cursor:pointer}
+nav button:hover,nav button.active{background:#1b2530;border-color:#344352;color:#fff}
+main{max-width:1180px;width:100%;margin:auto;padding:36px}.slide{display:none;min-height:calc(100vh - 90px);align-content:center}.slide.active{display:grid}
+.kicker{color:var(--blue);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}h2{font-size:clamp(32px,5vw,58px);line-height:1.08;margin:8px 0 20px}h3{margin:5px 0 12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;margin:12px 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.muted{color:var(--muted)}
+.big{font-size:44px}.flow{display:flex;flex-wrap:wrap;align-items:center;gap:12px}.box{background:#1a222c;border:1px solid #344352;border-radius:9px;padding:13px 18px}.arrow{font-size:25px;color:var(--blue)}
+.ide{background:#1e2127;border:1px solid #3b424c;border-radius:8px;overflow:hidden;box-shadow:0 12px 30px #0006;margin:15px 0}.idebar{height:30px;background:#2a2d33;display:flex;align-items:center;gap:7px;padding:0 10px}.dot{width:10px;height:10px;border-radius:50%;background:#777}.tabs{margin-left:12px;color:#c8ced6;font-size:12px}.code{padding:18px;overflow:auto;color:#d8dee9;font:15px/1.65 "SFMono-Regular",Consolas,Menlo,monospace;white-space:pre}
+.answer{border-left:4px solid var(--green);padding-left:14px}.warn{border-left:4px solid var(--yellow);padding-left:14px}.tag{display:inline-block;padding:4px 9px;background:#1d2c3a;border-radius:20px;color:var(--blue);font-size:12px;font-weight:700}
+.reveal,.controls button{background:#17212b;color:#e8edf3;border:1px solid #3a4a5a;border-radius:7px;padding:9px 14px;cursor:pointer}.hidden{display:none}.controls{position:fixed;right:20px;bottom:18px;display:flex;gap:8px}.progress{position:fixed;top:0;left:0;height:4px;background:var(--blue);width:0}
+.definition{background:#101923;border-left:4px solid var(--blue);padding:15px 18px;border-radius:8px}.small{font-size:14px;color:var(--muted)}
+@media(max-width:800px){.app{display:block}nav{position:relative;height:auto}.slide{min-height:auto;padding:30px 0 80px}main{padding:20px}}
+
+.ide{background:#0d1117!important;border:1px solid #30363d!important;border-radius:10px!important;overflow:hidden!important;box-shadow:0 10px 28px rgba(0,0,0,.28)!important;margin:18px 0!important}
+.idebar{height:38px!important;background:#161b22!important;border-bottom:1px solid #30363d!important;display:flex!important;align-items:center!important;gap:7px!important;padding:0 12px!important}
+.dot{width:11px!important;height:11px!important;border-radius:50%!important;background:#484f58!important}
+.tabs{margin-left:10px!important;height:38px!important;line-height:38px!important;padding:0 18px!important;background:#0d1117!important;border-left:1px solid #30363d!important;border-right:1px solid #30363d!important;color:#c9d1d9!important;font:12px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace!important}
+.ide-codearea{display:grid;grid-template-columns:48px minmax(0,1fr);overflow:auto}
+.ide-lines{padding:14px 9px 16px 0;text-align:right;background:#0d1117;color:#484f58;font:13px/1.7 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre;user-select:none}
+.code{padding:14px 18px 16px!important;overflow:visible!important;color:#c9d1d9!important;font:14px/1.7 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace!important;white-space:pre!important;min-width:max-content}
+.lesson-example{margin:22px 0;padding:16px 18px;background:#101923;border:1px solid #2a3441;border-radius:10px}
+.lesson-example h4{margin:0 0 7px;color:#fff}
+.lesson-example p{margin:0 0 12px;color:#9aa7b5}
+.ide .kw{color:#ff7b72}.ide .type{color:#79c0ff}.ide .str{color:#a5d6ff}.ide .num{color:#79c0ff}.ide .com{color:#8b949e}.ide .fn{color:#d2a8ff}
+</style><style><style>
+/* Fixed two-column teaching layout */
+.app{display:grid!important;grid-template-columns:285px minmax(0,1fr)!important;min-height:100vh!important;align-items:start!important}
+.app>nav{grid-column:1!important;grid-row:1!important;position:sticky!important;top:0!important;height:100vh!important}
+.app>main{grid-column:2!important;grid-row:1!important;min-width:0!important;width:auto!important;max-width:none!important;margin:0!important;padding:36px 42px!important}
+.slide{display:none!important;min-height:calc(100vh - 70px)!important;align-content:start!important}
+.slide.active{display:block!important}
+.slide>div{width:100%!important;max-width:1100px!important;margin:0 auto!important}
+.ide{background:#0d1117!important;border:1px solid #30363d!important;border-radius:10px!important;overflow:hidden!important;box-shadow:0 10px 28px rgba(0,0,0,.28)!important;margin:18px 0!important}
+.idebar{height:38px!important;background:#161b22!important;border-bottom:1px solid #30363d!important;display:flex!important;align-items:center!important;gap:7px!important;padding:0 12px!important}
+.dot{width:11px!important;height:11px!important;border-radius:50%!important;background:#484f58!important}
+.tabs{margin-left:10px!important;height:38px!important;line-height:38px!important;padding:0 18px!important;background:#0d1117!important;border-left:1px solid #30363d!important;border-right:1px solid #30363d!important;color:#c9d1d9!important;font:12px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace!important}
+.ide-codearea{display:grid;grid-template-columns:48px minmax(0,1fr);overflow:auto}
+.ide-lines{padding:14px 9px 16px 0;text-align:right;background:#0d1117;color:#484f58;font:13px/1.7 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre;user-select:none}
+.code{padding:14px 18px!important;color:#c9d1d9!important;font:14px/1.7 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace!important;white-space:pre!important;min-width:max-content}
+.ide .kw{color:#ff7b72}.ide .type{color:#79c0ff}.ide .str{color:#a5d6ff}.ide .num{color:#79c0ff}
+.lesson-example{margin:24px 0;padding:18px;background:#101923;border:1px solid #2a3441;border-radius:10px}
+.lesson-example h4{margin:0 0 8px;color:#fff}.lesson-example p{margin:0 0 12px;color:#9aa7b5}
+.access-table-wrap{margin:22px 0;overflow-x:auto}.access-table{width:100%;border-collapse:collapse;background:#fff;color:#172033}.access-table th,.access-table td{border:1px solid #dbe3ec;padding:10px 12px;text-align:center}.access-table th{background:#eef2f7}.access-table td:first-child{text-align:left;font-weight:700}.table-note{font-size:13px;color:#64748b}
+@media(max-width:800px){.app{display:block!important}.app>nav{position:relative!important;width:auto!important;height:auto!important}.app>main{padding:24px 18px!important}.slide{min-height:auto!important}}
+</style><style>
+.ide .code{color:#c9d1d9!important;font:14px/1.7 ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace!important;white-space:pre!important;min-width:max-content}
+.ide .ide-keyword{color:#ff7b72}.ide .ide-type{color:#79c0ff}.ide .ide-string{color:#a5d6ff}.ide .ide-number{color:#79c0ff}.ide .ide-comment{color:#8b949e}
+</style></head><body><div class="progress" id="progress"></div><div class="app"><nav><h1>Java • Chương 4–6</h1><div class="hint">Tình huống → ví dụ → code → định nghĩa</div><button>Bắt đầu</button><button>4.1 Thừa kế</button><button>4.2 Cài đặt</button><button>4.3 Quyền truy nhập</button><button>4.4 final</button><button>5.1 Đa hình</button><button>5.2 Abstract</button><button>5.3 Interface</button><button>5.4 Đa thừa kế</button><button>5.5 Prototype</button><button>5.6 Template Method</button><button>6.1 Ngoại lệ</button><button>6.2 try/catch</button><button>6.2 throw / throws</button><button>6.3 Ngoại lệ mới</button><button>6.4 Ngoại lệ và đa hình</button><button>Bài tập</button><button>Tổng kết</button></nav><main><section class="slide"><div><div class="kicker">CHƯƠNG 4–6</div><h2>Ba chuyện rất quen thuộc</h2><div class="card"><div class="big">🎓 🐶 🐱 🚗 ⚠️</div><p>Hôm nay ta dùng những thứ quen thuộc để hiểu: <b>thừa kế, đa hình, lớp trừu tượng, interface và ngoại lệ</b>.</p></div></div></section><section class="slide"><div><div class="kicker">4.1 • THỪA KẾ</div><h2>Chó và mèo đều là động vật</h2>
+<div class="grid"><div class="card">🐾 <b>Động vật</b><br/>tên<br/>ăn<br/>di chuyển</div><div class="card">🐶 <b>Chó</b><br/>tên<br/>ăn<br/>di chuyển<br/>+ sủa</div><div class="card">🐱 <b>Mèo</b><br/>tên<br/>ăn<br/>di chuyển<br/>+ kêu meo</div></div>
+<div class="definition"><b>Thừa kế (Inheritance)</b> là cơ chế cho phép một lớp mới <b>kế thừa các thành viên</b> của một lớp đã có, sau đó có thể <b>thêm thành viên mới hoặc thay đổi cách thực hiện một số hành vi</b>.</div><div class="lesson-example"><h4>Ví dụ — SinhVien kế thừa Nguoi</h4><p>Ví dụ chỉ tập trung vào quan hệ lớp con – lớp cha.</p><div class="ide"><div class="idebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tabs">Main.java</span></div><div class="ide-codearea"><div class="ide-lines">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13</div><div class="code"><span class="ide-keyword">class</span> <span class="ide-type">Nguoi</span> {
+ <span class="ide-type">String</span> ten;
+
+ <span class="ide-keyword">void</span> gioiThieu() {
+        System.out.println(<span class="ide-string">"Xin chao!"</span>);
+    }
+}
+
+<span class="ide-keyword">class</span> <span class="ide-type">SinhVien</span> <span class="ide-keyword">extends</span> <span class="ide-type">Nguoi</span> {
+ <span class="ide-keyword">void</span> hoc() {
+        System.out.println(<span class="ide-string">"Sinh vien dang hoc"</span>);
+    }
+}</div></div></div></div></div></section><section class="slide"><div><div class="kicker">4.2 • CÀI ĐẶT</div><h2>Java dùng extends</h2><div class="ide"><div class="idebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tabs">Main.java</span></div><div class="ide-codearea"><div class="ide-lines">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11</div><div class="code"><span class="ide-keyword">class</span> <span class="ide-type">DongVat</span> {
+ <span class="ide-keyword">void</span> an() {
+        System.out.println(<span class="ide-string">"Đang ăn"</span>);
+    }
+}
+
+<span class="ide-keyword">class</span> <span class="ide-type">Cho</span> <span class="ide-keyword">extends</span> <span class="ide-type">DongVat</span> {
+ <span class="ide-keyword">void</span> sua() {
+        System.out.println(<span class="ide-string">"Gâu gâu"</span>);
+    }
+}</div></div></div><p><b>Cho</b> kế thừa <b>DongVat</b> nên dùng được <code>an()</code> và có thêm <code>sua()</code>.</p><div class="lesson-example"><h4>Ví dụ — Cài đặt extends</h4><p>Ví dụ chỉ tập trung vào cách cài đặt kế thừa bằng extends.</p><div class="ide"><div class="idebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tabs">Main.java</span></div><div class="ide-codearea"><div class="ide-lines">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</div><div class="code"><span class="ide-keyword">class</span> <span class="ide-type">DongVat</span> {
+ <span class="ide-keyword">void</span> an() {
+        System.out.println(<span class="ide-string">"Dang an"</span>);
+    }
+}
+
+<span class="ide-keyword">class</span> <span class="ide-type">Cho</span> <span class="ide-keyword">extends</span> <span class="ide-type">DongVat</span> {
+ <span class="ide-keyword">void</span> sua() {
+        System.out.println(<span class="ide-string">"Gau gau"</span>);
+    }
+}
+
+<span class="ide-keyword">public</span> <span class="ide-keyword">class</span> <span class="ide-type">Main</span> {
+ <span class="ide-keyword">public</span> <span class="ide-keyword">static</span> <span class="ide-keyword">void</span> main(<span class="ide-type">String</span>[] args) {
+ <span class="ide-type">Cho</span> cho = <span class="ide-keyword">new</span> <span class="ide-type">Cho</span>();
+        cho.an();
+        cho.sua();
+    }
+}</div></div></div></div></div></section><section class="slide"><div><div class="kicker">4.3 • QUYỀN TRUY NHẬP</div><h2>Không phải thứ gì cũng mở cho mọi người</h2>
+<div class="grid"><div class="card">🟢 <b>public</b><br/>có thể được truy cập từ nơi khác theo phạm vi cho phép.</div><div class="card">🟡 <b>protected</b><br/>cho lớp, lớp con và phạm vi package liên quan.</div><div class="card">🔴 <b>private</b><br/>chỉ truy cập trực tiếp bên trong chính lớp.</div></div>
+<div class="definition"><b>Che dấu thông tin (Information Hiding)</b> là việc hạn chế việc bên ngoài truy cập trực tiếp vào dữ liệu/cách cài đặt bên trong, chỉ cho phép sử dụng thông qua những cách được thiết kế.</div><div class="access-table-wrap"><table class="access-table"><thead><tr><th>Quyền truy nhập</th><th>Trong cùng class</th><th>Cùng package</th><th>Subclass khác package</th><th>Khác package</th></tr></thead><tbody><tr><td><code>public</code></td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr><tr><td><code>protected</code></td><td>✓</td><td>✓</td><td>✓*</td><td>✗</td></tr><tr><td>default</td><td>✓</td><td>✓</td><td>✗</td><td>✗</td></tr><tr><td><code>private</code></td><td>✓</td><td>✗</td><td>✗</td><td>✗</td></tr></tbody></table><p class="table-note">* protected ở subclass khác package có quy tắc truy cập thông qua quan hệ kế thừa.</p></div><div class="lesson-example"><h4>Ví dụ — private và public method</h4><p>Ví dụ tập trung vào private và cách truy cập có kiểm soát.</p><div class="ide"><div class="idebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tabs">Main.java</span></div><div class="ide-codearea"><div class="ide-lines">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13</div><div class="code"><span class="ide-keyword">class</span> <span class="ide-type">SinhVien</span> {
+ <span class="ide-keyword">private</span> <span class="ide-keyword">double</span> diem;
+
+ <span class="ide-keyword">public</span> <span class="ide-keyword">void</span> setDiem(<span class="ide-keyword">double</span> diem) {
+ <span class="ide-keyword">if</span> (diem &gt;= <span class="ide-number">0</span> &amp;&amp; diem &lt;= <span class="ide-number">10</span>) {
+ <span class="ide-keyword">this</span>.diem = diem;
+        }
+    }
+
+ <span class="ide-keyword">public</span> <span class="ide-keyword">double</span> getDiem() {
+ <span class="ide-keyword">return</span> diem;
+    }
+}</div></div></div></div></div></section><section class="slide"><div><div class="kicker">4.4 • FINAL</div><h2>Có thứ không muốn cho thay đổi</h2><div class="ide"><div class="idebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tabs">Main.java</span></div><div class="ide-codearea"><div class="ide-lines">1
+2
+3</div><div class="code"><span class="ide-keyword">class</span> MonHoc {
+ <span class="ide-keyword">final</span> <span class="ide-type">String</span> maMon = <span class="ide-string">"JAVA101"</span>;
+}</div></div></div><div class="definition"><b>final</b> thể hiện rằng một thứ đã được chốt: biến final không thể gán lại; phương thức final không thể bị ghi đè; lớp final không thể bị kế thừa.</div><div class="lesson-example"><h4>Ví dụ — final</h4><p>Ví dụ tập trung vào ý nghĩa của final.</p><div class="ide"><div class="idebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tabs">Main.java</span></div><div class="ide-codearea"><div class="ide-lines">1
+2
+3
+4
+5
+6
+7</div><div class="code"><span class="ide-keyword">class</span> <span class="ide-type">SinhVien</span> {
+ <span class="ide-keyword">final</span> <span class="ide-keyword">int</span> MA_SO = <span class="ide-number">1001</span>;
+
+ <span class="ide-keyword">final</span> <span class="ide-keyword">void</span> hienThiMaSo() {
+        System.out.println(MA_SO);
+    }
+}</div></div></div></div></div></section><section class="slide"><div><div class="kicker">5.1 • ĐA HÌNH</div><h2>Chó và mèo cùng là động vật</h2><div class="ide"><div class="idebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tabs">Main.java</span></div><div class="ide-codearea"><div class="ide-lines">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</div><div class="code"><span class="ide-keyword">class</span> <span class="ide-type">DongVat</span> {
+ <span class="ide-keyword">void</span> keu() {
+        System.out.println(<span class="ide-string">"Âm thanh"</span>);
+    }
+}
+
+<span class="ide-keyword">class</span> <span class="ide-type">Cho</span> <span class="ide-keyword">extends</span> <span class="ide-type">DongVat</span> {
+    @Override
+<span class="ide-keyword">void</span> keu() {
+        System.out.println(<span class="ide-string">"Gâu gâu"</span>);
+    }
+}
+
+<span class="ide-keyword">class</span> <span class="ide-type">Meo</span> <span class="ide-keyword">extends</span> <span class="ide-type">DongVat</span> {
+    @Override
+<span class="ide-keyword">void</span> keu() {
+        System.out.println(<span class="ide-string">"Meo meo"</span>);
+    }
+}</div></div></div><div class="definition"><b>Đa hình (Polymorphism)</b> là khả năng dùng một kiểu chung để làm việc với nhiều đối tượng khác nhau; khi gọi một phương thức được ghi đè, mỗi đối tượng có thể thực hiện hành vi riêng của nó.</div><div class="lesson-example"><h4>Ví dụ — Chó và Mèo ghi đè phương thức</h4><p>Ví dụ tập trung vào cùng một hành vi nhưng mỗi lớp con thực hiện khác nhau.</p><div class="ide"><div class="idebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tabs">Main.java</span></div><div class="ide-codearea"><div class="ide-lines">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</div><div class="code"><span class="ide-keyword">class</span> <span class="ide-type">DongVat</span> {
+ <span class="ide-keyword">void</span> keu() {
+        System.out.println(<span class="ide-string">"Dong vat keu"</span>);
+    }
+}
+
+<span class="ide-keyword">class</span> <span class="ide-type">Cho</span> <span class="ide-keyword">extends</span> <span class="ide-type">DongVat</span> {
+    @Override
+ <span class="ide-keyword">void</span> keu() {
+        System.out.println(<span class="ide-string">"Gau gau"</span>);
+    }
+}
+
+<span class="ide-keyword">class</span> <span class="ide-type">Meo</span> <span class="ide-keyword">extends</span> <span class="ide-type">DongVat</span> {
+    @Override
+ <span class="ide-keyword">void</span> keu() {
+        System.out.println(<span class="ide-string">"Meo meo"</span>);
+    }
+}</div></div></div></div></div></section><section class="slide"><div><div class="kicker">5.2 • LỚP TRỪU TƯỢNG</div><h2>Có một lớp chỉ làm “khung”</h2><div class="ide"><div class="idebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tabs">Main.java</span></div><div class="ide-codearea"><div class="ide-lines">1
+2
+3
+4
+5
+6
+7
+8
+9
+10</div><div class="code"><span class="ide-keyword">abstract</span> <span class="ide-keyword">class</span> <span class="ide-type">DongVat</span> {
+ <span class="ide-keyword">abstract</span> <span class="ide-keyword">void</span> keu();
+}
+
+<span class="ide-keyword">class</span> <span class="ide-type">Cho</span> <span class="ide-keyword">extends</span> <span class="ide-type">DongVat</span> {
+    @Override
+<span class="ide-keyword">void</span> keu() {
+        System.out.println(<span class="ide-string">"Gâu gâu"</span>);
+    }
+}</div></div></div><div class="definition"><b>Lớp trừu tượng (Abstract Class)</b> là lớp được dùng làm lớp cơ sở chung, có thể chứa dữ liệu và phương thức dùng chung, đồng thời có thể chứa phương thức trừu tượng. <b>Không thể tạo object trực tiếp từ lớp abstract.</b></div>
+<p><b>Phương thức trừu tượng (Abstract Method)</b> là phương thức chỉ khai báo yêu cầu, chưa có phần thân; lớp con cụ thể phải cài đặt nó.</p><div class="lesson-example"><h4>Ví dụ — abstract class và abstract method</h4><p>Ví dụ tập trung vào abstract class và abstract method.</p><div class="ide"><div class="idebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tabs">Main.java</span></div><div class="ide-codearea"><div class="ide-lines">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14</div><div class="code"><span class="ide-keyword">abstract</span> <span class="ide-keyword">class</span> <span class="ide-type">DongVat</span> {
+ <span class="ide-keyword">abstract</span> <span class="ide-keyword">void</span> keu();
+
+ <span class="ide-keyword">void</span> ngu() {
+        System.out.println(<span class="ide-string">"Dang ngu"</span>);
+    }
+}
+
+<span class="ide-keyword">class</span> <span class="ide-type">Cho</span> <span class="ide-keyword">extends</span> <span class="ide-type">DongVat</span> {
+    @Override
+ <span class="ide-keyword">void</span> keu() {
+        System.out.println(<span class="ide-string">"Gau gau"</span>);
+    }
+}</div></div></div></div></div></section><section class="slide"><div><div class="kicker">5.3 • INTERFACE</div><h2>Một “hợp đồng” về hành động</h2><div class="ide"><div class="idebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tabs">Main.java</span></div><div class="ide-codearea"><div class="ide-lines">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13</div><div class="code"><span class="ide-keyword">interface</span> CoTheChay {
+ <span class="ide-keyword">void</span> chay();
+}
+
+<span class="ide-keyword">interface</span> CoTheBoi {
+ <span class="ide-keyword">void</span> boi();
+}
+
+<span class="ide-keyword">class</span> <span class="ide-type">Cho</span> <span class="ide-keyword">implements</span> CoTheChay {
+ <span class="ide-keyword">public</span> <span class="ide-keyword">void</span> chay() {
+        System.out.println(<span class="ide-string">"Chó chạy"</span>);
+    }
+}</div></div></div><div class="definition"><b>Interface (giao diện)</b> là một tập hợp các yêu cầu về hành vi mà lớp thực hiện phải cung cấp. Nó mô tả <b>cần làm gì</b> hơn là quy định chi tiết <b>làm như thế nào</b>.</div>
+<p>Một class có thể <code>implements</code> nhiều interface.</p><div class="lesson-example"><h4>Ví dụ — interface</h4><p>Ví dụ tập trung vào interface và implements.</p><div class="ide"><div class="idebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tabs">Main.java</span></div><div class="ide-codearea"><div class="ide-lines">1
+2
+3
+4
+5
+6
+7
+8
+9</div><div class="code"><span class="ide-keyword">interface</span> <span class="ide-type">ChayDuoc</span> {
+ <span class="ide-keyword">void</span> chay();
+}
+
+<span class="ide-keyword">class</span> <span class="ide-type">VanDongVien</span> <span class="ide-keyword">implements</span> <span class="ide-type">ChayDuoc</span> {
+ <span class="ide-keyword">public</span> <span class="ide-keyword">void</span> chay() {
+        System.out.println(<span class="ide-string">"Dang chay"</span>);
+    }
+}</div></div></div></div></div></section><section class="slide"><div><div class="kicker">5.4 • ĐA THỪA KẾ</div><h2>Java không cho một class có nhiều class cha</h2>
+<div class="card">❌ <code>class C extends A, B</code> — Java không cho.</div>
+<div class="card">✅ Một class có thể <code>implements</code> nhiều interface.</div>
+<div class="definition"><b>Đa thừa kế (Multiple Inheritance)</b> là việc một lớp kế thừa trực tiếp từ nhiều lớp cha. Java không hỗ trợ đa thừa kế giữa các class, nhưng cho phép một class thực hiện nhiều interface.</div><div class="lesson-example"><h4>Ví dụ — implements nhiều interface</h4><p>Ví dụ tập trung vào một class thực hiện nhiều interface.</p><div class="ide"><div class="idebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tabs">Main.java</span></div><div class="ide-codearea"><div class="ide-lines">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17</div><div class="code"><span class="ide-keyword">interface</span> <span class="ide-type">ChayDuoc</span> {
+ <span class="ide-keyword">void</span> chay();
+}
+
+<span class="ide-keyword">interface</span> <span class="ide-type">BoiDuoc</span> {
+ <span class="ide-keyword">void</span> boi();
+}
+
+<span class="ide-keyword">class</span> <span class="ide-type">VanDongVien</span> <span class="ide-keyword">implements</span> <span class="ide-type">ChayDuoc</span>, <span class="ide-type">BoiDuoc</span> {
+ <span class="ide-keyword">public</span> <span class="ide-keyword">void</span> chay() {
+        System.out.println(<span class="ide-string">"Dang chay"</span>);
+    }
+
+ <span class="ide-keyword">public</span> <span class="ide-keyword">void</span> boi() {
+        System.out.println(<span class="ide-string">"Dang boi"</span>);
+    }
+}</div></div></div></div></div></section><section class="slide"><div><div class="kicker">5.5 • PROTOTYPE</div><h2>Có một mẫu rồi tạo bản sao</h2>
+<div class="card"><div class="big">🚗 → 🚗 → 🚗</div><p>Có một chiếc xe mẫu. Muốn tạo chiếc tương tự, ta bắt đầu từ mẫu đó rồi thay màu, biển số...</p></div>
+<div class="definition"><b>Prototype (Mẫu nguyên mẫu)</b> là mẫu thiết kế trong đó một đối tượng mới được tạo dựa trên việc sao chép một đối tượng mẫu đã có, thay vì xây dựng hoàn toàn từ đầu.</div><div class="lesson-example"><h4>Ví dụ — Prototype</h4><p>Ví dụ tập trung vào việc tạo bản sao từ đối tượng mẫu.</p><div class="ide"><div class="idebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tabs">Main.java</span></div><div class="ide-codearea"><div class="ide-lines">1
+2
+3
+4
+5
+6
+7
+8
+9</div><div class="code"><span class="ide-keyword">class</span> <span class="ide-type">Car</span> {
+ <span class="ide-type">String</span> mau;
+
+ <span class="ide-type">Car</span> copy() {
+ <span class="ide-type">Car</span> xeMoi = <span class="ide-keyword">new</span> <span class="ide-type">Car</span>();
+        xeMoi.mau = <span class="ide-keyword">this</span>.mau;
+ <span class="ide-keyword">return</span> xeMoi;
+    }
+}</div></div></div></div></div></section><section class="slide"><div><div class="kicker">5.5 • TEMPLATE METHOD</div><h2>Cùng quy trình, một số bước khác nhau</h2>
+<div class="flow"><div class="box">Chuẩn bị</div><div class="arrow">→</div><div class="box">Thực hiện</div><div class="arrow">→</div><div class="box">Kết thúc</div></div>
+<div class="definition"><b>Template Method (Phương thức khuôn mẫu)</b> định nghĩa một <b>khung các bước</b> của một quy trình; một số bước được giữ chung, một số bước cho lớp con thay đổi cách thực hiện.</div><div class="lesson-example"><h4>Ví dụ — Prototype</h4><p>Ví dụ tập trung vào việc tạo bản sao từ đối tượng mẫu.</p><div class="ide"><div class="idebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tabs">Main.java</span></div><div class="ide-codearea"><div class="ide-lines">1
+2
+3
+4
+5
+6
+7
+8
+9</div><div class="code"><span class="ide-keyword">class</span> <span class="ide-type">Car</span> {
+ <span class="ide-type">String</span> mau;
+
+ <span class="ide-type">Car</span> copy() {
+ <span class="ide-type">Car</span> xeMoi = <span class="ide-keyword">new</span> <span class="ide-type">Car</span>();
+        xeMoi.mau = <span class="ide-keyword">this</span>.mau;
+ <span class="ide-keyword">return</span> xeMoi;
+    }
+}</div></div></div></div></div></section><section class="slide"><div><div class="kicker">6.1 • NGOẠI LỆ</div><h2>Khi chương trình gặp chuyện bất thường</h2>
+<div class="card"><div class="big">✏️ → ❌</div><p>Ví dụ chương trình yêu cầu điểm từ 0 đến 10 nhưng người dùng nhập 15.</p></div>
+<div class="definition"><b>Ngoại lệ (Exception)</b> là một đối tượng biểu diễn một tình huống bất thường xảy ra trong quá trình chương trình chạy và làm gián đoạn luồng xử lý bình thường.</div>
+<p>Mục tiêu: <b>bắt lỗi và xử lý theo cách ta muốn</b>, thay vì để chương trình lỗi một cách mất kiểm soát.</p><div class="lesson-example"><h4>Ví dụ — Tình huống phát sinh Exception</h4><p>Ví dụ chỉ cho thấy tình huống lỗi phát sinh.</p><div class="ide"><div class="idebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tabs">Main.java</span></div><div class="ide-codearea"><div class="ide-lines">1
+2
+3
+4
+5
+6
+7
+8</div><div class="code"><span class="ide-keyword">public</span> <span class="ide-keyword">class</span> <span class="ide-type">Main</span> {
+ <span class="ide-keyword">public</span> <span class="ide-keyword">static</span> <span class="ide-keyword">void</span> main(<span class="ide-type">String</span>[] args) {
+ <span class="ide-keyword">int</span> a = <span class="ide-number">10</span>;
+ <span class="ide-keyword">int</span> b = <span class="ide-number">0</span>;
+
+        System.out.println(a / b);
+    }
+}</div></div></div></div></div></section><section class="slide"><div><div class="kicker">6.2 • TRY / CATCH</div><h2>Nói đơn giản nhất: thử – bắt</h2><div class="ide"><div class="idebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tabs">Main.java</span></div><div class="ide-codearea"><div class="ide-lines">1
+2
+3
+4
+5</div><div class="code"><span class="ide-keyword">try</span> {
+ <span class="ide-keyword">int</span> x = <span class="ide-number">10</span> / <span class="ide-number">0</span>;
+} <span class="ide-keyword">catch</span> (<span class="ide-type">ArithmeticException</span> e) {
+    System.out.println(<span class="ide-string">"Có lỗi"</span>);
+}</div></div></div><div class="definition"><b>try</b>: đặt đoạn code có thể lỗi vào đây.<br/><b>catch</b>: nếu lỗi xảy ra, xử lý lỗi ở đây.</div><div class="lesson-example"><h4>Ví dụ — try/catch</h4><p>Ví dụ tập trung vào try/catch để bắt và xử lý lỗi.</p><div class="ide"><div class="idebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tabs">Main.java</span></div><div class="ide-codearea"><div class="ide-lines">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11</div><div class="code"><span class="ide-keyword">public</span> <span class="ide-keyword">class</span> <span class="ide-type">Main</span> {
+ <span class="ide-keyword">public</span> <span class="ide-keyword">static</span> <span class="ide-keyword">void</span> main(<span class="ide-type">String</span>[] args) {
+ <span class="ide-keyword">try</span> {
+ <span class="ide-keyword">int</span> a = <span class="ide-number">10</span>;
+ <span class="ide-keyword">int</span> b = <span class="ide-number">0</span>;
+            System.out.println(a / b);
+        } <span class="ide-keyword">catch</span> (<span class="ide-type">ArithmeticException</span> e) {
+            System.out.println(<span class="ide-string">"Khong the chia cho 0"</span>);
+        }
+    }
+}</div></div></div></div></div></section><section class="slide"><div><div class="kicker">6.2 • NÉM NGOẠI LỆ</div><h2>Hai từ dễ nhầm</h2><div class="ide"><div class="idebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tabs">Main.java</span></div><div class="ide-codearea"><div class="ide-lines">1
+2
+3
+4</div><div class="code"><span class="ide-keyword">throw</span> <span class="ide-keyword">new</span> <span class="ide-type">IllegalArgumentException</span>(<span class="ide-string">"Sai điểm"</span>);
+
+<span class="ide-keyword">void</span> docFile() <span class="ide-keyword">throws</span> IOException {
+}</div></div></div><p><code>throw</code> = <b>chủ động ném lỗi</b>.</p><p><code>throws</code> = <b>báo trước rằng method có thể phát sinh lỗi</b>.</p><div class="lesson-example"><h4>Ví dụ — try/catch</h4><p>Ví dụ tập trung vào try/catch để bắt và xử lý lỗi.</p><div class="ide"><div class="idebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tabs">Main.java</span></div><div class="ide-codearea"><div class="ide-lines">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11</div><div class="code"><span class="ide-keyword">public</span> <span class="ide-keyword">class</span> <span class="ide-type">Main</span> {
+ <span class="ide-keyword">public</span> <span class="ide-keyword">static</span> <span class="ide-keyword">void</span> main(<span class="ide-type">String</span>[] args) {
+ <span class="ide-keyword">try</span> {
+ <span class="ide-keyword">int</span> a = <span class="ide-number">10</span>;
+ <span class="ide-keyword">int</span> b = <span class="ide-number">0</span>;
+            System.out.println(a / b);
+        } <span class="ide-keyword">catch</span> (<span class="ide-type">ArithmeticException</span> e) {
+            System.out.println(<span class="ide-string">"Khong the chia cho 0"</span>);
+        }
+    }
+}</div></div></div></div></div></section><section class="slide"><div><div class="kicker">6.3 • CUSTOM EXCEPTION</div><h2>Đặt tên riêng cho lỗi của mình</h2><div class="ide"><div class="idebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tabs">Main.java</span></div><div class="ide-codearea"><div class="ide-lines">1
+2
+3
+4
+5
+6
+7</div><div class="code"><span class="ide-keyword">class</span> DiemKhongHopLeException
+<span class="ide-keyword">extends</span> <span class="ide-type">Exception</span> {
+
+    DiemKhongHopLeException(<span class="ide-type">String</span> msg) {
+ <span class="ide-keyword">super</span>(msg);
+    }
+}</div></div></div><div class="definition"><b>Ngoại lệ tự định nghĩa (Custom Exception)</b> là lớp ngoại lệ do lập trình viên tạo ra để mô tả một loại lỗi riêng của bài toán hoặc ứng dụng.</div><div class="lesson-example"><h4>Ví dụ — throw và throws</h4><p>Ví dụ tập trung vào throw và throws.</p><div class="ide"><div class="idebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tabs">Main.java</span></div><div class="ide-codearea"><div class="ide-lines">1
+2
+3
+4
+5
+6
+7
+8</div><div class="code"><span class="ide-keyword">static</span> <span class="ide-keyword">void</span> kiemTraDiem(<span class="ide-keyword">double</span> diem)
+ <span class="ide-keyword">throws</span> <span class="ide-type">IllegalArgumentException</span> {
+
+ <span class="ide-keyword">if</span> (diem &lt; <span class="ide-number">0</span> || diem &gt; <span class="ide-number">10</span>) {
+ <span class="ide-keyword">throw</span> <span class="ide-keyword">new</span> <span class="ide-type">IllegalArgumentException</span>(<span class="ide-string">"Diem phai tu 0 den 10"</span>
+        );
+    }
+}</div></div></div></div></div></section><section class="slide"><div><div class="kicker">6.4 • QUAN HỆ VỚI ĐA HÌNH</div><h2>Exception cũng là lớp</h2>
+<div class="flow"><div class="box">Exception</div><div class="arrow">↓</div><div class="box">RuntimeException</div><div class="arrow">↓</div><div class="box">ArithmeticException</div></div>
+<div class="definition">Các loại ngoại lệ có quan hệ lớp. Vì vậy có thể dùng kiểu cha <code>Exception</code> để tham chiếu hoặc bắt các ngoại lệ thuộc lớp con.</div><div class="lesson-example"><h4>Ví dụ — Exception và đa hình</h4><p>Ví dụ tập trung vào quan hệ kiểu cha Exception với ngoại lệ cụ thể.</p><div class="ide"><div class="idebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="tabs">Main.java</span></div><div class="ide-codearea"><div class="ide-lines">1
+2
+3
+4
+5
+6
+7
+8</div><div class="code"><span class="ide-keyword">public</span> <span class="ide-keyword">class</span> <span class="ide-type">Main</span> {
+ <span class="ide-keyword">public</span> <span class="ide-keyword">static</span> <span class="ide-keyword">void</span> main(<span class="ide-type">String</span>[] args) {
+ <span class="ide-type">Exception</span> loi = <span class="ide-keyword">new</span> <span class="ide-type">ArithmeticException</span>(<span class="ide-string">"Loi chia cho 0"</span>
+        );
+
+        System.out.println(loi.getMessage());
+    }
+}</div></div></div></div></div></section><section class="slide"><div><div class="kicker">THỰC HÀNH</div><h2>Bài tập nhỏ</h2>
+<div class="card"><b>1.</b> Tạo <code>DongVat</code> có <code>keu()</code>.<br/><b>2.</b> Tạo <code>Cho</code> và <code>Meo</code> kế thừa.<br/><b>3.</b> Ghi đè <code>keu()</code>.<br/><b>4.</b> Tạo một object và gọi <code>keu()</code>.</div>
+<p>Hãy giải thích: vì sao Chó và Mèo có cùng tên phương thức nhưng kết quả khác nhau?</p></div></section><section class="slide"><div><div class="kicker">TỔNG KẾT</div><h2>Nhìn tình huống rồi gọi đúng tên</h2>
+<ol><li><b>Thừa kế (Inheritance)</b>: lớp con kế thừa và mở rộng lớp cha.</li><li><b>Đa hình (Polymorphism)</b>: cùng cách gọi, đối tượng khác nhau có thể thực hiện khác nhau.</li><li><b>Abstract Class</b>: lớp cơ sở chưa hoàn chỉnh, không tạo object trực tiếp.</li><li><b>Interface</b>: hợp đồng về hành vi mà class thực hiện.</li><li><b>Exception</b>: tình huống bất thường khi chương trình chạy và cần xử lý.</li></ol></div></section></main></div><div class="controls"><button id="prev">←</button><button id="next">→</button></div><script>
+const ss=[...document.querySelectorAll('.slide')],bs=[...document.querySelectorAll('nav button')];let i=0;
+function show(n){i=Math.max(0,Math.min(ss.length-1,n));ss.forEach((s,k)=>s.classList.toggle('active',k===i));bs.forEach((b,k)=>b.classList.toggle('active',k===i));document.getElementById('progress').style.width=((i+1)/ss.length*100)+'%';scrollTo(0,0)}
+bs.forEach((b,k)=>b.onclick=()=>show(k));document.getElementById('prev').onclick=()=>show(i-1);document.getElementById('next').onclick=()=>show(i+1);
+document.onkeydown=e=>{if(e.key==='ArrowRight')show(i+1);if(e.key==='ArrowLeft')show(i-1)};
+document.querySelectorAll('.reveal').forEach(b=>b.onclick=()=>document.getElementById(b.dataset.target).classList.toggle('hidden'));show(0);
+</script></body></html>
