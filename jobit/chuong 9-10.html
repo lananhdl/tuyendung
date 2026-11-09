@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài Giảng Lập Trình Hướng Đối Tượng Java - Chương 9 & 10</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #030712;
+            color: #f9fafb;
+        }
+        
+        code, pre {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .slide-pane {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.25s ease-in-out;
+        }
+
+        .slide-pane.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .pulse-pointer {
+            animation: pointerPulse 1.8s infinite ease-in-out;
+        }
+        @keyframes pointerPulse {
+            0%, 100% { transform: translateX(0); opacity: 0.7; }
+            50% { transform: translateX(8px); opacity: 1; }
+        }
+
+        .stream-flow {
+            background: linear-gradient(90deg, rgba(56, 189, 248, 0) 0%, rgba(56, 189, 248, 0.8) 50%, rgba(56, 189, 248, 0) 100%);
+            background-size: 200% 100%;
+            animation: flowMove 2s infinite linear;
+        }
+        @keyframes flowMove {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between select-none bg-[#030712]">
+
+    <!-- THANH TIÊU ĐỀ TRÊN CÙNG -->
+    <header class="bg-gray-900/95 border-b border-gray-800 px-8 py-4 flex justify-between items-center sticky top-0 z-50 backdrop-blur">
+        <div class="flex items-center gap-4">
+            <span class="bg-emerald-500 text-gray-950 font-black text-sm px-3.5 py-1.5 rounded-lg tracking-wider">JAVA OOP</span>
+            <h1 class="text-xl md:text-2xl font-black text-white" id="headerTitle">Chương 9: Luồng Dữ Liệu & Chương 10: Thiết Kế Hướng Đối Tượng</h1>
+        </div>
+        <div class="flex items-center gap-4">
+            <select id="slideSelect" onchange="goToSlide(parseInt(this.value))" class="bg-gray-800 border border-gray-700 text-gray-100 text-base font-bold rounded-xl px-4 py-2 focus:outline-none focus:border-emerald-500 cursor-pointer">
+                <!-- Tự động sinh mục lục -->
+            </select>
+            <span class="text-base font-mono font-black bg-gray-800 text-emerald-400 px-4 py-2 rounded-xl border border-gray-700" id="slideNumber">
+                1 / 16
+            </span>
+        </div>
+    </header>
+
+    <!-- KHUNG TRÌNH CHIẾU CHÍNH (LAYOUT ĐÔI 50/50) -->
+    <main class="flex-1 max-w-[1700px] w-full mx-auto p-4 md:p-8 flex flex-col justify-center">
+
+        <!-- ==================== SLIDE 1: MỞ ĐẦU CHƯƠNG 9 & 10 ==================== -->
+        <section class="slide-pane active" data-title="Tổng Quan Chương 9 & 10">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <div class="lg:col-span-7 space-y-6">
+                    <span class="inline-block px-4 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-full text-base font-bold uppercase tracking-widest">
+                        Kiến trúc ứng dụng thực tế
+                    </span>
+                    <h2 class="text-4xl md:text-6xl font-black text-white leading-tight">
+                        LUỒNG DỮ LIỆU & <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-sky-400">THIẾT KẾ OOP CHUẨN MỰC</span>
+                    </h2>
+                    <p class="text-xl md:text-2xl text-gray-300 font-medium leading-relaxed">
+                        Từ việc đưa dữ liệu vào/ra hệ thống qua File và Network đến nghệ thuật kiến trúc phần mềm với nguyên tắc SOLID và các mẫu thiết kế kinh điển.
+                    </p>
+                    <div class="grid grid-cols-2 gap-4 pt-2">
+                        <div class="p-5 bg-gray-950 rounded-2xl border border-sky-500/40">
+                            <span class="text-sky-400 font-black text-xl block mb-1">Chương 9: I/O Streams</span>
+                            <span class="text-base text-gray-300 font-semibold">Luồng Byte, Luồng Character, Lắp ráp ống dẫn Buffer, Đọc/Ghi File & Socket</span>
+                        </div>
+                        <div class="p-5 bg-gray-950 rounded-2xl border border-emerald-500/40">
+                            <span class="text-emerald-400 font-black text-xl block mb-1">Chương 10: OOD & Design Patterns</span>
+                            <span class="text-base text-gray-300 font-semibold">5 nguyên lý SOLID, Mẫu Singleton, Factory Method & Observer Pattern</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5 flex justify-center items-center h-full">
+                    <div class="w-full bg-gray-950 border-2 border-gray-800 rounded-3xl p-8 text-center space-y-6 shadow-2xl">
+                        <div class="relative w-40 h-40 mx-auto flex items-center justify-center">
+                            <div class="absolute inset-0 rounded-full border-4 border-dashed border-emerald-500/40 animate-spin" style="animation-duration: 22s;"></div>
+                            <div class="w-32 h-32 rounded-full bg-gradient-to-tr from-emerald-500 to-sky-500 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                                <i class="fa-solid fa-network-wired text-gray-950 text-5xl"></i>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <span class="text-2xl font-black text-white block">Tư Duy Kiến Trúc Chuyên Nghiệp</span>
+                            <p class="text-base text-gray-400 font-medium">Lưu chuyển dữ liệu an toàn ➔ Thiết kế phần mềm mở rộng linh hoạt</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 2: 9.1 KHÁI NIỆM VỀ LUỒNG DỮ LIỆU ==================== -->
+        <section class="slide-pane" data-title="9.1 Khái niệm về luồng dữ liệu">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <div class="lg:col-span-6 space-y-6">
+                    <div class="border-b border-gray-800 pb-3">
+                        <span class="text-sm font-bold text-sky-400 font-mono uppercase tracking-wider">Mục 9.1</span>
+                        <h3 class="text-3xl md:text-4xl font-extrabold text-white">Khái Niệm Luồng Dữ Liệu (Stream)</h3>
+                    </div>
+                    <p class="text-lg md:text-xl text-gray-300 leading-relaxed">
+                        Trong Java, <strong>Stream (Luồng)</strong> là một chuỗi tuần tự các byte dữ liệu di chuyển từ <strong>Nguồn (Source)</strong> tới <strong>Đích (Destination)</strong>.
+                    </p>
+                    <div class="space-y-4 text-base md:text-lg text-gray-200">
+                        <div class="p-4 bg-gray-950 rounded-2xl border border-sky-500/30">
+                            <strong class="text-sky-400 block mb-1">1. InputStream / Reader (Luồng vào):</strong>
+                            <p class="text-sm text-gray-300">Đọc dữ liệu từ bên ngoài (bàn phím, file, mạng internet) vào bộ nhớ RAM của chương trình.</p>
+                        </div>
+                        <div class="p-4 bg-gray-950 rounded-2xl border border-emerald-500/30">
+                            <strong class="text-emerald-400 block mb-1">2. OutputStream / Writer (Luồng ra):</strong>
+                            <p class="text-sm text-gray-300">Ghi dữ liệu từ chương trình Java xuất ra màn hình, ghi xuống đĩa cứng hoặc truyền đi qua mạng.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-6 flex justify-center items-center">
+                    <div class="w-full bg-gray-950 border border-gray-800 rounded-3xl p-6 text-center space-y-6">
+                        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest block">Mô Phỏng Ống Dẫn Nước Dữ Liệu</span>
+                        <div class="space-y-5">
+                            <!-- Input flow -->
+                            <div class="flex items-center justify-between gap-3">
+                                <div class="p-3 bg-gray-900 border border-gray-700 rounded-xl text-xs font-mono text-gray-300 w-28">Nguồn (File/Web)</div>
+                                <div class="flex-1 h-8 rounded-lg border border-sky-500 relative flex items-center justify-center overflow-hidden bg-sky-950/30">
+                                    <div class="absolute inset-0 stream-flow"></div>
+                                    <span class="relative text-xs font-mono text-sky-200 font-bold">10110010 ➔ byte stream</span>
+                                </div>
+                                <div class="p-3 bg-blue-950 border border-blue-500 rounded-xl text-xs font-mono font-bold text-blue-200 w-28">Java App</div>
+                            </div>
+
+                            <!-- Output flow -->
+                            <div class="flex items-center justify-between gap-3">
+                                <div class="p-3 bg-blue-950 border border-blue-500 rounded-xl text-xs font-mono font-bold text-blue-200 w-28">Java App</div>
+                                <div class="flex-1 h-8 rounded-lg border border-emerald-500 relative flex items-center justify-center overflow-hidden bg-emerald-950/30">
+                                    <div class="absolute inset-0 stream-flow"></div>
+                                    <span class="relative text-xs font-mono text-emerald-200 font-bold">OutputStream ➔</span>
+                                </div>
+                                <div class="p-3 bg-gray-900 border border-gray-700 rounded-xl text-xs font-mono text-gray-300 w-28">Đích (Màn hình/Ổ đĩa)</div>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-400 italic">Dữ liệu được xử lý tuần tự từng phần nhỏ, không cần nạp toàn bộ dữ liệu khổng lồ vào RAM cùng lúc.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 3: 9.1 PHÂN BIỆT BYTE STREAM VS CHARACTER STREAM ==================== -->
+        <section class="slide-pane" data-title="9.1 Byte Stream vs Character Stream">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <div class="lg:col-span-6 space-y-6">
+                    <div class="border-b border-gray-800 pb-3">
+                        <span class="text-sm font-bold text-sky-400 font-mono uppercase tracking-wider">Mục 9.1 Chi Tiết</span>
+                        <h3 class="text-3xl md:text-4xl font-extrabold text-white">Luồng Byte vs Luồng Ký Tự</h3>
+                    </div>
+                    <p class="text-lg text-gray-300 leading-relaxed">
+                        Java chia hệ thống I/O thành 2 nhánh lớn dựa trên đơn vị dữ liệu được vận chuyển:
+                    </p>
+                    <ul class="space-y-4 text-base md:text-lg text-gray-200">
+                        <li class="p-4 bg-gray-950 rounded-2xl border border-indigo-500/40">
+                            <strong class="text-indigo-400 block text-lg">1. Byte Streams (InputStream / OutputStream):</strong>
+                            Xử lý dữ liệu nhị phân nguyên thủy <strong>từng 8-bit (1 byte)</strong>. Dùng cho file hình ảnh (PNG, JPG), âm thanh (MP3), video, file nhị phân (PDF, DOCX).
+                        </li>
+                        <li class="p-4 bg-gray-950 rounded-2xl border border-amber-500/40">
+                            <strong class="text-amber-400 block text-lg">2. Character Streams (Reader / Writer):</strong>
+                            Xử lý văn bản <strong>từng 16-bit Unicode (2 bytes)</strong>. Tự động hỗ trợ bảng mã UTF-8/Unicode, dùng cho văn bản tiếng Việt có dấu, file TXT, JSON, XML.
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="lg:col-span-6 flex justify-center items-center">
+                    <div class="w-full bg-gray-950 border border-gray-800 rounded-3xl p-6 text-center space-y-5">
+                        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest block">Hai Nhánh Phả Hệ Cơ Bản</span>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="p-5 bg-indigo-950/40 border border-indigo-500 rounded-2xl space-y-2">
+                                <span class="text-xs font-bold text-indigo-400 uppercase block">Luồng Nhị Phân (1 Byte)</span>
+                                <div class="text-sm font-mono font-bold text-white">FileInputStream</div>
+                                <div class="text-sm font-mono font-bold text-white">FileOutputStream</div>
+                                <span class="text-xs text-gray-400 block pt-2">Ảnh, Video, Tệp nén</span>
+                            </div>
+                            <div class="p-5 bg-amber-950/40 border border-amber-500 rounded-2xl space-y-2">
+                                <span class="text-xs font-bold text-amber-400 uppercase block">Luồng Ký Tự (2 Byte / Unicode)</span>
+                                <div class="text-sm font-mono font-bold text-white">FileReader</div>
+                                <div class="text-sm font-mono font-bold text-white">FileWriter</div>
+                                <span class="text-xs text-gray-400 block pt-2">Văn bản tiếng Việt, HTML, JSON</span>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-gray-900 rounded-xl text-xs text-emerald-300 font-mono">
+                            Cầu nối chuyển đổi: InputStreamReader (Đổi từ Byte sang Ký tự theo UTF-8)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 4: 9.2 CƠ CHẾ LẮP RÁP LUỒNG (DECORATOR) ==================== -->
+        <section class="slide-pane" data-title="9.2 Lắp ráp các luồng dữ liệu">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <div class="lg:col-span-6 space-y-5">
+                    <div class="border-b border-gray-800 pb-3">
+                        <span class="text-sm font-bold text-sky-400 font-mono uppercase tracking-wider">Mục 9.2</span>
+                        <h3 class="text-3xl md:text-4xl font-extrabold text-white">Cơ Chế Lắp Ráp Luồng (Chaining Streams)</h3>
+                    </div>
+                    <p class="text-lg text-gray-300 leading-relaxed">
+                        Java I/O áp dụng <strong>Decorator Pattern</strong>: Lồng luồng này vào trong luồng khác như các khúc ống nước để bổ sung thêm tính năng (như bộ đệm đệm tăng tốc độ, đọc từng dòng chữ, mã hóa).
+                    </p>
+                    <pre class="bg-gray-950 p-5 rounded-2xl border border-gray-800 text-sm md:text-base text-gray-200 leading-relaxed font-mono">
+<span class="text-gray-500">// 1. Khúc ống lõi: Nối trực tiếp vào file</span>
+FileReader fr = <span class="text-purple-400">new</span> FileReader(<span class="text-amber-200">"data.txt"</span>);
+
+<span class="text-gray-500">// 2. Bọc ống đệm (Buffer): Tăng tốc độ đọc gấp hàng chục lần</span>
+BufferedReader br = <span class="text-purple-400">new</span> BufferedReader(fr);
+
+<span class="text-gray-500">// Đọc tiện lợi từng dòng:</span>
+String line = br.readLine();
+br.close(); <span class="text-gray-500">// Tự động đóng toàn bộ các ống bên trong</span></pre>
+                </div>
+
+                <div class="lg:col-span-6 flex justify-center items-center">
+                    <div class="w-full bg-gray-950 border border-gray-800 rounded-3xl p-6 text-center space-y-5">
+                        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest block">Minh Họa Lồng Ống Nước (Wrapping)</span>
+                        <div class="p-6 bg-gray-900 border-2 border-dashed border-sky-500 rounded-2xl space-y-4">
+                            <div class="p-3 bg-sky-950 border border-sky-400 rounded-xl text-xs font-mono font-bold text-sky-200">
+                                Ống Ngoài Cùng: BufferedReader (Hỗ trợ readLine(), lưu bộ đệm 8KB)
+                            </div>
+                            <div class="text-center text-xs text-sky-400">↓ lồng vào trong ↓</div>
+                            <div class="p-3 bg-indigo-950 border border-indigo-400 rounded-xl text-xs font-mono font-bold text-indigo-200">
+                                Ống Chuyển Đổi: InputStreamReader (Giải mã nhị phân sang UTF-8)
+                            </div>
+                            <div class="text-center text-xs text-indigo-400">↓ nối thẳng vào ↓</div>
+                            <div class="p-3 bg-gray-950 border border-gray-600 rounded-xl text-xs font-mono font-bold text-gray-300">
+                                Ống Cơ Bản: FileInputStream (Đọc từng byte thô từ đĩa cứng)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 5: 9.3 XỬ LÝ FILE VÀ TRY-WITH-RESOURCES ==================== -->
+        <section class="slide-pane" data-title="9.3 Xử lý File & try-with-resources">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <div class="lg:col-span-6 space-y-5">
+                    <div class="border-b border-gray-800 pb-3">
+                        <span class="text-sm font-bold text-sky-400 font-mono uppercase tracking-wider">Mục 9.3</span>
+                        <h3 class="text-3xl md:text-4xl font-extrabold text-white">Đọc/Ghi File & Tự Động Đóng Luồng</h3>
+                    </div>
+                    <p class="text-lg text-gray-300 leading-relaxed">
+                        Thao tác file bắt buộc phải đóng luồng (<code>close()</code>) để giải phóng con trỏ đĩa. Dùng cú pháp <strong>try-with-resources</strong> (từ Java 7+) giúp Java <strong>tự động đóng luồng 100%</strong> mà không cần viết khối finally phức tạp.
+                    </p>
+                    <pre class="bg-gray-950 p-5 rounded-2xl border border-gray-800 text-sm md:text-base text-gray-200 leading-relaxed font-mono">
+<span class="text-gray-500">// Tự động close() khi kết thúc khối try:</span>
+<span class="text-purple-400">try</span> (<span class="text-cyan-300">BufferedWriter</span> bw = <span class="text-purple-400">new</span> BufferedWriter(
+        <span class="text-purple-400">new</span> FileWriter(<span class="text-amber-200">"sinhvien.txt"</span>, <span class="text-purple-400">true</span>))) {
+    bw.write(<span class="text-amber-200">"Nguyễn Văn An, GPA: 9.0"</span>);
+    bw.newLine();
+} <span class="text-purple-400">catch</span> (IOException e) {
+    e.printStackTrace();
+}</pre>
+                </div>
+
+                <div class="lg:col-span-6 flex justify-center items-center">
+                    <div class="w-full bg-gray-950 border border-gray-800 rounded-3xl p-6 text-center space-y-5">
+                        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest block">Chế Độ Ghi Đè vs Ghi Nối Tiếp</span>
+                        <div class="grid grid-cols-2 gap-4 text-xs font-mono">
+                            <div class="p-4 bg-gray-900 border border-rose-500 rounded-2xl space-y-2">
+                                <span class="text-rose-400 font-bold block">new FileWriter("f.txt")</span>
+                                <p class="text-gray-300">Chế độ ghi đè (Overwrite): Xóa sạch nội dung cũ của file và viết lại từ đầu.</p>
+                            </div>
+                            <div class="p-4 bg-gray-900 border border-emerald-500 rounded-2xl space-y-2">
+                                <span class="text-emerald-400 font-bold block">new FileWriter("f.txt", true)</span>
+                                <p class="text-gray-300">Chế độ ghi nối (Append): Giữ nguyên nội dung cũ, chèn thêm dòng mới vào cuối file.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 6: 9.4 ĐỌC GHI VỚI MẠNG (SOCKET / HTTP) ==================== -->
+        <section class="slide-pane" data-title="9.4 Đọc/Ghi dữ liệu qua Mạng">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <div class="lg:col-span-6 space-y-5">
+                    <div class="border-b border-gray-800 pb-3">
+                        <span class="text-sm font-bold text-sky-400 font-mono uppercase tracking-wider">Mục 9.4</span>
+                        <h3 class="text-3xl md:text-4xl font-extrabold text-white">Áp Dụng Luồng Cho Kết Nối Mạng (Socket)</h3>
+                    </div>
+                    <p class="text-lg text-gray-300 leading-relaxed">
+                        Sức mạnh tuyệt vời của cơ chế I/O trong Java: <strong>File hay Kết nối mạng Internet đều thao tác y hệt nhau</strong>! Chỉ cần lấy được <code>InputStream</code> hoặc <code>OutputStream</code> từ Socket là đọc ghi tương tự một file trên ổ cứng.
+                    </p>
+                    <pre class="bg-gray-950 p-5 rounded-2xl border border-gray-800 text-sm md:text-base text-gray-200 leading-relaxed font-mono">
+<span class="text-gray-500">// Kết nối tới server qua Socket TCP:</span>
+Socket socket = <span class="text-purple-400">new</span> Socket(<span class="text-amber-200">"api.example.com"</span>, <span class="text-amber-400">80</span>);
+
+<span class="text-gray-500">// Lấy luồng đọc từ mạng y chang đọc file:</span>
+BufferedReader reader = <span class="text-purple-400">new</span> BufferedReader(
+    <span class="text-purple-400">new</span> InputStreamReader(socket.getInputStream()));
+
+String message = reader.readLine(); <span class="text-gray-500">// Đọc gói tin gửi từ server!</span></pre>
+                </div>
+
+                <div class="lg:col-span-6 flex justify-center items-center">
+                    <div class="w-full bg-gray-950 border border-gray-800 rounded-3xl p-6 text-center space-y-5">
+                        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest block">Tính Trừu Tượng Hóa Tuyệt Đối Của Stream</span>
+                        <div class="flex items-center justify-around">
+                            <div class="p-3 bg-gray-900 border border-gray-700 rounded-xl text-xs font-mono">Ổ Cứng SSD (File)</div>
+                            <div class="text-sky-400 font-bold">➔ InputStream ➔</div>
+                            <div class="p-4 bg-sky-950 border-2 border-sky-400 rounded-2xl text-sm font-mono font-bold text-white">Chương Trình Java</div>
+                            <div class="text-emerald-400 font-bold">➔ OutputStream ➔</div>
+                            <div class="p-3 bg-gray-900 border border-gray-700 rounded-xl text-xs font-mono">Internet (Socket IP)</div>
+                        </div>
+                        <p class="text-xs text-gray-400">Lập trình viên không cần quan tâm phần cứng bên dưới là cáp quang, sóng Wifi hay chip nhớ SSD, chỉ cần dùng chung 1 bộ hàm <code>read()</code> và <code>write()</code>.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 7: 10.1 TỔNG QUAN NGUYÊN TẮC THIẾT KẾ OOP TỐT (SOLID) ==================== -->
+        <section class="slide-pane" data-title="10.1 Nguyên tắc thiết kế tốt (SOLID)">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <div class="lg:col-span-6 space-y-6">
+                    <div class="border-b border-gray-800 pb-3">
+                        <span class="text-sm font-bold text-emerald-400 font-mono uppercase tracking-wider">Mục 10.1</span>
+                        <h3 class="text-3xl md:text-4xl font-extrabold text-white">Bộ Nguyên Tắc Thiết Kế S.O.L.I.D</h3>
+                    </div>
+                    <p class="text-lg md:text-xl text-gray-300 leading-relaxed">
+                        SOLID là 5 nguyên tắc vàng do Robert C. Martin (Uncle Bob) đúc kết, giúp kiến trúc phần mềm chống lại hiện tượng "mã nguồn bốc mùi" (code smell), dễ bảo trì và dễ mở rộng khi dự án lên hàng triệu dòng code.
+                    </p>
+                    <ul class="space-y-3 text-base text-gray-200">
+                        <li><strong class="text-amber-400">S - Single Responsibility:</strong> Đơn trách nhiệm.</li>
+                        <li><strong class="text-emerald-400">O - Open/Closed:</strong> Mở rộng tính năng, đóng việc sửa mã cũ.</li>
+                        <li><strong class="text-sky-400">L - Liskov Substitution:</strong> Lớp con thay thế hoàn hảo cho lớp cha.</li>
+                        <li><strong class="text-purple-400">I - Interface Segregation:</strong> Chia nhỏ giao diện thành nhiều interface con.</li>
+                        <li><strong class="text-pink-400">D - Dependency Inversion:</strong> Phụ thuộc vào trừu tượng, không phụ thuộc cụ thể.</li>
+                    </ul>
+                </div>
+
+                <div class="lg:col-span-6 flex justify-center items-center">
+                    <div class="w-full bg-gray-950 border border-gray-800 rounded-3xl p-6 text-center space-y-4">
+                        <div class="grid grid-cols-1 gap-2.5 text-left text-xs font-mono">
+                            <div class="p-3 bg-amber-950/40 border border-amber-500/50 rounded-xl flex items-center justify-between">
+                                <span class="font-bold text-amber-300 text-sm">S: Đơn trách nhiệm</span>
+                                <span class="text-gray-400">1 Class chỉ nên có 1 lý do duy nhất để thay đổi</span>
+                            </div>
+                            <div class="p-3 bg-emerald-950/40 border border-emerald-500/50 rounded-xl flex items-center justify-between">
+                                <span class="font-bold text-emerald-300 text-sm">O: Mở / Đóng</span>
+                                <span class="text-gray-400">Thêm tính năng bằng cách kế thừa, không sửa file cũ</span>
+                            </div>
+                            <div class="p-3 bg-sky-950/40 border border-sky-500/50 rounded-xl flex items-center justify-between">
+                                <span class="font-bold text-sky-300 text-sm">L: Thay thế Liskov</span>
+                                <span class="text-gray-400">Lớp con không được làm sai lệch bản chất của lớp cha</span>
+                            </div>
+                            <div class="p-3 bg-purple-950/40 border border-purple-500/50 rounded-xl flex items-center justify-between">
+                                <span class="font-bold text-purple-300 text-sm">I: Phân tách Interface</span>
+                                <span class="text-gray-400">Không ép lớp con thực thi hàm nó không dùng đến</span>
+                            </div>
+                            <div class="p-3 bg-pink-950/40 border border-pink-500/50 rounded-xl flex items-center justify-between">
+                                <span class="font-bold text-pink-300 text-sm">D: Đảo ngược phụ thuộc</span>
+                                <span class="text-gray-400">Mô-đun cấp cao giao tiếp qua Interface, không gán cứng</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 8: 10.1 CHI TIẾT S VÀ O TRONG SOLID ==================== -->
+        <section class="slide-pane" data-title="10.1 Nguyên tắc S & O trong SOLID">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <div class="lg:col-span-6 space-y-5">
+                    <div class="border-b border-gray-800 pb-3">
+                        <span class="text-sm font-bold text-emerald-400 font-mono uppercase tracking-wider">Mục 10.1 Chi Tiết</span>
+                        <h3 class="text-3xl md:text-4xl font-extrabold text-white">Nguyên Tắc S & O Trong SOLID</h3>
+                    </div>
+                    <ul class="space-y-4 text-base md:text-lg text-gray-200">
+                        <li class="p-4 bg-gray-950 rounded-2xl border border-amber-500/40">
+                            <strong class="text-amber-400 block text-lg">Single Responsibility Principle (SRP):</strong>
+                            Một lớp chỉ làm đúng một chức năng. Tránh tạo lớp "God Object" vừa tính toán hóa đơn, vừa gửi email, vừa in PDF.
+                        </li>
+                        <li class="p-4 bg-gray-950 rounded-2xl border border-emerald-500/40">
+                            <strong class="text-emerald-400 block text-lg">Open / Closed Principle (OCP):</strong>
+                            Mở cho việc mở rộng (thêm chức năng mới bằng cách tạo thêm lớp mới kế thừa/implements), nhưng Đóng đối với việc sửa đổi mã nguồn đã chạy ổn định.
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="lg:col-span-6 flex justify-center items-center">
+                    <div class="w-full bg-gray-950 border border-gray-800 rounded-3xl p-6 text-center space-y-4">
+                        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest block">Minh Họa OCP: Thanh Toán Mở Rộng</span>
+                        <div class="p-4 bg-gray-900 border border-emerald-500 rounded-2xl text-left font-mono text-xs space-y-2">
+                            <div class="text-emerald-300 font-bold">// Giao diện chung đóng không sửa:</div>
+                            <div class="text-purple-300">interface ThanhToan { void pay(double amt); }</div>
+                            <div class="text-gray-400 pt-2">// Muốn thêm thanh toán Momo hoặc ZaloPay?</div>
+                            <div class="text-sky-300">class MomoPayment implements ThanhToan { ... }</div>
+                            <div class="text-sky-300">class ZaloPayPayment implements ThanhToan { ... }</div>
+                            <span class="text-emerald-400 block font-bold pt-1">➔ Thêm vô số cổng thanh toán mà không sửa 1 dòng code cũ!</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 9: 10.1 CHI TIẾT L, I, D TRONG SOLID ==================== -->
+        <section class="slide-pane" data-title="10.1 Nguyên tắc L, I & D">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <div class="lg:col-span-6 space-y-5">
+                    <div class="border-b border-gray-800 pb-3">
+                        <span class="text-sm font-bold text-emerald-400 font-mono uppercase tracking-wider">Mục 10.1 Chi Tiết</span>
+                        <h3 class="text-3xl md:text-4xl font-extrabold text-white">Nguyên Tắc L, I & D Trong SOLID</h3>
+                    </div>
+                    <ul class="space-y-4 text-base md:text-lg text-gray-200">
+                        <li>
+                            <strong class="text-sky-400">Liskov (LSP):</strong> Lớp con phải thay thế được lớp cha mà không làm hỏng tính đúng đắn (Ví dụ: Chim Cánh Cụt kế thừa từ Chim nhưng không biết bay ➔ Vi phạm LSP).
+                        </li>
+                        <li>
+                            <strong class="text-purple-400">Interface Segregation (ISP):</strong> Tách interface khổng lồ thành nhiều interface chuyên biệt, tránh ép lớp con viết hàm rỗng.
+                        </li>
+                        <li>
+                            <strong class="text-pink-400">Dependency Inversion (DIP):</strong> Các module cấp cao (OrderService) không gọi trực tiếp module cấp thấp (MySQLDatabase), mà cả hai phụ thuộc vào Interface trừu tượng (DatabaseRepository).
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="lg:col-span-6 flex justify-center items-center">
+                    <div class="w-full bg-gray-950 border border-gray-800 rounded-3xl p-6 text-center space-y-4">
+                        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest block">Mô Hình Đảo Ngược Phụ Thuộc (DIP)</span>
+                        <div class="p-4 bg-gray-900 border border-pink-500 rounded-2xl space-y-3 font-mono text-xs">
+                            <div class="p-2 bg-pink-950 text-pink-300 rounded font-bold">Module Cấp Cao: OrderService</div>
+                            <div class="text-gray-400">↓ chỉ giao tiếp thông qua ↓</div>
+                            <div class="p-2 bg-emerald-950 border border-emerald-500 text-emerald-300 rounded font-bold">Interface: DatabaseConnection</div>
+                            <div class="text-gray-400">↑ hiện thực độc lập ↑</div>
+                            <div class="grid grid-cols-2 gap-2 text-gray-300">
+                                <div class="p-1.5 bg-black rounded">MySQLDriver</div>
+                                <div class="p-1.5 bg-black rounded">MongoDBDriver</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 10: 10.2 GIỚI THIỆU SƠ LƯỢC MẪU THIẾT KẾ ==================== -->
+        <section class="slide-pane" data-title="10.2 Giới thiệu Mẫu Thiết Kế (Design Patterns)">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <div class="lg:col-span-6 space-y-6">
+                    <div class="border-b border-gray-800 pb-3">
+                        <span class="text-sm font-bold text-emerald-400 font-mono uppercase tracking-wider">Mục 10.2</span>
+                        <h3 class="text-3xl md:text-4xl font-extrabold text-white">Khái Niệm Mẫu Thiết Kế (Design Patterns)</h3>
+                    </div>
+                    <p class="text-lg md:text-xl text-gray-300 leading-relaxed">
+                        Design Pattern là <strong>giải pháp tổng quát đã được kiểm nghiệm thực tế</strong> để giải quyết các vấn đề thường xuyên lặp đi lặp lại trong quá trình thiết kế phần mềm hướng đối tượng.
+                    </p>
+                    <div class="grid grid-cols-3 gap-3 pt-2 text-xs font-mono">
+                        <div class="p-3 bg-gray-950 rounded-xl border border-blue-500/40 text-center">
+                            <span class="font-bold text-blue-400 block mb-1">Creational</span>
+                            <span class="text-gray-400">Mẫu khởi tạo (Singleton, Factory, Prototype)</span>
+                        </div>
+                        <div class="p-3 bg-gray-950 rounded-xl border border-purple-500/40 text-center">
+                            <span class="font-bold text-purple-400 block mb-1">Structural</span>
+                            <span class="text-gray-400">Mẫu cấu trúc (Adapter, Decorator, Facade)</span>
+                        </div>
+                        <div class="p-3 bg-gray-950 rounded-xl border border-amber-500/40 text-center">
+                            <span class="font-bold text-amber-400 block mb-1">Behavioral</span>
+                            <span class="text-gray-400">Mẫu hành vi (Observer, Strategy, Template)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-6 flex justify-center items-center">
+                    <div class="w-full bg-gray-950 border border-gray-800 rounded-3xl p-6 text-center space-y-4">
+                        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest block">Lợi Ích Khi Áp Dụng Mẫu Thiết Kế</span>
+                        <div class="space-y-3 text-sm text-left text-gray-300">
+                            <div class="p-3 bg-gray-900 rounded-xl border border-gray-800 flex items-center gap-3">
+                                <i class="fa-solid fa-check-double text-emerald-400 text-lg"></i>
+                                <span>Tránh việc "phát minh lại bánh xe" (Reinventing the wheel).</span>
+                            </div>
+                            <div class="p-3 bg-gray-900 rounded-xl border border-gray-800 flex items-center gap-3">
+                                <i class="fa-solid fa-comments text-sky-400 text-lg"></i>
+                                <span>Tạo tiếng nói chung chuyên nghiệp giữa các lập trình viên trên toàn cầu.</span>
+                            </div>
+                            <div class="p-3 bg-gray-900 rounded-xl border border-gray-800 flex items-center gap-3">
+                                <i class="fa-solid fa-shield-virus text-purple-400 text-lg"></i>
+                                <span>Đảm bảo kiến trúc đạt chuẩn OOP và các nguyên lý SOLID tối đa.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 11: 10.2 MẪU THIẾT KẾ 1: SINGLETON PATTERN ==================== -->
+        <section class="slide-pane" data-title="10.2 Mẫu 1: Singleton Pattern">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <div class="lg:col-span-6 space-y-5">
+                    <div class="border-b border-gray-800 pb-3">
+                        <span class="text-sm font-bold text-emerald-400 font-mono uppercase tracking-wider">Mục 10.2 - Mẫu Điển Hình 1</span>
+                        <h3 class="text-3xl md:text-4xl font-extrabold text-white">Mẫu Singleton (Đơn Thể Duy Nhất)</h3>
+                    </div>
+                    <p class="text-lg text-gray-300 leading-relaxed">
+                        • <strong>Mục đích:</strong> Đảm bảo <strong>chỉ có DUY NHẤT một thể hiện (instance)</strong> của lớp tồn tại trong toàn bộ vòng đời chương trình (Ví dụ: Kết nối Database, Trình ghi Log hệ thống).<br>
+                        • <strong>Cài đặt:</strong> Khóa constructor bằng <code>private</code> và cung cấp hàm tĩnh <code>getInstance()</code>.
+                    </p>
+                    <pre class="bg-gray-950 p-5 rounded-2xl border border-gray-800 text-sm md:text-base text-gray-200 leading-relaxed font-mono">
+<span class="text-purple-400">public class</span> <span class="text-amber-300 font-bold">DatabaseConnection</span> {
+    <span class="text-purple-400">private static</span> DatabaseConnection instance;
+
+    <span class="text-gray-500">// 1. Khóa constructor: Cấm bên ngoài gọi new!</span>
+    <span class="text-purple-400">private</span> <span class="text-blue-400 font-bold">DatabaseConnection</span>() { }
+
+    <span class="text-gray-500">// 2. Điểm truy cập toàn cục duy nhất</span>
+    <span class="text-purple-400">public static</span> DatabaseConnection <span class="text-emerald-400 font-bold">getInstance</span>() {
+        <span class="text-purple-400">if</span> (instance == <span class="text-purple-400">null</span>) instance = <span class="text-purple-400">new</span> DatabaseConnection();
+        <span class="text-purple-400">return</span> instance;
+    }
+}</pre>
+                </div>
+
+                <div class="lg:col-span-6 flex justify-center items-center">
+                    <div class="w-full bg-gray-950 border border-gray-800 rounded-3xl p-6 text-center space-y-5">
+                        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest block">Mô Phỏng Điểm Truy Cập Tập Trung</span>
+                        <div class="p-6 bg-emerald-950/40 border-2 border-emerald-500 rounded-2xl max-w-sm mx-auto space-y-2">
+                            <span class="text-xs bg-emerald-900 text-emerald-300 px-3 py-1 rounded-full font-mono">Duy nhất 1 ô nhớ trên RAM</span>
+                            <div class="text-xl font-black text-white font-mono">DatabaseConnection Instance</div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 text-xs font-mono text-gray-400">
+                            <div class="p-2 bg-gray-900 rounded border border-gray-800">Module UserService ➔ dùng chung</div>
+                            <div class="p-2 bg-gray-900 rounded border border-gray-800">Module OrderService ➔ dùng chung</div>
+                            <div class="p-2 bg-gray-900 rounded border border-gray-800">Module PaymentService ➔ dùng chung</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 12: 10.2 MẪU THIẾT KẾ 2: FACTORY METHOD PATTERN ==================== -->
+        <section class="slide-pane" data-title="10.2 Mẫu 2: Factory Method">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <div class="lg:col-span-6 space-y-5">
+                    <div class="border-b border-gray-800 pb-3">
+                        <span class="text-sm font-bold text-emerald-400 font-mono uppercase tracking-wider">Mục 10.2 - Mẫu Điển Hình 2</span>
+                        <h3 class="text-3xl md:text-4xl font-extrabold text-white">Mẫu Factory Method (Nhà Máy Tạo Đối Tượng)</h3>
+                    </div>
+                    <p class="text-lg text-gray-300 leading-relaxed">
+                        • <strong>Mục đích:</strong> Ủy thác việc tạo đối tượng cho một "nhà máy" (Factory) thay vì gọi trực tiếp lệnh <code>new</code> rải rác trong code. Giúp tách rời (decouple) mã giao diện khỏi các lớp cụ thể.
+                    </p>
+                    <pre class="bg-gray-950 p-5 rounded-2xl border border-gray-800 text-sm md:text-base text-gray-200 leading-relaxed font-mono">
+<span class="text-purple-400">public class</span> <span class="text-amber-300 font-bold">ThongBaoFactory</span> {
+    <span class="text-purple-400">public static</span> Notification <span class="text-blue-400 font-bold">taoThongBao</span>(String kieu) {
+        <span class="text-purple-400">if</span> (kieu.equals(<span class="text-amber-200">"SMS"</span>)) <span class="text-purple-400">return new</span> SMSNotification();
+        <span class="text-purple-400">if</span> (kieu.equals(<span class="text-amber-200">"EMAIL"</span>)) <span class="text-purple-400">return new</span> EmailNotification();
+        <span class="text-purple-400">return null</span>;
+    }
+}
+<span class="text-gray-500">// Sử dụng đơn giản:</span>
+Notification notif = ThongBaoFactory.taoThongBao(<span class="text-amber-200">"SMS"</span>);</pre>
+                </div>
+
+                <div class="lg:col-span-6 flex justify-center items-center">
+                    <div class="w-full bg-gray-950 border border-gray-800 rounded-3xl p-6 text-center space-y-5">
+                        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest block">Nguyên Lý Nhà Máy Đóng Gói</span>
+                        <div class="p-5 bg-blue-950/40 border-2 border-blue-500 rounded-2xl max-w-sm mx-auto space-y-1">
+                            <span class="text-xs font-bold text-blue-300 uppercase">Factory (Nhà Máy Sản Xuất)</span>
+                            <div class="text-lg font-black text-white font-mono">ThongBaoFactory.taoThongBao()</div>
+                        </div>
+                        <div class="text-xl text-blue-400">↓ Sản xuất đối tượng theo yêu cầu ↓</div>
+                        <div class="grid grid-cols-2 gap-3 text-xs font-mono">
+                            <div class="p-3 bg-gray-900 border border-gray-800 rounded-xl text-emerald-400">SMSNotification</div>
+                            <div class="p-3 bg-gray-900 border border-gray-800 rounded-xl text-sky-400">EmailNotification</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 13: 10.2 MẪU THIẾT KẾ 3: OBSERVER PATTERN ==================== -->
+        <section class="slide-pane" data-title="10.2 Mẫu 3: Observer Pattern">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <div class="lg:col-span-6 space-y-5">
+                    <div class="border-b border-gray-800 pb-3">
+                        <span class="text-sm font-bold text-emerald-400 font-mono uppercase tracking-wider">Mục 10.2 - Mẫu Điển Hình 3</span>
+                        <h3 class="text-3xl md:text-4xl font-extrabold text-white">Mẫu Observer (Người Quan Sát / Đăng Ký Nhận Tin)</h3>
+                    </div>
+                    <p class="text-lg text-gray-300 leading-relaxed">
+                        • <strong>Mục đích:</strong> Định nghĩa mối quan hệ 1-Nhiều (1-to-Many). Khi một đối tượng (<strong>Subject</strong>) thay đổi trạng thái, toàn bộ các đối tượng phụ thuộc (<strong>Observers</strong>) đã đăng ký theo dõi sẽ <strong>tự động nhận được thông báo</strong> cập nhật ngay tức khắc.
+                    </p>
+                    <pre class="bg-gray-950 p-5 rounded-2xl border border-gray-800 text-sm md:text-base text-gray-200 leading-relaxed font-mono">
+<span class="text-gray-500">// Kênh Youtube (Subject) phát video mới:</span>
+<span class="text-purple-400">public void</span> <span class="text-blue-400 font-bold">dangVideoMoi</span>(String tenVideo) {
+    <span class="text-purple-400">for</span> (Subscriber s : danhSachDangKy) {
+        s.nhanThongBao(tenVideo); <span class="text-gray-500">// Broadcast tới mọi subscriber!</span>
+    }
+}</pre>
+                </div>
+
+                <div class="lg:col-span-6 flex justify-center items-center">
+                    <div class="w-full bg-gray-950 border border-gray-800 rounded-3xl p-6 text-center space-y-5">
+                        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest block">Mô Hình Broadcast Publisher - Subscriber</span>
+                        <div class="p-4 bg-purple-950/50 border-2 border-purple-500 rounded-2xl max-w-sm mx-auto space-y-1">
+                            <span class="text-xs uppercase font-bold text-purple-300">Chủ Thể (Subject / Channel)</span>
+                            <div class="text-base font-black text-white">Trạng thái đổi: Có Video Mới!</div>
+                        </div>
+                        <div class="text-xl text-purple-400">↓ Tự động phát tin thông báo ↓</div>
+                        <div class="grid grid-cols-3 gap-2 text-xs font-mono text-emerald-400">
+                            <div class="p-2.5 bg-gray-900 rounded-lg border border-gray-800">User A (App)</div>
+                            <div class="p-2.5 bg-gray-900 rounded-lg border border-gray-800">User B (Email)</div>
+                            <div class="p-2.5 bg-gray-900 rounded-lg border border-gray-800">User C (SMS)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 14: BÀI TOÁN THỰC TẾ TỔNG HỢP ==================== -->
+        <section class="slide-pane" data-title="Case Study Thực Tế Tổng Hợp">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <div class="lg:col-span-6 space-y-5">
+                    <div class="border-b border-gray-800 pb-3">
+                        <span class="text-sm font-bold text-emerald-400 font-mono uppercase tracking-wider">Case Study Thực Tế</span>
+                        <h3 class="text-3xl md:text-4xl font-extrabold text-white">Xây Dựng Hệ Thống Bán Hàng E-Commerce</h3>
+                    </div>
+                    <p class="text-base md:text-lg text-gray-300 leading-relaxed">
+                        Kết hợp toàn bộ kiến thức I/O Streams và Design Patterns để tạo nên một hệ thống mua hàng tiêu chuẩn:
+                    </p>
+                    <ul class="space-y-3 text-sm md:text-base text-gray-200">
+                        <li>• <strong>Singleton:</strong> Quản lý kết nối Database duy nhất.</li>
+                        <li>• <strong>Factory:</strong> Tạo cổng thanh toán phù hợp (Visa, Paypal, COD).</li>
+                        <li>• <strong>Observer:</strong> Bắn thông báo về điện thoại khi đơn hàng giao thành công.</li>
+                        <li>• <strong>I/O Stream:</strong> Xuất hóa đơn ra file PDF và gửi email xác nhận.</li>
+                    </ul>
+                </div>
+
+                <div class="lg:col-span-6 flex justify-center items-center">
+                    <div class="w-full bg-gray-950 border border-gray-800 rounded-3xl p-6 text-center space-y-4">
+                        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest block">Kiến Trúc Tích Hợp Module</span>
+                        <div class="space-y-3 text-xs font-mono text-left">
+                            <div class="p-3 bg-gray-900 rounded-xl border border-blue-500">
+                                <strong>1. Order Processing:</strong> Nhận giỏ hàng ➔ Ghi log qua FileOutputStream
+                            </div>
+                            <div class="p-3 bg-gray-900 rounded-xl border border-emerald-500">
+                                <strong>2. Payment:</strong> PaymentFactory.create("MOMO") ➔ Xử lý theo OCP
+                            </div>
+                            <div class="p-3 bg-gray-900 rounded-xl border border-purple-500">
+                                <strong>3. Notification:</strong> OrderSubject.notifyAll() ➔ Báo người dùng & kho hàng
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 15: TỔNG KẾT TOÀN DIỆN CHƯƠNG 9 & 10 ==================== -->
+        <section class="slide-pane" data-title="Tổng kết Chương 9 & 10">
+            <div class="bg-gray-900/80 p-8 md:p-12 rounded-3xl border border-gray-800 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[640px]">
+                <div class="lg:col-span-7 space-y-5">
+                    <div class="border-b border-gray-800 pb-3">
+                        <h3 class="text-3xl md:text-5xl font-black text-white">Tổng Kết Ghi Nhớ Trọng Tâm</h3>
+                    </div>
+                    <div class="space-y-4 text-base md:text-lg text-gray-200">
+                        <div class="p-5 bg-gray-950 rounded-2xl border border-sky-500/40 space-y-2">
+                            <strong class="text-sky-400 text-lg block uppercase">Chương 9: Luồng Dữ Liệu (I/O Streams)</strong>
+                            <p class="text-gray-300 text-sm md:text-base leading-relaxed">
+                                • Phân định rõ <strong>Byte Stream</strong> (nhị phân, ảnh) và <strong>Character Stream</strong> (Unicode, văn bản).<br>
+                                • Luôn bọc bằng <strong>BufferedReader/BufferedWriter</strong> để tối ưu tốc độ.<br>
+                                • Sử dụng <strong>try-with-resources</strong> để tự động đóng luồng an toàn chống rò rỉ bộ nhớ.
+                            </p>
+                        </div>
+                        <div class="p-5 bg-gray-950 rounded-2xl border border-emerald-500/40 space-y-2">
+                            <strong class="text-emerald-400 text-lg block uppercase">Chương 10: Thiết Kế OOP & Mẫu Thiết Kế</strong>
+                            <p class="text-gray-300 text-sm md:text-base leading-relaxed">
+                                • Áp dụng 5 nguyên tắc <strong>SOLID</strong> để xây dựng hệ thống bền vững.<br>
+                                • Nắm vững 3 mẫu cốt lõi: <strong>Singleton</strong> (1 thể hiện), <strong>Factory Method</strong> (nhà máy khởi tạo), <strong>Observer</strong> (phát thông báo sự kiện 1-N).
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5 flex justify-center items-center">
+                    <div class="w-full bg-gray-950 border border-gray-800 rounded-3xl p-8 text-center space-y-6">
+                        <div class="w-20 h-20 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-4xl mx-auto shadow-lg shadow-emerald-500/10">
+                            <i class="fa-solid fa-award"></i>
+                        </div>
+                        <div class="text-2xl font-black text-white">Hoàn Thành Toàn Bộ Khóa Học Java OOP</div>
+                        <div class="flex flex-col gap-3">
+                            <a href="slide-oop-c6-c8.html" class="inline-flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-700 text-gray-200 px-6 py-3 rounded-xl text-sm font-bold border border-gray-700 transition">
+                                <i class="fa-solid fa-arrow-left"></i> Xem Lại Slide Chương 6, 7 & 8
+                            </a>
+                            <a href="index.html" class="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-sky-500 hover:from-emerald-400 hover:to-sky-400 text-gray-950 px-6 py-3 rounded-xl text-base font-extrabold shadow-xl transition transform hover:scale-105">
+                                <i class="fa-solid fa-house"></i> Về Bảng Điều Khiển Khóa Học
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- THANH ĐIỀU HƯỚNG DƯỚI CÙNG -->
+    <footer class="bg-gray-900/95 border-t border-gray-800 px-8 py-4 sticky bottom-0 z-50">
+        <!-- Progress bar -->
+        <div class="w-full bg-gray-800 h-2.5 rounded-full overflow-hidden mb-3.5">
+            <div id="progressBar" class="bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-400 h-full w-0 transition-all duration-300"></div>
+        </div>
+
+        <div class="flex justify-between items-center max-w-[1700px] mx-auto">
+            <button id="prevBtn" onclick="prevSlide()" class="bg-gray-800 hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed text-gray-200 text-base font-bold px-6 py-2.5 rounded-xl transition flex items-center gap-2">
+                <i class="fa-solid fa-chevron-left"></i> Slide Trước
+            </button>
+            <span class="text-sm font-semibold text-gray-500 hidden md:inline">
+                Sử dụng phím mũi tên <strong>←</strong> hoặc <strong>→</strong> trên bàn phím để chuyển slide
+            </span>
+            <button id="nextBtn" onclick="nextSlide()" class="bg-emerald-500 hover:bg-emerald-400 disabled:opacity-30 disabled:cursor-not-allowed text-gray-950 text-base font-black px-7 py-2.5 rounded-xl transition flex items-center gap-2 shadow-lg">
+                Slide Tiếp <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
+    </footer>
+
+    <!-- SCRIPT ĐIỀU KHIỂN SLIDE -->
+    <script>
+        const slides = document.querySelectorAll('.slide-pane');
+        const select = document.getElementById('slideSelect');
+        const slideNumber = document.getElementById('slideNumber');
+        const headerTitle = document.getElementById('headerTitle');
+        const progressBar = document.getElementById('progressBar');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        let currentSlide = 0;
+
+        // Sinh mục lục trong dropdown
+        slides.forEach((slide, idx) => {
+            const opt = document.createElement('option');
+            opt.value = idx;
+            opt.innerText = `${idx + 1}. ${slide.getAttribute('data-title')}`;
+            select.appendChild(opt);
+        });
+
+        function updateSlideUI() {
+            slides.forEach((s, idx) => {
+                s.classList.toggle('active', idx === currentSlide);
+            });
+
+            const activeSlide = slides[currentSlide];
+            const title = activeSlide.getAttribute('data-title');
+
+            headerTitle.innerText = title;
+            slideNumber.innerText = `${currentSlide + 1} / ${slides.length}`;
+            select.value = currentSlide;
+
+            const percent = ((currentSlide + 1) / slides.length) * 100;
+            progressBar.style.width = `${percent}%`;
+
+            prevBtn.disabled = (currentSlide === 0);
+            nextBtn.disabled = (currentSlide === slides.length - 1);
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                updateSlideUI();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlideUI();
+            }
+        }
+
+        function goToSlide(idx) {
+            if (idx >= 0 && idx < slides.length) {
+                currentSlide = idx;
+                updateSlideUI();
+            }
+        }
+
+        // Bắt sự kiện phím mũi tên chuyển slide
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                prevSlide();
+            }
+        });
+
+        updateSlideUI();
+    </script>
+</body>
+</html>
